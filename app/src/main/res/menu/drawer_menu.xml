@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/firstItem"
+        android:title="First"
+        android:icon="@drawable/ic_action_search"
+        />
+
+    <item
+        android:id="@+id/secondItem"
+        android:title="Second"
+        android:icon="@drawable/ic_action_accept"
+        />
+
+    <item
+        android:id="@+id/thirdItem"
+        android:title="Third"
+        android:icon="@drawable/ic_action_call"
+        />
+
+    <item android:title="Other">
+
+        <menu>
+            <item
+                android:title="sub1"
+                android:icon="@drawable/ic_action_map"
+                />
+
+            <item
+                android:title="sub2"
+                android:icon="@drawable/ic_action_new"
+                />
+        </menu>
+
+    </item>
+
+    <group android:id="@+id/group">
+
+        <item
+            android:title="Help"
+            android:icon="@drawable/ic_action_help"
+            />
+
+        <item
+            android:title="Settings"
+            android:icon="@drawable/ic_action_settings"
+            />
+    </group>
+
+</menu>
