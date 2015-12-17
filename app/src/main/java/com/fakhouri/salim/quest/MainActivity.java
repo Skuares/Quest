@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Firebase ref;
     private Firebase userRef;
-    protected User myUser = null;
+    public static User myUser = null;
+    public static Bitmap userImageStatic = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +105,15 @@ public class MainActivity extends AppCompatActivity {
                 // when user clicks close the drawer
                 drawerLayout.closeDrawers();
 
-                if (item.getItemId() == R.id.firstItem) {
+                if (item.getItemId() == R.id.edit_profile) {
 
                     // replace with tab fragment
-                    android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.containerView, new TabFragment()).commit();
+                    //android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+                    //transaction.replace(R.id.containerView, new TabFragment()).commit();
+
+                    // open user profile activity
+                    Intent intentProfile = new Intent(MainActivity.this,UserProfile.class);
+                    startActivity(intentProfile);
 
                 }
 
@@ -164,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
                     String sImage = myUser.getUserImage();
                     // convert string to bitmap and assign it
                     Bitmap bitmap = myUser.stringToBitmap(sImage);
+
+                    userImageStatic = bitmap;
                     // header image WE STILL NEED TO MAKE IT CHANGEABLE
                     headerImage.setImageBitmap(bitmap);
 

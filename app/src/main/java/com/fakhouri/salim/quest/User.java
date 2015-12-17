@@ -17,11 +17,13 @@ import java.util.Map;
  */
 public class User {
 
+
+    private final String quester = "I am a Quester";
     private String firstName;
     private String lastName;
     private String username;
     private String email;
-
+    private String description;
     private int age;
     private String userImage;
 
@@ -37,7 +39,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.age = age;
-
+        this.description = quester;
         // if this contsructor is used, use placeholder image
         //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
         this.userImage = bitmapToString(localBitmap);
@@ -51,6 +53,7 @@ public class User {
                 @JsonProperty("username") String username,
                 @JsonProperty("email") String email,
                 @JsonProperty("age") int age,
+                @JsonProperty("description") String description,
                 @JsonProperty("userImage") String bitmapString){
         // for firebase
         this.firstName = firstName;
@@ -58,7 +61,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.age = age;
-
+        this.description = description;
         // if this contsructor is used, use placeholder image
         //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
         this.userImage = bitmapString;
@@ -110,6 +113,22 @@ public class User {
 
             Log.e("ErrorImage", e.getMessage());
             return null;
+        }
+
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description, Firebase userRef) {
+        if(description != null && userRef != null){
+
+            this.description = description;
+            // save to firebase
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put("description",description);
+            userRef.updateChildren(map);
         }
 
     }

@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/firstItem"
-        android:title="First"
-        android:icon="@drawable/ic_action_search"
+        android:id="@+id/edit_profile"
+        android:title="Edit Profile"
+        android:icon="@drawable/ic_action_person"
         />
 
     <item

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/userInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        android:layout_margin="12dp"
+        app:cardBackgroundColor="@color/accent_500">
+
+        <RelativeLayout
+            android:id="@+id/contUserInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/firstnameCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="First Name : "/>
+
+            <TextView
+                android:id="@+id/firstnameCardValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Hello"
+                android:layout_toEndOf="@+id/firstnameCard"
+                android:layout_toRightOf="@+id/firstnameCard"
+                android:layout_alignBaseline="@+id/firstnameCard"/>
+
+            <ImageButton
+                android:id="@+id/changeFirstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_edit"
+                android:layout_alignParentRight="true"
+                android:padding="4dp"
+
+                android:background="@color/accent_500"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/firstnameCardValue"
+                android:layout_alignBottom="@+id/firstnameCardValue"/>
+
+            <TextView
+                android:id="@+id/lastnameCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Last Name : "
+                android:layout_below="@+id/firstnameCard"/>
+
+            <TextView
+                android:id="@+id/lastnameCardValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Hello"
+                android:layout_toEndOf="@+id/lastnameCard"
+                android:layout_toRightOf="@+id/lastnameCard"
+                android:layout_alignBaseline="@+id/lastnameCard"
+                android:layout_alignLeft="@+id/firstnameCardValue"
+                />
+
+
+
+            <TextView
+                android:id="@+id/usernameCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Username : "
+                android:layout_below="@+id/lastnameCard"/>
+
+            <TextView
+                android:id="@+id/usernameCardValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Hello"
+                android:layout_toEndOf="@+id/usernameCard"
+                android:layout_toRightOf="@+id/usernameCard"
+                android:layout_alignBaseline="@+id/usernameCard"
+                android:layout_alignLeft="@+id/firstnameCardValue"
+                />
+
+
+
+            <TextView
+                android:id="@+id/ageCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Age : "
+                android:layout_below="@+id/usernameCard"/>
+
+            <TextView
+                android:id="@+id/ageCardValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="12"
+                android:layout_toEndOf="@+id/ageCard"
+                android:layout_toRightOf="@+id/ageCard"
+                android:layout_alignBaseline="@+id/ageCard"
+                android:layout_alignLeft="@+id/firstnameCardValue"
+                />
+
+
+            <TextView
+                android:id="@+id/emailCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Email : "
+                android:layout_below="@+id/ageCard"/>
+
+            <TextView
+                android:id="@+id/emailCardValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Hello"
+                android:layout_toEndOf="@+id/emailCard"
+                android:layout_toRightOf="@+id/emailCard"
+                android:layout_alignBaseline="@+id/emailCard"
+                android:layout_alignLeft="@+id/firstnameCardValue"
+                />
+
+        </RelativeLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/descCard"
+        android:layout_margin="12dp"
+        app:cardBackgroundColor="@color/accent_700"
+        app:cardCornerRadius="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/descwithImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/description"
+                android:text="Description"
+                android:textColor="#fff"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/changeDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_edit"
+                android:layout_alignParentRight="true"
+                android:padding="4dp"
+                android:background="@color/accent_700"
+                android:layout_alignParentEnd="true"/>
+
+            <TextView
+                android:id="@+id/descValue"
+                android:layout_below="@+id/description"
+                android:text="hello lasf asfjp asf  apsfj asofj aspofj apsofj  asofj asofj "
+                android:textSize="22sp"
+                android:padding="16dp"
+                android:textColor="#fff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>
