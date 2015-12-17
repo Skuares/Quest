@@ -75,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView)findViewById(R.id.shitstuff);
 
         // we need the header view
-       // View headerView = navigationView.inflateHeaderView(R.layout.header_drawer);
+        headerView = navigationView.inflateHeaderView(R.layout.header_drawer);
         //headerImage = (ImageView)headerView.findViewById(R.id.headerImage);
         //headerText = (TextView) headerView.findViewById(R.id.headerText);
 
-        headerView =  LayoutInflater.from(this).inflate(R.layout.header_drawer, navigationView,false);
+
         headerImage = (ImageView) headerView.findViewById(R.id.headerImage);
         headerText = (TextView) headerView.findViewById(R.id.headerText);
 
@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                    navigationView.addHeaderView(headerView);
                 }
 
                 @Override
