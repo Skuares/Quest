@@ -1,5 +1,7 @@
 package com.fakhouri.salim.quest;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -8,25 +10,81 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static int REQUEST_CODE= 1;
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     android.support.v4.app.FragmentTransaction transaction;
     android.support.v4.app.FragmentManager manager;
+
+    ImageView headerImage;
+    TextView headerText;
+
+    private View headerView;
+
+    /* Data from the authenticated user */
+    private AuthData mAuthData;
+
+    /* Listener for Firebase session changes */
+    private Firebase.AuthStateListener mAuthStateListener;
+
+    private Firebase ref;
+    private Firebase userRef;
+    protected User myUser = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // check user
+        ref = new Firebase(getResources().getString(R.string.firebaseUrl));
+        // authinticate user if logged in send him to home
+        mAuthStateListener = new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+
+                mAuthData = authData;
+                setAuthenticatedUser(authData);
+            }
+        };
+        /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
+         * user and hide hide any login buttons */
+        ref.addAuthStateListener(mAuthStateListener);
+
+        // **********************************************************
+        // ******************************************************8888
 
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayout);
         navigationView = (NavigationView)findViewById(R.id.shitstuff);
+
+        // we need the header view
+       // View headerView = navigationView.inflateHeaderView(R.layout.header_drawer);
+        //headerImage = (ImageView)headerView.findViewById(R.id.headerImage);
+        //headerText = (TextView) headerView.findViewById(R.id.headerText);
+
+        headerView =  LayoutInflater.from(this).inflate(R.layout.header_drawer, navigationView,false);
+        headerImage = (ImageView) headerView.findViewById(R.id.headerImage);
+        headerText = (TextView) headerView.findViewById(R.id.headerText);
+
+
+
         /**
          * Lets inflate the very first fragment
          * Here , we are inflating the TabFragment as the first Fragment
@@ -63,6 +121,16 @@ public class MainActivity extends AppCompatActivity {
 
                 }
 
+                if(item.getItemId() == R.id.logout){
+
+                    if (mAuthData != null) {
+                        /* logout of Firebase */
+                        ref.unauth();
+                    }else{
+
+                    }
+                }
+
                 // rest of the menu
 
                 return false;
@@ -78,14 +146,69 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-
-
-
     }
 
 
 
+    public void retrieveUser(){
+        if(mAuthData != null){
 
+            // listener for user key
+            userRef = ref.child("users").child(mAuthData.getUid());
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // convert snapshot to user class
+                    myUser = dataSnapshot.getValue(User.class);
+
+                    String sImage = myUser.getUserImage();
+                    // convert string to bitmap and assign it
+                    Bitmap bitmap = myUser.stringToBitmap(sImage);
+                    // header image WE STILL NEED TO MAKE IT CHANGEABLE
+                    headerImage.setImageBitmap(bitmap);
+
+                    // change the name
+                    headerText.setText(myUser.getUsername());
+
+
+
+                    navigationView.addHeaderView(headerView);
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    // set default header view !!!!!!!!!!!!!!!!!!!!!!!
+
+
+                }
+            });
+
+        }else{
+
+            Log.e("auth", "auth is null");
+        }
+
+    }
+
+    private void setAuthenticatedUser(AuthData authData) {
+        if(authData != null){
+
+            retrieveUser();
+            // all good
+            //Intent intent = new Intent(MainActivity.this,SignUp.class);
+            //startActivity(intent);
+            //finish();
+        }else{
+
+            Intent intent = new Intent(MainActivity.this,SignUp.class);
+            startActivity(intent);
+            finish();
+            // user is not authenticated through him out to log in
+        }
+
+        // store the auth for later use
+        this.mAuthData = authData;
+    }
 
 
     @Override

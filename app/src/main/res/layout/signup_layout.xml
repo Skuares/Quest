@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_width="match_parent"
+    android:background="@drawable/gradient"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:id="@+id/container"
+        android:layout_weight="7"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <EditText
+            android:id="@+id/email"
+
+            android:hint="Email"
+            android:textColor="#fff"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"/>
+        <EditText
+            android:id="@+id/firstname"
+            android:paddingStart="10dp"
+            android:textColor="#fff"
+            android:hint="First Name"
+            android:inputType="textCapWords"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/lastname"
+
+            android:textColor="#fff"
+            android:hint="Last Name"
+            android:inputType="textCapWords"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/username"
+            android:inputType="text"
+            android:paddingStart="10dp"
+            android:textColor="#fff"
+            android:hint="Username"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+
+            android:id="@+id/age"
+            android:paddingStart="10dp"
+            android:textColor="#fff"
+            android:hint="Age"
+            android:inputType="number"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:textColor="#fff"
+            android:id="@+id/password"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:hint="Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <Button
+
+        android:id="@+id/signupButton"
+        android:onClick="Signup"
+        android:textColor="#fff"
+        android:paddingLeft="10dp"
+        android:text="Sign Up"
+        android:background="@drawable/horizontalgrad"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <TextView
+            android:id="@+id/indicate"
+            android:textSize="18sp"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:text="Already have an account?"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/signin"
+            android:text="Sign in"
+            android:onClick="signInMethod"
+            android:background="@drawable/horigradback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

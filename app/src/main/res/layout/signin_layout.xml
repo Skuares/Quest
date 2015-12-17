@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/gradient">
+
+    <ImageView
+        android:src="@drawable/logoplaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_marginTop="17dp"
+        android:id="@+id/container1"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <EditText
+
+            android:id="@+id/emailSign"
+            android:paddingStart="10dp"
+            android:textColor="#fff"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:layout_marginTop="10dp"
+            android:id="@+id/passworSign"
+            android:paddingStart="10dp"
+            android:textColor="#fff"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+
+            android:id="@+id/signupButton"
+            android:onClick="Signin"
+            android:layout_marginTop="12dp"
+            android:textColor="#fff"
+            android:paddingLeft="10dp"
+            android:text="Sign In"
+            android:background="@drawable/horizontalgrad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

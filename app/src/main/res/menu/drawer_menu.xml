@@ -28,8 +28,8 @@
                 />
 
             <item
-                android:title="sub2"
-                android:icon="@drawable/ic_action_new"
+                android:title="Settings"
+                android:icon="@drawable/ic_action_settings"
                 />
         </menu>
 
@@ -43,9 +43,11 @@
             />
 
         <item
-            android:title="Settings"
-            android:icon="@drawable/ic_action_settings"
+
+            android:title="Logout"
+            android:id="@+id/logout"
             />
+
     </group>
 
 </menu>

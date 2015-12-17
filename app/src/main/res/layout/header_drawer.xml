@@ -3,11 +3,15 @@
     android:layout_height="150dp"
     android:orientation="vertical">
     <ImageView
+        android:id="@+id/headerImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/placeholder"
-        android:scaleType="centerCrop" />
+        android:src="@drawable/placeholderuser"
+        android:scaleType="fitXY"
+
+         />
     <TextView
+        android:id="@+id/headerText"
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
