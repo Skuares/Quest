@@ -51,14 +51,14 @@ public class TabFragment extends Fragment {
         private int[] images = {
 
 
-                R.drawable.ic_action_map,
                 R.drawable.ic_action_help,
+                R.drawable.ic_action_map,
                 R.drawable.ic_action_person
         };
 
         String[] strings = {
-                "Map",
                 "Stream",
+                "Map",
                 "Person"
         };
 
@@ -75,8 +75,8 @@ public class TabFragment extends Fragment {
 
             switch (position){
 
-                case 0: return new MapFragment();
-                case 1: return new StreamFragment();
+                case 0: return new StreamFragment();
+                case 1: return new MapFragment();
                 case 2: return new PersonStreamFragment();
             }
             return null;

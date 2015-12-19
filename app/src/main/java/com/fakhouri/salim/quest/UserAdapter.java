@@ -27,7 +27,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         TextView descriptionValue;
 
-        ImageButton changeFirstName;
 
         public ViewHolder(View view) {
             super(view);
@@ -43,7 +42,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             descriptionValue = (TextView)view.findViewById(R.id.descValue);
 
-            changeFirstName = (ImageButton)view.findViewById(R.id.changeFirstName);
 
 
         }

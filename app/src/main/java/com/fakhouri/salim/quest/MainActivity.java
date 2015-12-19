@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     /* Listener for Firebase session changes */
     private Firebase.AuthStateListener mAuthStateListener;
 
-    private Firebase ref;
-    private Firebase userRef;
+    public static Firebase ref;
+    public static Firebase userRef;
     public static User myUser = null;
     public static Bitmap userImageStatic = null;
 
@@ -196,6 +196,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // check image
+        if(UserProfile.imageHasChanged){
+
+            String sImage = myUser.getUserImage();
+            // convert string to bitmap and assign it
+            Bitmap bitmap = myUser.stringToBitmap(sImage);
+            headerImage.setImageBitmap(bitmap);
+
+            // assig it again to static
+            userImageStatic = bitmap;
+            // set it back to false
+            UserProfile.imageHasChanged = false;
+            //Log.e("imagechanged","changed");
+        }else{
+            //Log.e("imagechanged","not changed");
+        }
+
+
+    }
+
     private void setAuthenticatedUser(AuthData authData) {
         if(authData != null){
 
@@ -216,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         this.mAuthData = authData;
     }
 
-
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -238,4 +261,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    */
 }

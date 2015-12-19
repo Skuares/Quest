@@ -19,7 +19,8 @@
     <color name="black_trans80">#14000000</color>
 
     <color name="indicator_unselected">#4D000000</color>
-
+    <color name="clouds">#fbfcfc</color>
+    <color name="black">#000</color>
 
     <color name="blue_grey">#455A64</color>
     <color name="red">#F44336</color>

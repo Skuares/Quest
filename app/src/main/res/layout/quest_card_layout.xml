@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/questCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/clouds">
+
+        <RelativeLayout
+            android:id="@+id/questContainerInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <ImageView
+                android:id="@+id/questImage"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:src="@drawable/download"
+                android:scaleType="fitXY"/>
+
+            <TextView
+                android:id="@+id/questTitle"
+                android:text="Title Goes here"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:maxLines="1"
+                android:minLines="1"
+                android:ems="@android:integer/config_longAnimTime"
+                android:padding="3dp"
+                android:textColor="@color/wet"
+                android:layout_margin="4dp"
+                android:layout_below="@+id/questImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_margin="8dp"
+                android:id="@+id/questUserImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/placeholder"
+                android:layout_below="@+id/questTitle"/>
+
+            <TextView
+                android:id="@+id/quuestDescription"
+                android:text="Description goes here oausf oaishf aosihf asi aishf a aisfp aishf pasf pasfaspif apsfh pasfh pasfh pa apsf "
+                android:textSize="18sp"
+                android:layout_toRightOf="@id/questUserImage"
+                android:layout_alignTop="@+id/questUserImage"
+                android:maxLines="3"
+                android:paddingRight="4dp"
+                android:minLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/questUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="By SalimFakhouri"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_below="@+id/questUserImage"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:layout_alignLeft="@+id/questUserImage"
+                />
+
+            <TextView
+                android:id="@+id/questCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12RM/3H"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_below="@+id/questUserImage"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:padding="2dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignBaseline="@+id/questUserName"/>
+
+            <LinearLayout
+                android:id="@+id/questActionsContainer"
+                android:layout_below="@+id/questUserName"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/questActionLike"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_like"
+                    android:background="@color/clouds"
+                    android:visibility="gone"
+                    />
+
+                <ImageButton
+                    android:id="@+id/questActionLikeNot"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_favorite"
+                    android:background="@color/clouds"
+                    />
+
+                <ImageButton
+                    android:id="@+id/questActionTake"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@color/clouds"
+                    android:src="@drawable/ic_action_new"
+
+
+                    />
+
+                <ImageButton
+                    android:id="@+id/questActionBroadcast"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_signal"
+                    android:background="@color/clouds"
+                    android:layout_weight="1"
+                    />
+
+                <ImageButton
+                    android:id="@+id/questActionShare"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_share"
+                    android:background="@color/clouds"
+                    android:layout_weight="1"
+                    />
+
+
+
+            </LinearLayout>
+
+
+
+
+
+    </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

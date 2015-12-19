@@ -46,13 +46,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingPicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:src="@drawable/ic_action_new_picture"
         app:layout_anchor="@+id/appbar"
-        android:background="@color/turq"
+        android:backgroundTint="@color/turq"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
         app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>

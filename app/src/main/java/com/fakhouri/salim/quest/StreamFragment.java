@@ -1,7 +1,9 @@
 package com.fakhouri.salim.quest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,5 +20,21 @@ public class StreamFragment extends Fragment {
         View view = inflater.inflate(R.layout.stream_layout,container,false);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fabStream);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // open create quest
+                Intent intentQuest = new Intent(getContext(),CreateQuest.class);
+                startActivity(intentQuest);
+            }
+        });
+
     }
 }

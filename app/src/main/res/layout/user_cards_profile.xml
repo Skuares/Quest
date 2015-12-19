@@ -41,18 +41,6 @@
                 android:layout_toRightOf="@+id/firstnameCard"
                 android:layout_alignBaseline="@+id/firstnameCard"/>
 
-            <ImageButton
-                android:id="@+id/changeFirstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_edit"
-                android:layout_alignParentRight="true"
-                android:padding="4dp"
-
-                android:background="@color/accent_500"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/firstnameCardValue"
-                android:layout_alignBottom="@+id/firstnameCardValue"/>
 
             <TextView
                 android:id="@+id/lastnameCard"
@@ -192,21 +180,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <ImageButton
-                android:id="@+id/changeDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_edit"
-                android:layout_alignParentRight="true"
-                android:padding="4dp"
-                android:background="@color/accent_700"
-                android:layout_alignParentEnd="true"/>
+
 
             <TextView
                 android:id="@+id/descValue"
                 android:layout_below="@+id/description"
-                android:text="hello lasf asfjp asf  apsfj asofj aspofj apsofj  asofj asofj "
-                android:textSize="22sp"
+                android:text="hello la asoffj "
+                android:textSize="18sp"
                 android:padding="16dp"
                 android:textColor="#fff"
                 android:layout_width="match_parent"

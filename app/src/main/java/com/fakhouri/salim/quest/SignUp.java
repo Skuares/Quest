@@ -114,7 +114,7 @@ public class SignUp extends AppCompatActivity {
 
                 User myFirebaseUser = new User(firstName.getText().toString(),
                         lastName.getText().toString(),
-                        username.getText().toString(),
+                        username.getText().toString().trim(),
                         email.getText().toString(),
                         nAge,
                         bitmap
