@@ -24,6 +24,9 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static int REQUEST_CODE= 1;
@@ -38,9 +41,12 @@ public class MainActivity extends AppCompatActivity {
 
     private View headerView;
 
+
+
     /* Data from the authenticated user */
     private AuthData mAuthData;
 
+    public static String uid = null;
     /* Listener for Firebase session changes */
     private Firebase.AuthStateListener mAuthStateListener;
 
@@ -54,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         // check user
         ref = new Firebase(getResources().getString(R.string.firebaseUrl));
         // authinticate user if logged in send him to home
@@ -62,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(AuthData authData) {
 
                 mAuthData = authData;
+
                 setAuthenticatedUser(authData);
             }
         };
@@ -160,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
             // listener for user key
             userRef = ref.child("users").child(mAuthData.getUid());
+            uid = mAuthData.getUid();
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -223,6 +232,8 @@ public class MainActivity extends AppCompatActivity {
         if(authData != null){
 
             retrieveUser();
+
+
             // all good
             //Intent intent = new Intent(MainActivity.this,SignUp.class);
             //startActivity(intent);

@@ -42,13 +42,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             descriptionValue = (TextView)view.findViewById(R.id.descValue);
 
-
-
         }
     }
 
     private User myUser;
     // data is only one user
+
     public UserAdapter(User user) {
         myUser = user;
     }

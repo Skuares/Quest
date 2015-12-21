@@ -9,7 +9,9 @@
     <TextView
         android:id="@+id/todoDesc"
         android:text=""
+        android:textColor="@color/wet"
         android:layout_width="0dp"
+        android:padding="5dp"
         android:textSize="18sp"
         android:layout_weight="4"
         android:layout_height="wrap_content" />
@@ -17,6 +19,7 @@
     <TextView
         android:id="@+id/todoCost"
         android:text=""
+        android:padding="5dp"
         android:textSize="16sp"
         android:textColor="#000"
         android:layout_width="0dp"

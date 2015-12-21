@@ -4,15 +4,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#44f0f0">
+    android:background="@color/clouds">
 
-    <TextView
-        android:id="@+id/textMap"
-        android:textSize="22sp"
-        android:layout_margin="40dp"
-        android:text="Stream goes here"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabStream"

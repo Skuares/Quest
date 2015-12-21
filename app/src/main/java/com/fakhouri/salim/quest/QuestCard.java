@@ -9,7 +9,9 @@ import com.firebase.client.Firebase;
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,9 +39,13 @@ public class QuestCard {
     private double numberOfLikes;
     private double numberOfTakers;
     private double numberOfFollowers;
+    private List<ToDo> todos;
+
+
+    public QuestCard(){}
 
     public QuestCard(Bitmap questImage, String questTitle,String authorId, String questUsername,
-                     String questUserImage, String questDescription, String questCost){
+                     String questUserImage, String questDescription, String questCost,List<ToDo> todos){
 
         this.questImage = bitmapToString(questImage);
         this.questTitle = questTitle;
@@ -57,6 +63,9 @@ public class QuestCard {
         takers = new HashMap<String,Object>();
         followers = new HashMap<String,Object>();
 
+
+        this.todos = new ArrayList<ToDo>();
+        this.todos = todos;
     }
 
     public QuestCard(@JsonProperty("questImage") String questImage,
@@ -69,8 +78,8 @@ public class QuestCard {
                      @JsonProperty("numberOfLikes") double numberOfLikes,
                      @JsonProperty("numberOfTakers") double numberOfTakers,
                      @JsonProperty("numberOfFollowers") double numberOfFollowers,
-                     @JsonProperty("takers") Map<String,Object> takers,
-                     @JsonProperty("followers") Map<String,Object> followers){
+
+                     @JsonProperty("todos") List<ToDo> todos){
 
 
         this.questImage = questImage;
@@ -89,6 +98,7 @@ public class QuestCard {
         this.takers = takers;
         this.followers = followers;
 
+        this.todos = todos;
     }
 
 
@@ -102,7 +112,6 @@ public class QuestCard {
             // STILL IN TEST
             questRef.updateChildren(takers);
         }
-
 
     }
 

@@ -1,5 +1,7 @@
 package com.fakhouri.salim.quest;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,17 +11,26 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.fakhouri.salim.quest.UserProfile.getPath;
 
@@ -28,17 +39,26 @@ import static com.fakhouri.salim.quest.UserProfile.getPath;
  */
 public class CreateQuest extends AppCompatActivity {
 
+
+    public static List<ToDo> todosList;
     private static int REQUEST_CODE= 1;
 
     private Toolbar toolbar;
     Bitmap questImage = null;
     ImageView questImageAdd;
 
+    Button publish;
+
+    private Firebase ref;
+    private Firebase questRef;
+    private Firebase newQuestRef;
+
     TextView questUsernameAdd; // dynamic
     ImageView questUserImageAdd; // dynamic
 
     EditText questTitleAdd;
     EditText questDescriptionAdd;
+    Button addTodos;
 
     private User userQuest;
     @Override
@@ -51,13 +71,36 @@ public class CreateQuest extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        ref = new Firebase(getResources().getString(R.string.firebaseUrl));
+
+        questRef = ref.child("Quests");
+        newQuestRef = questRef.push();
+
+        // initialize the list
+        todosList = new ArrayList<ToDo>();
         // reference
         questImageAdd = (ImageView)findViewById(R.id.questImageAdd);
         questUserImageAdd = (ImageView)findViewById(R.id.questUserImageAdd);
         questUsernameAdd = (TextView)findViewById(R.id.questUserNameAdd);
         questDescriptionAdd = (EditText)findViewById(R.id.questDescriptionAdd);
         questTitleAdd = (EditText)findViewById(R.id.questTitleAdd);
+        publish = (Button)findViewById(R.id.publish);
 
+        addTodos = (Button)findViewById(R.id.addTodos);
+        addTodos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // populate the fragment
+                Fragment fragment = new TodoFragment();
+                android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+                transaction.add(R.id.relative, fragment, "TodoFragment");
+                transaction.addToBackStack("todo");
+                transaction.commit();
+                //Toast.makeText(CreateQuest.this,"clicked",Toast.LENGTH_LONG).show();
+
+            }
+        });
         // get user
         if(MainActivity.myUser != null){
             userQuest = MainActivity.myUser;
@@ -78,6 +121,89 @@ public class CreateQuest extends AppCompatActivity {
                     CreateQuest.this.startActivityForResult(Intent.createChooser(intent, "Complete Action Using"), REQUEST_CODE);
                 }
             });
+
+            publish.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // get info
+                    String questDesc = questDescriptionAdd.getText().toString();
+                    String questTitle = questTitleAdd.getText().toString();
+                    String userImage = userQuest.getUserImage();
+                    String username = userQuest.getUsername();
+
+                    // check list
+                    if(todosList == null || todosList.size() == 0){
+                        Toast.makeText(CreateQuest.this,"You must add a todos",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    // check image
+                    if(questImage == null ){
+                        Toast.makeText(CreateQuest.this,"You must choose a cover photo",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if(questDesc.equals("")){
+                        Toast.makeText(CreateQuest.this,"You must fill the description",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if(questTitle.equals("")){
+                        Toast.makeText(CreateQuest.this,"You must type a title",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    if(MainActivity.uid == null){
+                        Toast.makeText(CreateQuest.this,"You must authenticate",Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    // we need to meausre the cost
+                    double sumMoney = 0;
+                    int hours = 0;
+                    // loop through the list
+                    for(int i = 0; i < todosList.size(); i++){
+
+                        // get the money
+                        sumMoney += todosList.get(i).getMoney();
+                        // get the hours
+                        // convert to int
+                        int convert = Integer.parseInt(todosList.get(i).getTime());
+                        hours += convert;
+                    }
+
+                    String cost = ""+sumMoney+"RM"+" /"+hours+" H";
+                    // setup quest,, ADJUST THE CLASS FIRST BY ADDING LIST OF TODOS TO THE CLASS
+                    QuestCard questCard = new QuestCard(questImage,questTitle,MainActivity.uid,username,userImage,questDesc,cost,todosList);
+                    // SAVE TO FIREBASE
+                    newQuestRef.setValue(questCard);
+
+
+                    // add the list of todos to the questObject
+                    newQuestRef.child("todos").setValue(todosList);
+
+                    // DO WE NEED TO SET UP THE FOLLOWERS MAP AND TRAKERS MAP FROM NOW!!!!
+                    // YES WE DO BECAUSE I EXPECT TO RECEIVE THEM IN JSON PROPERTY
+
+                    // DID NOT WORK OUT IT HAS TO HAVE SOME DATA
+                    /*
+                    // it is a map let try making it empty
+                    Map<String,Object> takersMap = new HashMap<String, Object>();
+                    // empty for now
+                    newQuestRef.child("takers").setValue(takersMap);
+
+                    // let's set up the same for followers
+                    Map<String,Object> followersMap = new HashMap<String, Object>();
+                    // empty for now
+                    newQuestRef.child("followers").setValue(takersMap);
+                    */
+
+                    // end the task and give feedback
+                    Toast.makeText(CreateQuest.this,"Success",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+
+
 
         }else{
             // not allowed

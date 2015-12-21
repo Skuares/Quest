@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,127 +15,124 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="Quest" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/questCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="5dp"
-        app:cardCornerRadius="16dp"
-        app:cardBackgroundColor="@color/clouds">
 
-        <ScrollView
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/questCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <RelativeLayout
-                android:id="@+id/questContainerInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                >
-
-                <ImageView
-                    android:id="@+id/questImageAdd"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:src="@drawable/books"
-                    android:clickable="true"
-                    android:scaleType="fitXY"
-                    />
-
-                <EditText
-                    android:id="@+id/questTitleAdd"
-                    android:hint="Type Your Title"
-                    android:gravity="center"
-                    android:textSize="22sp"
-                    android:maxLines="1"
-                    android:minLines="1"
-
-                    android:ems="@android:integer/config_longAnimTime"
-                    android:padding="13dp"
-                    android:textColor="@color/wet"
-                    android:layout_marginTop="10dp"
-                    android:layout_below="@+id/questImageAdd"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <ImageView
-                    android:layout_margin="8dp"
-                    android:id="@+id/questUserImageAdd"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/placeholder"
-                    android:layout_below="@+id/questTitleAdd"/>
-
-                <EditText
-                    android:id="@+id/questDescriptionAdd"
-                    android:hint="Type Description"
-                    android:textSize="18sp"
-                    android:layout_toRightOf="@id/questUserImageAdd"
-                    android:layout_alignTop="@+id/questUserImageAdd"
-                    android:maxLines="3"
-                    android:paddingRight="4dp"
-                    android:minLines="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/questUserNameAdd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="By SalimFakhouri"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    android:layout_below="@+id/questUserImageAdd"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
-                    android:layout_alignLeft="@+id/questUserImageAdd"
-                    />
-
-
-
-            </RelativeLayout>
-        </ScrollView>
-
-    </android.support.v7.widget.CardView>
-
-    <ListView
-        android:layout_below="@+id/questCard"
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </ListView>
-
-    <LinearLayout
-        android:id="@+id/containButtons"
-        android:layout_marginTop="12dp"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:background="@color/wet"
-            android:textColor="#fff"
-            android:text="Cancel"/>
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="5dp"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="@color/clouds">
 
-        <Button
-            android:id="@+id/next"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="@color/turq"
-            android:text="Next"
-            android:layout_height="wrap_content" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
 
-    </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/questContainerInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/questImageAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:src="@drawable/books"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        />
+
+                    <EditText
+                        android:id="@+id/questTitleAdd"
+                        android:hint="Type Your Title"
+                        android:gravity="center"
+                        android:textSize="22sp"
+                        android:maxLines="1"
+                        android:minLines="1"
+
+                        android:ems="@android:integer/config_longAnimTime"
+                        android:padding="13dp"
+                        android:textColor="@color/wet"
+                        android:layout_marginTop="10dp"
+                        android:layout_below="@+id/questImageAdd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <ImageView
+                        android:layout_margin="8dp"
+                        android:id="@+id/questUserImageAdd"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/placeholder"
+                        android:layout_below="@+id/questTitleAdd"/>
+
+                    <EditText
+                        android:id="@+id/questDescriptionAdd"
+                        android:hint="Type Description"
+                        android:textSize="18sp"
+                        android:layout_toRightOf="@id/questUserImageAdd"
+                        android:layout_alignTop="@+id/questUserImageAdd"
+                        android:maxLines="3"
+                        android:paddingRight="4dp"
+                        android:minLines="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/questUserNameAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="By SalimFakhouri"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:layout_below="@+id/questUserImageAdd"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:layout_alignLeft="@+id/questUserImageAdd"
+                        />
+
+
+
+                </RelativeLayout>
+            </ScrollView>
+
+        </android.support.v7.widget.CardView>
+
+
+
+        <LinearLayout
+            android:id="@+id/containButtons"
+            android:layout_marginTop="12dp"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/publish"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@color/accent_500"
+                android:textColor="#fff"
+                android:text="Publish"/>
+
+            <Button
+                android:id="@+id/addTodos"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@color/turq"
+                android:text="Add Todos"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
 
 </RelativeLayout>

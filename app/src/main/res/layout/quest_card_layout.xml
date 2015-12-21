@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-
+    android:layout_marginBottom="12dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -52,7 +52,7 @@
                 android:layout_below="@+id/questTitle"/>
 
             <TextView
-                android:id="@+id/quuestDescription"
+                android:id="@+id/questDescription"
                 android:text="Description goes here oausf oaishf aosihf asi aishf a aisfp aishf pasf pasfaspif apsfh pasfh pasfh pa apsf "
                 android:textSize="18sp"
                 android:layout_toRightOf="@id/questUserImage"
@@ -149,9 +149,6 @@
 
 
             </LinearLayout>
-
-
-
 
 
     </RelativeLayout>
