@@ -2,6 +2,7 @@ package com.fakhouri.salim.quest;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
@@ -26,6 +27,9 @@ public class User {
     private String description;
     private int age;
     private String userImage;
+
+
+
 
     public User(){}
 
@@ -234,21 +238,53 @@ public class User {
 
     }
 
+    class SaveImageInBackground extends AsyncTask<Object,Void,String>{
 
-    public void setUserImage(Bitmap bitmapUserImage, Firebase userRef) {
+        private String data;
+        private Firebase firebase;
+        @Override
+        protected String doInBackground(Object... params) {
 
-        // call bitmapToString
-        if(bitmapUserImage != null){
-            String stringUserImage = bitmapToString(bitmapUserImage);
-            this.userImage = stringUserImage;
+            data = (String)params[0];
+            firebase = (Firebase)params[1];
+            // compress it
+            Bitmap bitmap = LoadImageFromPath.decodeSampledBitmapFromPath(data, 100, 100);
+            // convert to string
+            String stringUserImage = bitmapToString(bitmap);
 
+            // save
             // save to firebase
             Map<String,Object> map = new HashMap<String,Object>();
-            map.put("userImage",userImage);
-            userRef.updateChildren(map);
+            map.put("userImage",stringUserImage);
+            firebase.updateChildren(map);
+
+            return stringUserImage;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            // set the value
+            userImage = s;
+
+        }
+    }
+
+    public void setUserImage(String filePath, Firebase userRef) {
+
+        // call bitmapToString
+        if(filePath != null && userRef != null){
+
+            // call the async
+            SaveImageInBackground  saveImageInBackground = new SaveImageInBackground();
+            saveImageInBackground.execute(filePath,userRef);
+
+
         }else{
             Log.e("UserError","bitmap is null");
         }
 
     }
+
+
 }

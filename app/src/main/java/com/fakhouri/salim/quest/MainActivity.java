@@ -219,7 +219,9 @@ public class MainActivity extends AppCompatActivity {
             // assig it again to static
             userImageStatic = bitmap;
             // set it back to false
-            UserProfile.imageHasChanged = false;
+
+            // refresh the stream Fragment
+
             //Log.e("imagechanged","changed");
         }else{
             //Log.e("imagechanged","not changed");

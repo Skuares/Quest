@@ -71,6 +71,8 @@ public class TodoFragment extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // FILTER THE VALUES
                 // get the values and set up to do object
                 String desc = addDesc.getText().toString();
                 String time = addTime.getText().toString();

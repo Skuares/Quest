@@ -40,6 +40,10 @@ public class EditProfile extends AppCompatActivity {
                 if (MainActivity.myUser != null) {
                     // get the value of the editText
                     String value = changeFirst.getText().toString();
+                    if(value.equals("")){
+                        Toast.makeText(EditProfile.this,"Cannot be empty",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     MainActivity.myUser.setFirstName(value, MainActivity.userRef);
                     Toast.makeText(EditProfile.this, "first name has been changed", Toast.LENGTH_LONG).show();
                 } else {
@@ -64,6 +68,10 @@ public class EditProfile extends AppCompatActivity {
                 if(MainActivity.myUser != null){
                     // get the value of the editText
                     String value = changeDescription.getText().toString();
+                    if(value.equals("")){
+                        Toast.makeText(EditProfile.this,"Cannot be empty",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     MainActivity.myUser.setDescription(value, MainActivity.userRef);
                     Toast.makeText(EditProfile.this,"Description has been changed",Toast.LENGTH_LONG).show();
                 }else{
@@ -78,6 +86,10 @@ public class EditProfile extends AppCompatActivity {
                 if(MainActivity.myUser != null){
                     // get the value of the editText
                     String value = changeLast.getText().toString();
+                    if(value.equals("")){
+                        Toast.makeText(EditProfile.this,"Cannot be empty",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     MainActivity.myUser.setLastName(value, MainActivity.userRef);
                     Toast.makeText(EditProfile.this,"last name has been changed",Toast.LENGTH_LONG).show();
                 }else{
@@ -92,6 +104,10 @@ public class EditProfile extends AppCompatActivity {
                 if(MainActivity.myUser != null){
                     // get the value of the editText
                     String value = changeUsername.getText().toString().trim();
+                    if(value.equals("")){
+                        Toast.makeText(EditProfile.this,"Cannot be empty",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     MainActivity.myUser.setUsername(value, MainActivity.userRef);
                     Toast.makeText(EditProfile.this,"Username has been changed",Toast.LENGTH_LONG).show();
                 }else{
@@ -106,6 +122,10 @@ public class EditProfile extends AppCompatActivity {
                 if(MainActivity.myUser != null){
                     // get the value of the editText
                     String value = changeAge.getText().toString();
+                    if(value.equals("")){
+                        Toast.makeText(EditProfile.this,"Cannot be empty",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     int myAge = Integer.parseInt(value);
                     MainActivity.myUser.setAge(myAge, MainActivity.userRef);
                     Toast.makeText(EditProfile.this,"Age has been changed",Toast.LENGTH_LONG).show();

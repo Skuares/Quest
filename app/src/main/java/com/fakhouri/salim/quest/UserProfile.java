@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -46,6 +47,8 @@ public class UserProfile extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbarLayout;
     int mutedColor = R.attr.colorPrimary;
 
+    LoadImageFromPath loadImageFromPath;
+
     private User mUser;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -58,7 +61,7 @@ public class UserProfile extends AppCompatActivity {
 
         setContentView(R.layout.user_profile);
 
-
+        loadImageFromPath = new LoadImageFromPath(this);
 
         toolbar = (Toolbar)findViewById(R.id.anim_toolbar);
         setSupportActionBar(toolbar);
@@ -145,7 +148,7 @@ public class UserProfile extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
 
 
@@ -182,20 +185,33 @@ public class UserProfile extends AppCompatActivity {
                     InputStream input;
                     Bitmap bitmap;
                     String picturePath = getPath(UserProfile.this, selectedImage);
+                    // call loading image
+                    loadImageFromPath.loadBitmap(picturePath,header);
+
+                    // CALL SAVE IMAGE
+                    mUser.setUserImage(picturePath, MainActivity.userRef);
+                    // let main activity know that image has changed
+                    imageHasChanged = true;
+
+                    /*
+
                     try {
                         input = UserProfile.this.getContentResolver().openInputStream(
                                 selectedImage);
                         bitmap = BitmapFactory.decodeStream(input);
+
                         header.setImageBitmap(bitmap);
 
-                        // save to firebase
-                        saveImageToFirebase(picturePath);
+                        saveImageToFirebase(bitmap);
 
 
                     } catch (FileNotFoundException e1) {
                         Toast.makeText(UserProfile.this, e1.getMessage(), Toast.LENGTH_LONG).show();
 
                     }
+
+                    */
+
                 } else {
 
                     DoTheJobInBackgroud hello = new DoTheJobInBackgroud();
@@ -212,12 +228,11 @@ public class UserProfile extends AppCompatActivity {
         }
     }
 
-    public void saveImageToFirebase(String path){
+    /*
+    public void saveImageToFirebase(Bitmap bitmap){
 
-        if(path != null && mUser != null){
-            // convert to bitmap
-            Bitmap bitmap = BitmapFactory
-                    .decodeFile(path);
+        if(bitmap != null && mUser != null){
+
 
             // call user method to setUserImage
             mUser.setUserImage(bitmap,MainActivity.userRef);
@@ -232,6 +247,7 @@ public class UserProfile extends AppCompatActivity {
 
 
     }
+    */
 
     private class DoTheJobInBackgroud extends AsyncTask<Intent, Void, String> {
 
@@ -269,9 +285,21 @@ public class UserProfile extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (s != null) {
+                // Here apply bitmap stuff
+                loadImageFromPath.loadBitmap(s,header);
+
+                // THINK OF SAVING IMAGE
+                // CALL SAVE IMAGE
+                mUser.setUserImage(s,MainActivity.userRef);
+                // let main activity know that image has changed
+                imageHasChanged = true;
+
+                /*
                 Bitmap bitmap = BitmapFactory.decodeFile(s);
                 header.setImageBitmap(bitmap);
-                saveImageToFirebase(s);
+                saveImageToFirebase(bitmap);
+
+                */
 
 
             } else {

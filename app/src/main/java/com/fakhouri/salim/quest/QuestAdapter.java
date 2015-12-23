@@ -47,11 +47,15 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
 
 
     private List<QuestCard> list;
-    public QuestAdapter(List<QuestCard> questCards){
+    private LoadImageFromString loadImageFromString;
+    private LoadImageFromString loadImageFromString2;
+    String stringImage;
+    String userImage;
+    public QuestAdapter(List<QuestCard> questCards, LoadImageFromString loadImageFromString,LoadImageFromString loadImageFromString2){
 
         this.list = questCards;
-
-
+        this.loadImageFromString = loadImageFromString;
+        this.loadImageFromString2 = loadImageFromString2;
     }
 
 
@@ -71,11 +75,24 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
             return;
         }
 
-        holder.questImage.setImageBitmap(list.get(position).stringToBitmap(list.get(position).getQuestImage()));
+        stringImage = list.get(position).getQuestImage();
+        // pass it to load
+        loadImageFromString.loadBitmapFromString(stringImage, holder.questImage);
+
+        // ABOVE IS MORE EFFICIENT holder.questImage.setImageBitmap(list.get(position).stringToBitmap(list.get(position).getQuestImage()));
+
         holder.questTitle.setText(list.get(position).getQuestTitle());
-        holder.questUserImage.setImageBitmap(list.get(position).stringToBitmap(list.get(position).getQuestUserImage()));
-        holder.questDescription.setText(list.get(position).getQuestDescription());
+
+        // get them from users .. WE GOT THEM
+        userImage = list.get(position).getQuestUserImage();
+
+        loadImageFromString2.loadBitmapFromString(userImage,holder.questUserImage);
+
+        //holder.questUserImage.setImageBitmap(list.get(position).stringToBitmap(list.get(position).getQuestUserImage()));
         holder.questUsername.setText("By "+list.get(position).getQuestUsername());
+
+        holder.questDescription.setText(list.get(position).getQuestDescription());
+
         holder.questCost.setText(list.get(position).getQuestCost());
 
 

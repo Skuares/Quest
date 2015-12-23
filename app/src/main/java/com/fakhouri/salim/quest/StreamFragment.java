@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -25,8 +26,13 @@ import java.util.List;
  */
 public class StreamFragment extends Fragment {
 
-    private Firebase ref;
-    private Firebase questRef;
+    // identify the caller
+    int onResumeCaller = 100;
+    int onCreateCaller = 1;
+
+
+    private LoadImageFromString loadImageFromString;
+    private LoadImageFromString loadImageFromString2;
 
     public static List<QuestCard> questCards = null;
     private User mUser;
@@ -37,41 +43,294 @@ public class StreamFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // attach listener
 
-        // ensure this gets called once
+        loadImageFromString = new LoadImageFromString(getContext());
+        loadImageFromString2 = new LoadImageFromString(getContext());
+        // attach listener
+        Log.e("onchildadded", "ON CREATE IS CALLED");
+
+
+        // ensure fetch is called only once ,, otherwise the listener is set multiple times;
         if(questCards == null){
-            questCards = new ArrayList<QuestCard>();
-            Firebase questRef = new Firebase("https://quest1.firebaseio.com/Quests");
-            // attach listener
-            questRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            fetchData(onCreateCaller);
+        }
+
+        //Log.e("assigned", "I am here on create");
+    }
+
+    private void fetchData(int caller){
+        questCards = new ArrayList<QuestCard>();
+
+
+        final Firebase questRef = new Firebase("https://quest1.firebaseio.com/Quests");
+        final Firebase[] usersRef = new Firebase[1];
+
+
+        final User[] user = new User[1];
+        final String[] userImage = new String[1];
+        final String[] username = new String[1];
+        final QuestCard[] adapterQuest = new QuestCard[1];
+
+        final int[] numberOfLoops = {0};
+
+        // we need an array of quests and an incrementer to keep track of the quests
+        // otherwise last item is duplicated
+        final int[] increment = {0};
+        final List<QuestCard> questCardsHolders = new ArrayList<QuestCard>();
+        // attach listener for childs approach
+        final int[] i = {0};
+
+
+        // determine the caller
+        if(caller == 1){
+            questRef.addChildEventListener(new ChildEventListener() {
+                QuestCard fireQuest;
+
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    QuestCard post;
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        post = postSnapshot.getValue(QuestCard.class);
-                        // add it to the list
-                        questCards.add(post);
-                    }
-                    //
-                    Log.e("assigned", "list is ready");
-                    adapter = new QuestAdapter(questCards);
-                    recyclerView.setAdapter(adapter);
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    // gets called each time we add a new quest
+                    // and gets called for every item
+
+
+                    Log.e("onchildadded", "I AM CALLED");
+
+                    fireQuest = dataSnapshot.getValue(QuestCard.class);
+
+                    // track
+                    questCardsHolders.add(fireQuest);
+
+
+                    increment[0]++;
+
+                    // get user image and username
+                    String author = fireQuest.getAuthorId();
+                    usersRef[0] = new Firebase("https://quest1.firebaseio.com/users/" + author);
+                    // attach listener
+                    usersRef[0].addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            user[0] = dataSnapshot.getValue(User.class);
+                            userImage[0] = user[0].getUserImage();
+                            username[0] = user[0].getUsername();
+
+                            // use the full data constructor
+                            adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos());
+                            // increment i so we the next one next time
+                            i[0] = i[0] + 1;
+                            //Log.e("onchild",String.valueOf(i[0]));
+                            // add it to the list
+
+                            questCards.add(adapterQuest[0]);
+                            Log.e("onchild", "I AM ADDED");
+
+                            // ensure it gets called once
+                            if (increment[0] == questCards.size()) {
+                                // call the adapter
+                                Log.e("onchild", "adapter gets called");
+                                adapter = new QuestAdapter(questCards, loadImageFromString, loadImageFromString2);
+                                recyclerView.setAdapter(adapter);
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+
+                }
+
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
                 }
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
+
                 }
             });
 
 
 
+        /*
+        questRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                // THIS GETS CALLED EVERY TIME WE ADD A QUEST
+                Log.e("IAMCALLED","I AM CALLED");
+                //Log.e("loops","DATA"+dataSnapshot.getChildrenCount());
+                // set the int
+                numberOfLoops[0] = (int)dataSnapshot.getChildrenCount();
+
+                //Log.e("assigned","now on data change");
+                QuestCard post;
+                // flush the list
+                questCards.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    post = postSnapshot.getValue(QuestCard.class);
+
+                        /*
+                        strategy: use nested listener to obtain user's image and user's username
+                        WHY WE DO THIS
+                        if user changes his profile picture or changes his username
+                        the data in the quest will be consistent
+                        otherwise if we save the user's image and user's name along with the quest
+                        the data won't be able to be changed then
+                         */
+            /*
+                    String author = post.getAuthorId();
+                    usersRef[0] = new Firebase("https://quest1.firebaseio.com/users/"+author);
+                    // attach listener to user's ref
+                    final QuestCard finalPost = post;
+                    usersRef[0].addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            user[0] = dataSnapshot.getValue(User.class);
+                            userImage[0] = user[0].getUserImage();
+                            username[0] = user[0].getUsername();
+
+                            // use the full data constructor
+                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos());
+                            // add it to the list
+
+                            questCards.add(adapterQuest[0]);
+
+                            // determine last time we loop
+
+                            int i = numberOfLoops[0];
+                            if (questCards.size() == i) {
+                                Log.e("assigned", "list is ready");
+                                adapter = new QuestAdapter(questCards, loadImageFromString, loadImageFromString2);
+                                recyclerView.setAdapter(adapter);
+
+                            }
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+
+                }
+                //
+                //Log.e("assigned", "list is ready");
+                //adapter = new QuestAdapter(questCards,loadImageFromString,loadImageFromString2);
+                //recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        */
+        }else if (caller == 100){
+            // fetch data once
+            questRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    // THIS GETS CALLED once
+                    //Log.e("IAMCALLED","I AM CALLED");
+                    //Log.e("loops","DATA"+dataSnapshot.getChildrenCount());
+                    // set the int
+                    numberOfLoops[0] = (int)dataSnapshot.getChildrenCount();
+
+                    //Log.e("assigned","now on data change");
+                    QuestCard post;
+                    // flush the list
+                    questCards.clear();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        post = postSnapshot.getValue(QuestCard.class);
+
+                        /*
+                        strategy: use nested listener to obtain user's image and user's username
+                        WHY WE DO THIS
+                        if user changes his profile picture or changes his username
+                        the data in the quest will be consistent
+                        otherwise if we save the user's image and user's name along with the quest
+                        the data won't be able to be changed then
+                         */
+
+                    String author = post.getAuthorId();
+                    usersRef[0] = new Firebase("https://quest1.firebaseio.com/users/"+author);
+                    // attach listener to user's ref
+                    final QuestCard finalPost = post;
+                    usersRef[0].addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            user[0] = dataSnapshot.getValue(User.class);
+                            userImage[0] = user[0].getUserImage();
+                            username[0] = user[0].getUsername();
+
+                            // use the full data constructor
+                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos());
+                            // add it to the list
+
+                            questCards.add(adapterQuest[0]);
+
+                            // determine last time we loop
+
+                            int i = numberOfLoops[0];
+                            if (questCards.size() == i) {
+                                Log.e("assigned", "list is ready");
+                                adapter = new QuestAdapter(questCards, loadImageFromString, loadImageFromString2);
+                                recyclerView.setAdapter(adapter);
+
+                            }
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+
+                }
+                //
+                //Log.e("assigned", "list is ready");
+                //adapter = new QuestAdapter(questCards,loadImageFromString,loadImageFromString2);
+                //recyclerView.setAdapter(adapter);
+
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
         }
 
 
-        Log.e("assigned", "I am here on create");
     }
 
     @Nullable
@@ -90,13 +349,11 @@ public class StreamFragment extends Fragment {
 
 
         if(questCards != null){
-            adapter = new QuestAdapter(questCards);
+            adapter = new QuestAdapter(questCards,loadImageFromString,loadImageFromString2);
             recyclerView.setAdapter(adapter);
             Log.e("assigned", "adapter gets called and finishing on activity");
 
         }
-
-
 
         return view;
     }
@@ -122,4 +379,18 @@ public class StreamFragment extends Fragment {
     }
 
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(UserProfile.imageHasChanged){
+
+            fetchData(onResumeCaller);
+
+            UserProfile.imageHasChanged = false;
+
+        }
+
+    }
 }

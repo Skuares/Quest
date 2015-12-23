@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,6 +50,13 @@ public class CreateQuest extends AppCompatActivity {
 
     Button publish;
 
+    // boolean to check if user has set an image
+    boolean userChooseImage = false;
+
+    LoadImageFromPath loadImageFromPath;
+
+    private String pathString = null;
+
     private Firebase ref;
     private Firebase questRef;
     private Firebase newQuestRef;
@@ -61,6 +69,11 @@ public class CreateQuest extends AppCompatActivity {
     Button addTodos;
 
     private User userQuest;
+
+    String cost = "";
+    String questDesc = "";
+    String questTitle = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +89,8 @@ public class CreateQuest extends AppCompatActivity {
         questRef = ref.child("Quests");
         newQuestRef = questRef.push();
 
+
+        loadImageFromPath = new LoadImageFromPath(this);
         // initialize the list
         todosList = new ArrayList<ToDo>();
         // reference
@@ -126,10 +141,8 @@ public class CreateQuest extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // get info
-                    String questDesc = questDescriptionAdd.getText().toString();
-                    String questTitle = questTitleAdd.getText().toString();
-                    String userImage = userQuest.getUserImage();
-                    String username = userQuest.getUsername();
+                    questDesc = questDescriptionAdd.getText().toString();
+                    questTitle = questTitleAdd.getText().toString();
 
                     // check list
                     if(todosList == null || todosList.size() == 0){
@@ -138,10 +151,12 @@ public class CreateQuest extends AppCompatActivity {
                     }
 
                     // check image
-                    if(questImage == null ){
+
+                    if(userChooseImage == false ){
                         Toast.makeText(CreateQuest.this,"You must choose a cover photo",Toast.LENGTH_LONG).show();
                         return;
                     }
+
 
                     if(questDesc.equals("")){
                         Toast.makeText(CreateQuest.this,"You must fill the description",Toast.LENGTH_LONG).show();
@@ -171,31 +186,20 @@ public class CreateQuest extends AppCompatActivity {
                         hours += convert;
                     }
 
-                    String cost = ""+sumMoney+"RM"+" /"+hours+" H";
-                    // setup quest,, ADJUST THE CLASS FIRST BY ADDING LIST OF TODOS TO THE CLASS
-                    QuestCard questCard = new QuestCard(questImage,questTitle,MainActivity.uid,username,userImage,questDesc,cost,todosList);
-                    // SAVE TO FIREBASE
+                    cost = ""+sumMoney+"RM"+" /"+hours+" H";
+
+                    // setup quest
+                    GetCompressedImageThenSave getCompressedImageThenSave = new GetCompressedImageThenSave();
+                    getCompressedImageThenSave.execute(pathString,100,100);
+
+
+                    /*
                     newQuestRef.setValue(questCard);
-
-
                     // add the list of todos to the questObject
                     newQuestRef.child("todos").setValue(todosList);
-
-                    // DO WE NEED TO SET UP THE FOLLOWERS MAP AND TRAKERS MAP FROM NOW!!!!
-                    // YES WE DO BECAUSE I EXPECT TO RECEIVE THEM IN JSON PROPERTY
-
-                    // DID NOT WORK OUT IT HAS TO HAVE SOME DATA
-                    /*
-                    // it is a map let try making it empty
-                    Map<String,Object> takersMap = new HashMap<String, Object>();
-                    // empty for now
-                    newQuestRef.child("takers").setValue(takersMap);
-
-                    // let's set up the same for followers
-                    Map<String,Object> followersMap = new HashMap<String, Object>();
-                    // empty for now
-                    newQuestRef.child("followers").setValue(takersMap);
                     */
+
+
 
                     // end the task and give feedback
                     Toast.makeText(CreateQuest.this,"Success",Toast.LENGTH_SHORT).show();
@@ -209,6 +213,42 @@ public class CreateQuest extends AppCompatActivity {
             // not allowed
         }
 
+    }
+
+
+    class GetCompressedImageThenSave extends AsyncTask<Object,Void,Bitmap>{
+
+        private String path;
+        private int reqW = 100;
+        private int reqH = 100;
+
+
+        @Override
+        protected Bitmap doInBackground(Object... params) {
+            path = (String)params[0];
+            reqW = (int) params[1];
+            reqH = (int) params[2];
+
+            Bitmap bitmap = LoadImageFromPath.decodeSampledBitmapFromPath(path,reqW,reqH);
+
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            questImage = bitmap;
+
+            // now call save quest from here
+
+
+            QuestCard questCard = new QuestCard(questImage,questTitle,MainActivity.uid,questDesc,cost,todosList);
+            // SAVE TO FIREBASE
+            SaveQuest saveQuest = new SaveQuest();
+            saveQuest.execute(questCard,newQuestRef);
+
+        }
     }
 
     @Override
@@ -227,6 +267,11 @@ public class CreateQuest extends AppCompatActivity {
                     InputStream input;
                     Bitmap bitmap;
                     String picturePath = getPath(CreateQuest.this, selectedImage);
+                    loadImageFromPath.loadBitmap(picturePath, questImageAdd);
+                    userChooseImage = true;
+                    pathString = picturePath;
+
+                    /*
                     try {
                         input = CreateQuest.this.getContentResolver().openInputStream(
                                 selectedImage);
@@ -240,6 +285,7 @@ public class CreateQuest extends AppCompatActivity {
                         Toast.makeText(CreateQuest.this, e1.getMessage(), Toast.LENGTH_LONG).show();
 
                     }
+                    */
                 } else {
 
                     DoInBackgroud hello = new DoInBackgroud();
@@ -255,6 +301,28 @@ public class CreateQuest extends AppCompatActivity {
                     .show();
         }
     }
+
+    private class SaveQuest extends AsyncTask<Object,Void,Void>{
+
+        private QuestCard questCard = null;
+        private Firebase firebaseQuest = null;
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            questCard = (QuestCard)params[0];
+            firebaseQuest = (Firebase)params[1];
+
+            firebaseQuest.setValue(questCard);
+            // add todos
+            firebaseQuest.child("todos").setValue(todosList);
+
+
+            return null;
+        }
+
+
+    }
+
 
     private class DoInBackgroud extends AsyncTask<Intent, Void, String> {
 
@@ -292,10 +360,18 @@ public class CreateQuest extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if (s != null) {
+
+                loadImageFromPath.loadBitmap(s,questImageAdd);
+
+                userChooseImage = true;
+                pathString = s;
+
+                /*
                 Bitmap bitmap = BitmapFactory.decodeFile(s);
                 questImage = bitmap;
                 questImageAdd.setImageBitmap(bitmap);
-                //saveImageToFirebase(s);
+                */
+
 
 
             } else {

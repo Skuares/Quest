@@ -24,8 +24,11 @@ public class QuestCard {
     private String questImage;
     private String questTitle;
     private String authorId;
+
+    // used when retrieving user image and user username
     private String questUsername; // generated dynamically
     private String questUserImage; // generated dynamically... receive it as a string it is okay
+
     private String questDescription;
 
     // user id as a key in the map, value boolean!!!
@@ -41,17 +44,52 @@ public class QuestCard {
     private double numberOfFollowers;
     private List<ToDo> todos;
 
+    // another constructor to use when we get the user's image and user's username
+    public  QuestCard(String questImage, String questTitle,String authorId,
+                      String questUsername,
+                      String questUserImage,
+                      String questDescription, String questCost,List<ToDo> todos){
 
+        this.questImage = questImage;
+        this.questTitle = questTitle;
+        this.authorId = authorId;
+
+
+        // must get it from users reference in firebase
+        this.questUsername = questUsername;
+        this.questUserImage = questUserImage;
+
+
+        this.questDescription = questDescription;
+        this.questCost = questCost;
+
+        this.numberOfLikes = 0;
+        this.numberOfTakers = 0;
+        this.numberOfFollowers = 0;
+
+        // initialize the maps
+        takers = new HashMap<String,Object>();
+        followers = new HashMap<String,Object>();
+
+
+        this.todos = new ArrayList<ToDo>();
+        this.todos = todos;
+
+    }
     public QuestCard(){}
 
-    public QuestCard(Bitmap questImage, String questTitle,String authorId, String questUsername,
-                     String questUserImage, String questDescription, String questCost,List<ToDo> todos){
+    // to save the quest
+    public QuestCard(Bitmap questImage, String questTitle,String authorId,
+                     String questDescription, String questCost,List<ToDo> todos){
 
         this.questImage = bitmapToString(questImage);
         this.questTitle = questTitle;
         this.authorId = authorId;
-        this.questUsername = questUsername;
-        this.questUserImage = questUserImage;
+
+        // must get it from users reference in firebase
+        //this.questUsername = questUsername;
+        //this.questUserImage = questUserImage;
+
         this.questDescription = questDescription;
         this.questCost = questCost;
 
@@ -71,8 +109,7 @@ public class QuestCard {
     public QuestCard(@JsonProperty("questImage") String questImage,
                      @JsonProperty("questTitle") String questTitle,
                      @JsonProperty("authorId") String authorId,
-                     @JsonProperty("questUsername") String questUsername,
-                     @JsonProperty("questUserImage") String questUserImage,
+
                      @JsonProperty("questDescription") String questDescription,
                      @JsonProperty("questCode") String questCost,
                      @JsonProperty("numberOfLikes") double numberOfLikes,
@@ -85,8 +122,8 @@ public class QuestCard {
         this.questImage = questImage;
         this.questTitle = questTitle;
         this.authorId = authorId;
-        this.questUsername = questUsername;
-        this.questUserImage = questUserImage;
+       // this.questUsername = questUsername;
+        //this.questUserImage = questUserImage;
         this.questDescription = questDescription;
         this.questCost = questCost;
 
@@ -101,6 +138,9 @@ public class QuestCard {
         this.todos = todos;
     }
 
+    public List<ToDo> getTodos() {
+        return todos;
+    }
 
     // STILL IN DEVELOPMENT .. NOT FINISHED.. STICK WITH IT FOR NOW.. AND THEN DUPLICATE IT TO FOLLOWERS
     public void addTaker(String userId, Firebase questRef){
@@ -126,6 +166,16 @@ public class QuestCard {
             map.put("questImage",stringImage);
             questRef.updateChildren(map);
         }
+    }
+
+    // ONLY FOR ADAPTER
+    public String getQuestUsername() {
+        return questUsername;
+    }
+    // ONLY FOR ADAPTER
+    public String getQuestUserImage() {
+
+        return questUserImage;
     }
 
     public void setQuestTitle(String title, Firebase questRef){
@@ -200,13 +250,13 @@ public class QuestCard {
         return authorId;
     }
 
-    public String getQuestUsername() {
-        return questUsername;
-    }
+    //public String getQuestUsername() {
+      //  return questUsername;
+    //}
 
-    public String getQuestUserImage() {
-        return questUserImage;
-    }
+    //public String getQuestUserImage() {
+      //  return questUserImage;
+    //}
 
     public String getQuestDescription() {
         return questDescription;
