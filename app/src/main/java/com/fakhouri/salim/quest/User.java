@@ -211,6 +211,7 @@ public class User {
 
 
 
+
     public void setEmail(String email, Firebase userRef) {
         if(email != null){
             this.email = email;

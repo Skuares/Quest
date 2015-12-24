@@ -2,10 +2,12 @@ package com.fakhouri.salim.quest;
 
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Created by salim on 12/19/2015.
  */
-public class ToDo {
+public class ToDo implements Serializable{
 
     private String desc;
     private String time;

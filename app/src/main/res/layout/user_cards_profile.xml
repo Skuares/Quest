@@ -10,8 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="8dp"
+        app:cardBackgroundColor="@color/accent_500"
         android:layout_margin="12dp"
-        app:cardBackgroundColor="@color/accent_500">
+        >
 
         <RelativeLayout
             android:id="@+id/contUserInfo"

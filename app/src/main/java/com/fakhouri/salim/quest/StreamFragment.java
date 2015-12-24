@@ -47,7 +47,7 @@ public class StreamFragment extends Fragment {
         loadImageFromString = new LoadImageFromString(getContext());
         loadImageFromString2 = new LoadImageFromString(getContext());
         // attach listener
-        Log.e("onchildadded", "ON CREATE IS CALLED");
+        //Log.e("onchildadded", "ON CREATE IS CALLED");
 
 
         // ensure fetch is called only once ,, otherwise the listener is set multiple times;
@@ -93,7 +93,7 @@ public class StreamFragment extends Fragment {
                     // and gets called for every item
 
 
-                    Log.e("onchildadded", "I AM CALLED");
+                    //Log.e("onchildadded", "I AM CALLED");
 
                     fireQuest = dataSnapshot.getValue(QuestCard.class);
 
@@ -122,13 +122,13 @@ public class StreamFragment extends Fragment {
                             // add it to the list
 
                             questCards.add(adapterQuest[0]);
-                            Log.e("onchild", "I AM ADDED");
+                            //Log.e("onchild", "I AM ADDED");
 
                             // ensure it gets called once
                             if (increment[0] == questCards.size()) {
                                 // call the adapter
-                                Log.e("onchild", "adapter gets called");
-                                adapter = new QuestAdapter(questCards, loadImageFromString, loadImageFromString2);
+                                //Log.e("onchild", "adapter gets called");
+                                adapter = new QuestAdapter(getContext(),questCards, loadImageFromString, loadImageFromString2);
                                 recyclerView.setAdapter(adapter);
                             }
 
@@ -297,8 +297,8 @@ public class StreamFragment extends Fragment {
 
                             int i = numberOfLoops[0];
                             if (questCards.size() == i) {
-                                Log.e("assigned", "list is ready");
-                                adapter = new QuestAdapter(questCards, loadImageFromString, loadImageFromString2);
+                                //Log.e("assigned", "list is ready");
+                                adapter = new QuestAdapter(getContext(),questCards, loadImageFromString, loadImageFromString2);
                                 recyclerView.setAdapter(adapter);
 
                             }
@@ -337,7 +337,7 @@ public class StreamFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stream_layout,container,false);
-        Log.e("assigned","I am here on create view");
+        //Log.e("assigned","I am here on create view");
 
         // set recyle stuff
         recyclerView = (RecyclerView)view.findViewById(R.id.recycleview);
@@ -349,9 +349,9 @@ public class StreamFragment extends Fragment {
 
 
         if(questCards != null){
-            adapter = new QuestAdapter(questCards,loadImageFromString,loadImageFromString2);
+            adapter = new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2);
             recyclerView.setAdapter(adapter);
-            Log.e("assigned", "adapter gets called and finishing on activity");
+            //Log.e("assigned", "adapter gets called and finishing on activity");
 
         }
 
