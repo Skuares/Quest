@@ -12,6 +12,15 @@
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>
+<<<<<<< Updated upstream
+=======
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+          </set>
+        </option>
+>>>>>>> Stashed changes
       </GradleProjectSettings>
     </option>
   </component>
