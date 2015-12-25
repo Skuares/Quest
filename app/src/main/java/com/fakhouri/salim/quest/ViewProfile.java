@@ -162,6 +162,11 @@ public class ViewProfile extends AppCompatActivity {
                         // and delete this user (current) from author's hashmap
                         //Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
                           //      .setAction("Action", null).show();
+
+
+
+
+                        
                     }
 
                 }
