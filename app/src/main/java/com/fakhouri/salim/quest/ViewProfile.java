@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,9 +26,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.Map;
 
-/**
- * Created by salim on 12/24/2015.
- */
+
 public class ViewProfile extends AppCompatActivity {
 
     private ImageView header;
@@ -133,21 +132,42 @@ public class ViewProfile extends AppCompatActivity {
             });
         }
 
-
+        if(mUser != null){
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     Log.e("userStateHello","floating is clicked");
-                    // change the icon
-                    floatingActionButton.setImageResource(R.drawable.ic_action_time);
-                    // request an add friend
+                    /*
+                    check the state of the user
+                     */
+                    if(userState == null){
+                        // change the icon
+                        floatingActionButton.setImageResource(R.drawable.ic_action_time);
+                        // use parse to send a push request an add friend
 
-                    // get inside the pend state (1)
+                        // update the hashmap of this user's friends
+                    }else if(userState == 1){
+                        // pending state
+                        // do not change the icon
+                        // let user know that his request has   been sent
+                        Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }else if(userState == 2){
+                        // you are friened with this user
+                        // onclick , pop up dialog
+                        // ask if you want to unfriend this user
+                        // if so
+                        // delete this user(author) from the hashmap
+                        // and delete this user (current) from author's hashmap
 
+                    }
 
                 }
             });
+        }
+
+
 
 
 
@@ -162,7 +182,7 @@ public class ViewProfile extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             strImageHolder = params[0];
-            Bitmap bitmap = null;
+            Bitmap bitmap;
 
             // decode the string
             try {
