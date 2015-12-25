@@ -159,6 +159,16 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
+
+
+
+        /*
+        Parse Stuff
+        Should be in retrieve user , cause we need the data
+         */
+
+
+
     }
 
 
@@ -186,6 +196,12 @@ public class MainActivity extends AppCompatActivity {
                     // change the name
                     headerText.setText(myUser.getUsername());
 
+                    /*
+                    1- Put parse stuff to create the user class
+                    2- set up the Parse Installation .. add the author id to it
+                    so it can be unique
+
+                     */
 
 
                 }
@@ -209,6 +225,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         // check image
+        Log.e("HEYTHERE","HERE I AM");
+
+
         if(UserProfile.imageHasChanged){
 
             String sImage = myUser.getUserImage();

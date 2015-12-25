@@ -93,7 +93,7 @@ public class StreamFragment extends Fragment {
                     // and gets called for every item
 
 
-                    //Log.e("onchildadded", "I AM CALLED");
+                    Log.e("onchildadded", "I AM CALLED");
 
                     fireQuest = dataSnapshot.getValue(QuestCard.class);
 
@@ -114,6 +114,13 @@ public class StreamFragment extends Fragment {
                             userImage[0] = user[0].getUserImage();
                             username[0] = user[0].getUsername();
 
+
+                            /*
+                            to use descending set i[0] = increment and then start subtracting
+                            TO BE CONTINUED LATERZZZ
+                             */
+
+
                             // use the full data constructor
                             adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos());
                             // increment i so we the next one next time
@@ -127,7 +134,7 @@ public class StreamFragment extends Fragment {
                             // ensure it gets called once
                             if (increment[0] == questCards.size()) {
                                 // call the adapter
-                                //Log.e("onchild", "adapter gets called");
+                                Log.e("onchild", "adapter gets called");
                                 adapter = new QuestAdapter(getContext(),questCards, loadImageFromString, loadImageFromString2);
                                 recyclerView.setAdapter(adapter);
                             }

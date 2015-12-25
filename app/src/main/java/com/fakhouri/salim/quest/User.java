@@ -10,7 +10,9 @@ import com.firebase.client.Firebase;
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,8 @@ public class User {
     private int age;
     private String userImage;
 
-
+    // have to add them dynamically
+    private List<String> friends;
 
 
     public User(){}
@@ -47,11 +50,14 @@ public class User {
         // if this contsructor is used, use placeholder image
         //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
         this.userImage = bitmapToString(localBitmap);
+        // when user is registered he has no friends
+        this.friends = new ArrayList<String>();
+        this.friends.add(""); // HAS TO HAVE FIRST FIELD AS EMPTY OTHERWISE IT WON'T BE CREATED
     }
 
 
-    // dummy constructor
-
+    // dummy constructor NO LONGER IN USE , WE HAD TO ADD FRIEND FIELD
+    /*
     public User(@JsonProperty("firstName") String firstName,
                 @JsonProperty("lastName") String lastName,
                 @JsonProperty("username") String username,
@@ -70,24 +76,42 @@ public class User {
         //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
         this.userImage = bitmapString;
     }
+    */
 
-
-    // constructor with image ...... NOT DONE YET
-    /*
-    public User(String firstName,String lastName, String username, String email, int age,String userImage){
-
+    // another firebase constructor to receive friends
+    public User(@JsonProperty("firstName") String firstName,
+                @JsonProperty("lastName") String lastName,
+                @JsonProperty("username") String username,
+                @JsonProperty("email") String email,
+                @JsonProperty("age") int age,
+                @JsonProperty("description") String description,
+                @JsonProperty("userImage") String bitmapString,
+                @JsonProperty("friends") List<String> friends){
+        // for firebase
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
         this.age = age;
-
-        this.userImage = userImage;
-
-
+        this.description = description;
+        // if this contsructor is used, use placeholder image
+        //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
+        this.userImage = bitmapString;
+        this.friends = friends;
     }
 
-    */
+
+    public List<String> getFriends() {
+        return friends;
+    }
+
+    public void addFriends(String friendsUid,Firebase userRef) {
+        friends.add(friendsUid);
+        // save to firebase
+        Map<String,Object> map = new HashMap<String,Object>();
+        map.put("friends",friends);
+        userRef.updateChildren(map);
+    }
 
     private String bitmapToString(Bitmap bitmap){
 

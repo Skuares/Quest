@@ -203,7 +203,12 @@ public class CreateQuest extends AppCompatActivity {
 
                     // end the task and give feedback
                     Toast.makeText(CreateQuest.this,"Success",Toast.LENGTH_SHORT).show();
-                    finish();
+                    // make an intent first
+                    Intent intent = new Intent(CreateQuest.this,MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Removes other Activities from stack
+                    startActivity(intent);
+
+
                 }
             });
 
