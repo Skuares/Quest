@@ -1,5 +1,6 @@
 package com.skuares.studio.quest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Created by salim on 12/19/2015.
  */
-public class TodoFragment extends Fragment {
+public class TodoFragment extends Fragment  {
 
     ImageButton add;
 
@@ -31,10 +32,23 @@ public class TodoFragment extends Fragment {
     ToDo toDo;
     ListView listView;
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.todo_fragment_layout,container,false);
+
 
         add = (ImageButton)v.findViewById(R.id.add);
 
@@ -100,6 +114,7 @@ public class TodoFragment extends Fragment {
 
 
     }
+
 
 
 
