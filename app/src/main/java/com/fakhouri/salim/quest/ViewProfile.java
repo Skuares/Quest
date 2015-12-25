@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,9 +26,7 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.Map;
 
-/**
- * Created by salim on 12/24/2015.
- */
+
 public class ViewProfile extends AppCompatActivity {
 
     private ImageView header;
@@ -57,7 +56,10 @@ public class ViewProfile extends AppCompatActivity {
         setContentView(R.layout.view_profile_layout);
         toolbar = (Toolbar)findViewById(R.id.anim_toolbarView);
         setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         loadImageFromString = new LoadImageFromString(this);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbarView);
         header = (ImageView) findViewById(R.id.headerView);
@@ -94,7 +96,7 @@ public class ViewProfile extends AppCompatActivity {
                     collapsingToolbarLayout.setTitle(mUser.getUsername());
                     // pass the user to adapter
 
-                    recyclerView = (RecyclerView)findViewById(R.id.scrollableviewView);
+                    recyclerView = (RecyclerView) findViewById(R.id.scrollableviewView);
                     recyclerView.setHasFixedSize(true); // only one view
 
                     layoutManager = new LinearLayoutManager(ViewProfile.this);
@@ -107,21 +109,21 @@ public class ViewProfile extends AppCompatActivity {
                     userMapFriends = mUser.getFriends();
                     // check to see if this user in the userMap friends
 
-                    userState = (Integer)userMapFriends.get(author); // the author id of this particular user
-                    if(userState == null){
+                    userState = (Integer) userMapFriends.get(author); // the author id of this particular user
+                    if (userState == null) {
                         // this user is not a friend of your
                         // and have not sent him before
                         // do not change the icon
-                        Log.e("UserState",String.valueOf(userState));
+                        Log.e("UserState", String.valueOf(userState));
 
-                    }else if(userState == 1){
+                    } else if (userState == 1) {
                         // sent but no acceptance
                         // change the icon
-                        Log.e("UserState",String.valueOf(userState));
-                    }else if(userState == 2){
+                        Log.e("UserState", String.valueOf(userState));
+                    } else if (userState == 2) {
                         // this user is your friend
                         // change icon
-                        Log.e("UserState",String.valueOf(userState));
+                        Log.e("UserState", String.valueOf(userState));
 
                     }
                 }
@@ -133,21 +135,48 @@ public class ViewProfile extends AppCompatActivity {
             });
         }
 
-
+        if(mUser != null){
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     Log.e("userStateHello","floating is clicked");
-                    // change the icon
-                    floatingActionButton.setImageResource(R.drawable.ic_action_time);
-                    // request an add friend
+                    /*
+                    check the state of the user
+                     */
+                    if(userState == null){
+                        // change the icon
+                        floatingActionButton.setImageResource(R.drawable.ic_action_time);
+                        // use parse to send a push request an add friend
 
-                    // get inside the pend state (1)
+                        // update the hashmap of this user's friends
+                    }else if(userState == 1){
+                        // pending state
+                        // do not change the icon
+                        // let user know that his request has   been sent
+                        Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }else if(userState == 2){
+                        // you are friened with this user
+                        // onclick , pop up dialog
+                        // ask if you want to unfriend this user
+                        // if so
+                        // delete this user(author) from the hashmap
+                        // and delete this user (current) from author's hashmap
+                        //Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
+                        //      .setAction("Action", null).show();
 
+
+                        // heeasd
+
+
+                    }
 
                 }
             });
+        }
+
+
 
 
 
@@ -162,7 +191,7 @@ public class ViewProfile extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             strImageHolder = params[0];
-            Bitmap bitmap = null;
+            Bitmap bitmap;
 
             // decode the string
             try {
