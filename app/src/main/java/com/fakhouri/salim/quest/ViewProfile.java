@@ -23,6 +23,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
 
 import java.util.Map;
 
@@ -146,10 +149,27 @@ public class ViewProfile extends AppCompatActivity {
                      */
                     if(userState == null){
                         // change the icon
-                        floatingActionButton.setImageResource(R.drawable.ic_action_time);
-                        // use parse to send a push request an add friend
+                        if(author != null && mUser != null){
+                            Log.e("ViewProfileUserState","checking mUser status");
+                            floatingActionButton.setImageResource(R.drawable.ic_action_time);
+                            // use parse to send a push request an add friend
 
-                        // update the hashmap of this user's friends
+                            // Create our Installation query
+                            ParseQuery pushQuery = ParseInstallation.getQuery();
+                            //pushQuery.whereEqualTo("channels", "Giants"); // Set the channel
+                            pushQuery.whereEqualTo("installationAuthorId", author);
+
+                            // Send push notification to query
+                            ParsePush push = new ParsePush();
+                            push.setQuery(pushQuery);
+                            push.setMessage(mUser.getUsername()+" Sent you a friend request");
+                            push.sendInBackground();
+
+                            // update the hashmap of this user's friends
+
+                            // change user state to 1,, pending state
+                        }
+
                     }else if(userState == 1){
                         // pending state
                         // do not change the icon

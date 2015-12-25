@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                         parseInstallation.addUnique("channels", "System");
 
                         // add author id to parse installation
-                        parseInstallation.put("installationAuthodId", mAuthData.getUid());
+                        parseInstallation.put("installationAuthorId", mAuthData.getUid());
                         // make relation with userObject
                         parseInstallation.put("users", userObject);
                         parseInstallation.saveInBackground(new SaveCallback() {
