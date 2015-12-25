@@ -135,7 +135,7 @@ public class ViewProfile extends AppCompatActivity {
             });
         }
 
-        if(mUser != null){
+
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -163,22 +163,13 @@ public class ViewProfile extends AppCompatActivity {
                         // if so
                         // delete this user(author) from the hashmap
                         // and delete this user (current) from author's hashmap
-                        //Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
-                        //      .setAction("Action", null).show();
 
-
-                        // heeasd
 
 
                     }
 
                 }
             });
-        }
-
-
-
-
 
     }
 
