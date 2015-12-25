@@ -35,15 +35,13 @@ public class TodoFragment extends Fragment  {
     ListView listView;
 
 
-    /*
-  * onAttach(Context) is not called on pre API 23 versions of Android and onAttach(Activity) is deprecated
-  * Use onAttachToContext instead
-  */
     @TargetApi(23)
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        onAttachToContext(context);
+    @Override public void onAttach(Context context) {
+        //This method avoid to call super.onAttach(context) if I'm not using api 23 or more
+        if (Build.VERSION.SDK_INT >= 23) {
+            super.onAttach(context);
+            onAttachToContext(context);
+        }
     }
 
     /*
@@ -51,19 +49,17 @@ public class TodoFragment extends Fragment  {
      * Use onAttachToContext instead
      */
     @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
+    @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < 23) {
             onAttachToContext(activity);
         }
     }
 
     /*
-     * Called when the fragment attaches to the context
+     * This method will be called from one of the two previous method
      */
-    protected void onAttachToContext(Context context) {
-    }
+    protected void onAttachToContext(Context context) {}
 
     @Nullable
     @Override
