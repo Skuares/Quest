@@ -74,6 +74,7 @@ public class CreateQuest extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ref = new Firebase(getResources().getString(R.string.firebaseUrl));
@@ -101,8 +102,8 @@ public class CreateQuest extends AppCompatActivity {
                 Fragment fragment = new TodoFragment();
                 android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-                transaction.add(R.id.relative, fragment, "TodoFragment");
-                transaction.addToBackStack("todo");
+                transaction.replace(R.id.relative, fragment);
+                transaction.addToBackStack(null);
                 transaction.commit();
                 //Toast.makeText(CreateQuest.this,"clicked",Toast.LENGTH_LONG).show();
 

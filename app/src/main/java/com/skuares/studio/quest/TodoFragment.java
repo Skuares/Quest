@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import java.util.List;
 public class TodoFragment extends Fragment {
 
     ImageButton add;
-    ImageButton back;
+
     EditText addDesc;
     EditText addTime;
     EditText addMoney;
@@ -36,7 +37,7 @@ public class TodoFragment extends Fragment {
         View v = inflater.inflate(R.layout.todo_fragment_layout,container,false);
 
         add = (ImageButton)v.findViewById(R.id.add);
-        back = (ImageButton)v.findViewById(R.id.back);
+
         addDesc = (EditText)v.findViewById(R.id.addDescription);
         addTime = (EditText)v.findViewById(R.id.addTime);
         addMoney = (EditText)v.findViewById(R.id.addMoney);
@@ -54,11 +55,14 @@ public class TodoFragment extends Fragment {
 
 
 
+
         //
 
+        /*
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 android.support.v4.app.FragmentManager manager = getActivity().getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
                 Fragment frag = manager.findFragmentByTag("TodoFragment");
@@ -66,6 +70,8 @@ public class TodoFragment extends Fragment {
                 transaction.commit();
             }
         });
+
+        */
         // add listener for add
         add.setOnClickListener(new View.OnClickListener() {
             @Override
