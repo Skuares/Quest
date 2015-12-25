@@ -28,6 +28,9 @@ import java.util.Map;
 /**
  * Created by salim on 12/24/2015.
  */
+
+
+//test comment
 public class ViewProfile extends AppCompatActivity {
 
     private ImageView header;
