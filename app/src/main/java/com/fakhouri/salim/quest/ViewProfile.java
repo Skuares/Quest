@@ -56,7 +56,10 @@ public class ViewProfile extends AppCompatActivity {
         setContentView(R.layout.view_profile_layout);
         toolbar = (Toolbar)findViewById(R.id.anim_toolbarView);
         setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         loadImageFromString = new LoadImageFromString(this);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbarView);
         header = (ImageView) findViewById(R.id.headerView);
@@ -164,9 +167,9 @@ public class ViewProfile extends AppCompatActivity {
                           //      .setAction("Action", null).show();
 
 
+                        // heeasd
 
 
-                        
                     }
 
                 }
