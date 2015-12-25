@@ -54,7 +54,7 @@
                         android:textSize="22sp"
                         android:maxLines="1"
                         android:minLines="1"
-
+                        android:inputType="textCapSentences"
                         android:ems="@android:integer/config_longAnimTime"
                         android:padding="13dp"
                         android:textColor="@color/wet"
@@ -69,6 +69,7 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:scaleType="fitXY"
+
                         android:src="@drawable/placeholder"
                         android:layout_below="@+id/questTitleAdd"/>
 
@@ -81,6 +82,7 @@
                         android:maxLines="3"
                         android:paddingRight="4dp"
                         android:minLines="1"
+                        android:inputType="textCapSentences"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 

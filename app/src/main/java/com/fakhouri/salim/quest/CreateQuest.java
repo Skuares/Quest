@@ -208,7 +208,6 @@ public class CreateQuest extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Removes other Activities from stack
                     startActivity(intent);
 
-
                 }
             });
 

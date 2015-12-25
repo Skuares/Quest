@@ -1,8 +1,11 @@
 package com.fakhouri.salim.quest;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -17,17 +20,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    ParseObject userObject;
+    ParseInstallation parseInstallation;
 
     private static int REQUEST_CODE= 1;
 
@@ -200,8 +212,68 @@ public class MainActivity extends AppCompatActivity {
                     1- Put parse stuff to create the user class
                     2- set up the Parse Installation .. add the author id to it
                     so it can be unique
+                     */
+
+                    /*
+                    Ensure this gets called once
+                    not every time user opens the account
 
                      */
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                    if(sharedPreferences.getBoolean("firstTime",true)){
+                        // run once
+                        Log.e("Hello","I AM HERE RUN ONCE");
+                        userObject = new ParseObject("Users");
+                        //userObject.getObjectId();
+                        userObject.put("email",myUser.getEmail());
+                        userObject.put("username", myUser.getUsername());
+                        userObject.put("authorId", mAuthData.getUid());
+                        // list of user's friends
+                        userObject.addUnique("friends", "");// empty frield to match firebase :)
+                        userObject.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null) {
+                                    // success
+                                    //Toast.makeText(MainActivity.this, "Saved To Parse", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    // failed
+                                    Log.e("ParseError", e.getMessage());
+                                }
+
+                            }
+                        });
+
+                        // get the current installation
+                        parseInstallation = ParseInstallation.getCurrentInstallation();
+                        // subscribe to System
+                        parseInstallation.addUnique("channels", "System");
+
+                        // add author id to parse installation
+                        parseInstallation.put("installationAuthodId", mAuthData.getUid());
+                        // make relation with userObject
+                        parseInstallation.put("users", userObject);
+                        parseInstallation.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e == null){
+                                    // success
+                                    //Toast.makeText(MainActivity.this,"Installation Parse",Toast.LENGTH_SHORT).show();
+                                }else{
+                                    // failed
+                                    Log.e("ParseError", e.getMessage());
+                                }
+                            }
+                        });
+
+
+
+                        // lock the shared
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("firstTime",false);
+                        editor.commit();
+                    }
+
 
 
                 }

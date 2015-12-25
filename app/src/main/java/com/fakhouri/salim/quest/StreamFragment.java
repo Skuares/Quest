@@ -372,7 +372,7 @@ public class StreamFragment extends Fragment {
 
 
 
-        FloatingActionButton fab = (FloatingActionButton)getActivity().findViewById(R.id.fabStream);
+        com.github.clans.fab.FloatingActionButton fab = (com.github.clans.fab.FloatingActionButton)getActivity().findViewById(R.id.fabStream);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

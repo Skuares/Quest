@@ -31,7 +31,12 @@ public class User {
     private String userImage;
 
     // have to add them dynamically
-    private List<String> friends;
+    /*
+    - Null Not Friend
+    1- Pending state (wait for response)
+    2- Friend
+     */
+    private Map<String,Object> friends;
 
 
     public User(){}
@@ -51,8 +56,8 @@ public class User {
         //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
         this.userImage = bitmapToString(localBitmap);
         // when user is registered he has no friends
-        this.friends = new ArrayList<String>();
-        this.friends.add(""); // HAS TO HAVE FIRST FIELD AS EMPTY OTHERWISE IT WON'T BE CREATED
+        this.friends = new HashMap<String,Object>();
+        this.friends.put("empty", 0); // HAS TO HAVE FIRST FIELD AS EMPTY OTHERWISE IT WON'T BE CREATED
     }
 
 
@@ -86,7 +91,7 @@ public class User {
                 @JsonProperty("age") int age,
                 @JsonProperty("description") String description,
                 @JsonProperty("userImage") String bitmapString,
-                @JsonProperty("friends") List<String> friends){
+                @JsonProperty("friends") Map<String,Object> friends){
         // for firebase
         this.firstName = firstName;
         this.lastName = lastName;
@@ -100,18 +105,29 @@ public class User {
         this.friends = friends;
     }
 
+    public void addFriend(String id, int state,Firebase userRef) {
 
-    public List<String> getFriends() {
+        if(id != null && (state == 1 || state == 2 || state == 3)){
+            this.friends.put(id,state);
+            userRef.updateChildren(this.friends);
+        }
+
+    }
+
+    public Map<String, Object> getFriends() {
         return friends;
     }
 
+    /* NO LONGER USERFUL.. IT HAS TO BE A HASHMAP , THE ADD FREIND HAS 3 STATES
     public void addFriends(String friendsUid,Firebase userRef) {
         friends.add(friendsUid);
         // save to firebase
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("friends",friends);
+
         userRef.updateChildren(map);
     }
+    */
 
     private String bitmapToString(Bitmap bitmap){
 

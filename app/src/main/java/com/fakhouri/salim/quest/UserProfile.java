@@ -53,7 +53,7 @@ public class UserProfile extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private FloatingActionButton floatingActionButton;
+    private com.github.clans.fab.FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +122,7 @@ public class UserProfile extends AppCompatActivity {
 
 
         // set up the floating action button
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.floatingPicture);
+        floatingActionButton = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.floatingPicture);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -45,7 +45,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/floatingPicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,8 +53,13 @@
         android:clickable="true"
         android:src="@drawable/ic_action_new_picture"
         app:layout_anchor="@+id/appbar"
-        android:backgroundTint="@color/turq"
+
         app:borderWidth="0dp"
+
+        app:fab_colorNormal="@color/turq"
+        app:fab_colorPressed="@color/wet"
+        app:fab_colorRipple="#fff"
+
         app:elevation="6dp"
         app:layout_anchorGravity="bottom|right|end" />
 

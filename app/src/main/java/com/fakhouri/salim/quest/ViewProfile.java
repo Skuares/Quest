@@ -15,12 +15,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.Map;
 
 /**
  * Created by salim on 12/24/2015.
@@ -32,6 +35,8 @@ public class ViewProfile extends AppCompatActivity {
     private String author;
     private Firebase authorPath;
 
+    private Integer userState = 0;
+    private Map<String,Object> userMapFriends;
 
 
     private Toolbar toolbar;
@@ -44,7 +49,7 @@ public class ViewProfile extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private FloatingActionButton floatingActionButton;
+    private com.github.clans.fab.FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +61,7 @@ public class ViewProfile extends AppCompatActivity {
         loadImageFromString = new LoadImageFromString(this);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbarView);
         header = (ImageView) findViewById(R.id.headerView);
-        floatingActionButton = (FloatingActionButton)findViewById(R.id.floatingPicture);
+        floatingActionButton = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.floatingPictureView);
 
         /*
          1- Receive user id via intent and find him
@@ -98,7 +103,27 @@ public class ViewProfile extends AppCompatActivity {
                     adapter = new UserAdapter(mUser);
                     recyclerView.setAdapter(adapter);
 
+                    // check the state of this user
+                    userMapFriends = mUser.getFriends();
+                    // check to see if this user in the userMap friends
 
+                    userState = (Integer)userMapFriends.get(author); // the author id of this particular user
+                    if(userState == null){
+                        // this user is not a friend of your
+                        // and have not sent him before
+                        // do not change the icon
+                        Log.e("UserState",String.valueOf(userState));
+
+                    }else if(userState == 1){
+                        // sent but no acceptance
+                        // change the icon
+                        Log.e("UserState",String.valueOf(userState));
+                    }else if(userState == 2){
+                        // this user is your friend
+                        // change icon
+                        Log.e("UserState",String.valueOf(userState));
+
+                    }
                 }
 
                 @Override
@@ -108,11 +133,22 @@ public class ViewProfile extends AppCompatActivity {
             });
         }
 
-        // set up the floating action
-        if(mUser != null){
-            // do it here
 
-        }
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.e("userStateHello","floating is clicked");
+                    // change the icon
+                    floatingActionButton.setImageResource(R.drawable.ic_action_time);
+                    // request an add friend
+
+                    // get inside the pend state (1)
+
+
+                }
+            });
+
 
 
     }
