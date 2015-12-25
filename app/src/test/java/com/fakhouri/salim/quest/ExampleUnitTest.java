@@ -1,4 +1,4 @@
-package com.fakhouri.salim.quest;
+package com.skuares.studio.quest;
 
 import org.junit.Test;
 
