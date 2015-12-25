@@ -11,11 +11,13 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,8 @@ public class CreateQuest extends AppCompatActivity {
     ImageView questImageAdd;
 
     Button publish;
+
+    private RelativeLayout relativeLayout;
 
     // boolean to check if user has set an image
     boolean userChooseImage = false;
@@ -71,6 +75,8 @@ public class CreateQuest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_quest_layout);
 
+        relativeLayout = (RelativeLayout)findViewById(R.id.appGone);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -98,15 +104,25 @@ public class CreateQuest extends AppCompatActivity {
         addTodos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*
+
+                    // get red of the UI
+                //relativeLayout.setVisibility(View.INVISIBLE);
                 // populate the fragment
                 Fragment fragment = new TodoFragment();
                 android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.relative, fragment);
-                transaction.addToBackStack(null);
+                transaction.add(R.id.relative, fragment,"TodoFragment");
+                //transaction.addToBackStack(null);
                 transaction.commit();
+
+
                 //Toast.makeText(CreateQuest.this,"clicked",Toast.LENGTH_LONG).show();
 
+                 */
+                Intent intent = new Intent(CreateQuest.this,TodoQuestActivity.class);
+                startActivity(intent);
             }
         });
         // get user
@@ -211,6 +227,33 @@ public class CreateQuest extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("CreateQuest", "TO SEE IF ONSTART IS CALLED");
+        // get back the UI
+        relativeLayout.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("CreateQuest", "TO SEE IF ONRESume IS CALLED");
+        relativeLayout.setVisibility(View.VISIBLE);
+    }
+
+    /*
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("CreateQuest","TO SEE IF ONRESTART IS CALLED");
+        // get back the UI
+        relativeLayout.setVisibility(View.VISIBLE);
+    }
+    */
+
 
 
     class GetCompressedImageThenSave extends AsyncTask<Object,Void,Bitmap>{

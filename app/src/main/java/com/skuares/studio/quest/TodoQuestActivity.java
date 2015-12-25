@@ -1,13 +1,8 @@
 package com.skuares.studio.quest;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by salim on 12/19/2015.
+ * Created by salim on 12/25/2015.
  */
-public class TodoFragment extends Fragment  {
+public class TodoQuestActivity extends AppCompatActivity {
 
     ImageButton add;
     ImageButton back;
@@ -36,79 +31,22 @@ public class TodoFragment extends Fragment  {
     ListView listView;
 
 
-    /*
-  * onAttach(Context) is not called on pre API 23 versions of Android and onAttach(Activity) is deprecated
-  * Use onAttachToContext instead
-  */
-    @TargetApi(23)
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        onAttachToContext(context);
-    }
-
-    /*
-     * Deprecated on API 23
-     * Use onAttachToContext instead
-     */
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (Build.VERSION.SDK_INT < 23) {
-            onAttachToContext(activity);
-        }
-    }
-
-    /*
-     * Called when the fragment attaches to the context
-     */
-    protected void onAttachToContext(Context context) {
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.todo_fragment_layout,container,false);
-
-
-        add = (ImageButton)v.findViewById(R.id.add);
-        back = (ImageButton)v.findViewById(R.id.back);
-
-        addDesc = (EditText)v.findViewById(R.id.addDescription);
-        addTime = (EditText)v.findViewById(R.id.addTime);
-        addMoney = (EditText)v.findViewById(R.id.addMoney);
-
-        listView = (ListView)v.findViewById(R.id.listView);
-
-        return v;
-
-
-    }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.todo_fragment_layout);
+
+        add = (ImageButton)findViewById(R.id.add);
+        back = (ImageButton)findViewById(R.id.back);
+
+        addDesc = (EditText)findViewById(R.id.addDescription);
+        addTime = (EditText)findViewById(R.id.addTime);
+        addMoney = (EditText)findViewById(R.id.addMoney);
+
+        listView = (ListView)findViewById(R.id.listView);
 
 
-
-
-        //
-
-
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                android.support.v4.app.FragmentManager manager = getActivity().getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-                Fragment frag = manager.findFragmentByTag("TodoFragment");
-                transaction.remove(frag);
-                transaction.commit();
-            }
-        });
-
-        /*
         // add listener for add
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +62,7 @@ public class TodoFragment extends Fragment  {
                 // add it to the list
                 CreateQuest.todosList.add(toDo); // WE NEED TO EMPTY THE LIST WHEN THE USER CLICKS POPULATE
                 // set the adapter
-                listView.setAdapter(new CustomAdapterListView(getContext(),CreateQuest.todosList));
+                listView.setAdapter(new CustomAdapterListView(TodoQuestActivity.this,CreateQuest.todosList));
 
                 // empty fields
                 addDesc.setText("");
@@ -134,15 +72,13 @@ public class TodoFragment extends Fragment  {
 
             }
         });
-        */
+
 
 
     }
 
 
-
-    /*
-    public class CustomAdapterListView extends BaseAdapter{
+    public class CustomAdapterListView extends BaseAdapter {
 
         List<ToDo> list;
         Context context;
@@ -208,5 +144,6 @@ public class TodoFragment extends Fragment  {
             return rowView;
         }
     }
-    */
 }
+
+

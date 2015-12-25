@@ -60,6 +60,7 @@ public class UserProfile extends AppCompatActivity {
         toolbar = (Toolbar)findViewById(R.id.anim_toolbar);
         setSupportActionBar(toolbar);
 
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
