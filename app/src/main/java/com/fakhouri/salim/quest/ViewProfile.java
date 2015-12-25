@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +25,9 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.Map;
 
-
+/**
+ * Created by salim on 12/24/2015.
+ */
 public class ViewProfile extends AppCompatActivity {
 
     private ImageView header;
@@ -56,10 +57,7 @@ public class ViewProfile extends AppCompatActivity {
         setContentView(R.layout.view_profile_layout);
         toolbar = (Toolbar)findViewById(R.id.anim_toolbarView);
         setSupportActionBar(toolbar);
-
-        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         loadImageFromString = new LoadImageFromString(this);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbarView);
         header = (ImageView) findViewById(R.id.headerView);
@@ -135,48 +133,21 @@ public class ViewProfile extends AppCompatActivity {
             });
         }
 
-        if(mUser != null){
+
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     Log.e("userStateHello","floating is clicked");
-                    /*
-                    check the state of the user
-                     */
-                    if(userState == null){
-                        // change the icon
-                        floatingActionButton.setImageResource(R.drawable.ic_action_time);
-                        // use parse to send a push request an add friend
+                    // change the icon
+                    floatingActionButton.setImageResource(R.drawable.ic_action_time);
+                    // request an add friend
 
-                        // update the hashmap of this user's friends
-                    }else if(userState == 1){
-                        // pending state
-                        // do not change the icon
-                        // let user know that his request has   been sent
-                        Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }else if(userState == 2){
-                        // you are friened with this user
-                        // onclick , pop up dialog
-                        // ask if you want to unfriend this user
-                        // if so
-                        // delete this user(author) from the hashmap
-                        // and delete this user (current) from author's hashmap
-                        //Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
-                          //      .setAction("Action", null).show();
+                    // get inside the pend state (1)
 
-
-                        // heeasd
-
-
-                    }
 
                 }
             });
-        }
-
-
 
 
 
@@ -191,7 +162,7 @@ public class ViewProfile extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             strImageHolder = params[0];
-            Bitmap bitmap;
+            Bitmap bitmap = null;
 
             // decode the string
             try {
