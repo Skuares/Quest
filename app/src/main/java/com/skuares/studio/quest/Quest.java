@@ -18,7 +18,7 @@ public class Quest extends Application {
         Firebase.setAndroidContext(this);
         Firebase.getDefaultConfig().setPersistenceEnabled(true);
 
-        Parse.initialize(this, "mCQlAqYREXDqNqLdbjB6C3d0lUzyaOxrK1E0PoUT", "1t5WDSGejFRKOUfPskGcQyugAMzNW9tZDBwl4tmG");
+        Parse.initialize(this, "tKsGTKmxQZkMkLsAJAfsJvjsL5dRYqLQv37th75U", "dDSwrYUK74aZd3TIHXExQ0SCBDYiXiwarVlut29m");
         ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 }

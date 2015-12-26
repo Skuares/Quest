@@ -6,10 +6,7 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.ByteArrayOutputStream;
