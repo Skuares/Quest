@@ -105,8 +105,9 @@ public class User {
 
     public void addFriend(String id, int state,Firebase userRef) {
 
-        if(id != null && (state == 1 || state == 2 || state == 3)){
+        if(id != null && (state == 1 || state == 2)){
             this.friends.put(id,state);
+            System.out.print("I AM CALLED FROM ADD FREIND USER CLASS");
             userRef.updateChildren(this.friends);
         }
 

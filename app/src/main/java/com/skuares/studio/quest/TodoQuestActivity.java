@@ -3,7 +3,9 @@ package com.skuares.studio.quest;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,7 +23,7 @@ import java.util.List;
 public class TodoQuestActivity extends AppCompatActivity {
 
     ImageButton add;
-    ImageButton back;
+
 
     EditText addDesc;
     EditText addTime;
@@ -30,15 +32,23 @@ public class TodoQuestActivity extends AppCompatActivity {
     ToDo toDo;
     ListView listView;
 
-
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.todo_fragment_layout);
 
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarTodoFrag);
+        setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         add = (ImageButton)findViewById(R.id.add);
-        back = (ImageButton)findViewById(R.id.back);
+
 
         addDesc = (EditText)findViewById(R.id.addDescription);
         addTime = (EditText)findViewById(R.id.addTime);
@@ -77,6 +87,17 @@ public class TodoQuestActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == android.R.id.home){
+
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
 
     public class CustomAdapterListView extends BaseAdapter {
 

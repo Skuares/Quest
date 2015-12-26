@@ -73,7 +73,6 @@ public class TodoFragment extends Fragment  {
 
 
         add = (ImageButton)v.findViewById(R.id.add);
-        back = (ImageButton)v.findViewById(R.id.back);
 
         addDesc = (EditText)v.findViewById(R.id.addDescription);
         addTime = (EditText)v.findViewById(R.id.addTime);

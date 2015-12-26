@@ -228,6 +228,8 @@ public class CreateQuest extends AppCompatActivity {
 
     }
 
+    /*
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -243,6 +245,7 @@ public class CreateQuest extends AppCompatActivity {
         Log.e("CreateQuest", "TO SEE IF ONRESume IS CALLED");
         relativeLayout.setVisibility(View.VISIBLE);
     }
+    */
 
     /*
     @Override

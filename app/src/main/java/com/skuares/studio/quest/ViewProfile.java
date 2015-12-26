@@ -25,6 +25,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -59,6 +60,8 @@ public class ViewProfile extends AppCompatActivity {
         setContentView(R.layout.view_profile_layout);
         toolbar = (Toolbar)findViewById(R.id.anim_toolbarView);
         setSupportActionBar(toolbar);
+
+        userMapFriends = new HashMap<String, Object>();
 
         assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -165,11 +168,13 @@ public class ViewProfile extends AppCompatActivity {
                             // Send push notification to query
                             ParsePush push = new ParsePush();
                             push.setQuery(pushQuery);
-                            push.setMessage(MainActivity.myUser.getUsername()+" Sent you a friend request");
+                            push.setMessage(MainActivity.myUser.getUsername() + " Sent you a friend request");
                             push.sendInBackground();
 
                             // update the hashmap of this user's friends // author is the friend,,
-                            userMapFriends.put(author,pending);
+                            userMapFriends.put(author, pending);
+                            // save to firebase
+                            mUser.addFriend(author,pending,MainActivity.userRef);
                             // change user state to 1,, pending state
                             userState = pending;
                         }
