@@ -112,29 +112,42 @@ public class ViewProfile extends AppCompatActivity {
                     recyclerView.setAdapter(adapter);
 
                     // check the state of this user
-                    userMapFriends = mUser.getFriends();
+                    // get the map of values and index author in it to see of this user that I am checking has a record
+                    userMapFriends = MainActivity.myUser.getFriends();
+                    Log.e("ViewProfile",String.valueOf(userMapFriends));
                     // check to see if this user in the userMap friends
 
-                    userState = (Integer) userMapFriends.get(author); // the author id of this particular user
-                    if (userState == null) {
-                        // this user is not a friend of your
-                        // and have not sent him before
-                        // do not change the icon
-                        Log.e("UserState", String.valueOf(userState));
+                    // first check the userMapFriends
+                    if(userMapFriends == null){
+                        // user has no friends
+                        // his data on firebase does not contain friends field
 
-                    } else if (userState == pending) {
-                        Log.e("UserState", String.valueOf(userState));
-                        // sent but no acceptance
-                        // change the icon
-                        floatingActionButton.setImageResource(R.drawable.ic_action_time);
+                        // do nothing for now
+                        userState = null;
+                    }else{
+                        // he has friends
+                        userState = (Integer) userMapFriends.get(author); // the author id of this particular user
+                        if (userState == null) {
+                            // this user is not a friend of your
+                            // and have not sent him before
+                            // do not change the icon
+                            Log.e("UserState", String.valueOf(userState));
+
+                        } else if (userState == pending) {
+                            Log.e("UserState", String.valueOf(userState));
+                            // sent but no acceptance
+                            // change the icon
+                            floatingActionButton.setImageResource(R.drawable.ic_action_time);
 
 
-                    } else if (userState == accepted) {
-                        // this user is your friend
-                        // change icon
-                        Log.e("UserState", String.valueOf(userState));
-                        floatingActionButton.setImageResource(R.drawable.ic_action_accept);
+                        } else if (userState == accepted) {
+                            // this user is your friend
+                            // change icon
+                            Log.e("UserState", String.valueOf(userState));
+                            floatingActionButton.setImageResource(R.drawable.ic_action_accept);
+                        }
                     }
+
                 }
 
                 @Override
@@ -172,6 +185,10 @@ public class ViewProfile extends AppCompatActivity {
                             push.sendInBackground();
 
                             // update the hashmap of this user's friends // author is the friend,,
+                            // establish the userMapFriends
+                            if(userMapFriends == null){
+                                userMapFriends = new HashMap<String, Object>();
+                            }
                             userMapFriends.put(author, pending);
                             // save to firebase
                             mUser.addFriend(author,pending,MainActivity.userRef);

@@ -6,7 +6,10 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.ByteArrayOutputStream;
@@ -54,8 +57,9 @@ public class User {
         //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
         this.userImage = bitmapToString(localBitmap);
         // when user is registered he has no friends
-        this.friends = new HashMap<String,Object>();
-        this.friends.put("empty", 0); // HAS TO HAVE FIRST FIELD AS EMPTY OTHERWISE IT WON'T BE CREATED
+        friends = new HashMap<String,Object>();
+
+         // HAS TO HAVE FIRST FIELD AS EMPTY OTHERWISE IT WON'T BE CREATED
     }
 
 
@@ -101,14 +105,17 @@ public class User {
         //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
         this.userImage = bitmapString;
         this.friends = friends;
+        //Log.e("UserClass",String.valueOf(this.friends));
     }
+
 
     public void addFriend(String id, int state,Firebase userRef) {
 
         if(id != null && (state == 1 || state == 2)){
-            this.friends.put(id,state);
-            System.out.print("I AM CALLED FROM ADD FREIND USER CLASS");
-            userRef.updateChildren(this.friends);
+            // do nothing for now
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put(id,state);
+            userRef.child("friends").updateChildren(map);
         }
 
     }
@@ -116,6 +123,7 @@ public class User {
     public Map<String, Object> getFriends() {
         return friends;
     }
+
 
     /* NO LONGER USERFUL.. IT HAS TO BE A HASHMAP , THE ADD FREIND HAS 3 STATES
     public void addFriends(String friendsUid,Firebase userRef) {
