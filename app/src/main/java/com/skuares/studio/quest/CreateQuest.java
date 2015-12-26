@@ -129,7 +129,7 @@ public class CreateQuest extends AppCompatActivity {
         if(MainActivity.myUser != null){
             userQuest = MainActivity.myUser;
 
-            // get user image and get username
+            // get user image and get usernamse
 
             questUserImageAdd.setImageBitmap(MainActivity.userImageStatic);
             questUsernameAdd.setText("By " + userQuest.getUsername());

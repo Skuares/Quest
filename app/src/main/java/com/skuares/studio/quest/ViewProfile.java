@@ -38,6 +38,8 @@ public class ViewProfile extends AppCompatActivity {
     private Integer userState = 0;
     private Map<String,Object> userMapFriends;
 
+    private int pending = 1;
+    private int accepted = 2;
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -117,15 +119,18 @@ public class ViewProfile extends AppCompatActivity {
                         // do not change the icon
                         Log.e("UserState", String.valueOf(userState));
 
-                    } else if (userState == 1) {
+                    } else if (userState == pending) {
+                        Log.e("UserState", String.valueOf(userState));
                         // sent but no acceptance
                         // change the icon
-                        Log.e("UserState", String.valueOf(userState));
-                    } else if (userState == 2) {
+                        floatingActionButton.setImageResource(R.drawable.ic_action_time);
+
+
+                    } else if (userState == accepted) {
                         // this user is your friend
                         // change icon
                         Log.e("UserState", String.valueOf(userState));
-
+                        floatingActionButton.setImageResource(R.drawable.ic_action_accept);
                     }
                 }
 
@@ -163,18 +168,19 @@ public class ViewProfile extends AppCompatActivity {
                             push.setMessage(MainActivity.myUser.getUsername()+" Sent you a friend request");
                             push.sendInBackground();
 
-                            // update the hashmap of this user's friends
-
+                            // update the hashmap of this user's friends // author is the friend,,
+                            userMapFriends.put(author,pending);
                             // change user state to 1,, pending state
+                            userState = pending;
                         }
 
-                    }else if(userState == 1){
+                    }else if(userState == pending){
                         // pending state
                         // do not change the icon
                         // let user know that his request has   been sent
                         Snackbar.make(v, "A Request Has Already Been Sent", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
-                    }else if(userState == 2){
+                    }else if(userState == accepted){
                         // you are friened with this user
                         // onclick , pop up dialog
                         // ask if you want to unfriend this user
