@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+
         // check user
         ref = new Firebase(getResources().getString(R.string.firebaseUrl));
         // authinticate user if logged in send him to home
