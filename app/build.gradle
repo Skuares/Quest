@@ -5,8 +5,8 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.fakhouri.salim.quest"
-        minSdkVersion 15
+        applicationId "com.skuares.studio.quest"
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -24,17 +24,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
-
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.android.support:palette-v7:23.1.1'
-
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
     compile 'com.github.clans:fab:1.6.2'
-
     compile files('libs/firebase-client-android-2.4.1.jar')
+    compile 'com.firebaseui:firebase-ui:0.3.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.7.0'
 }

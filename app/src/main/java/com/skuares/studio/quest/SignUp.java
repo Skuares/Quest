@@ -10,10 +10,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
+import com.firebase.ui.auth.core.FirebaseLoginError;
+import com.firebase.ui.auth.core.SocialProvider;
 
 import java.util.Map;
 
@@ -25,12 +31,17 @@ public class SignUp extends AppCompatActivity {
     protected Firebase ref;
     protected EditText email,username,firstName,lastName,password,age;
     protected Button signup;
+    private LoginButton loginButton;
+//    private CallbackManager callbackManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.signup_layout);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        setContentView(R.layout.signup_fancy_layout);
 
+//        callbackManager = CallbackManager.Factory.create();
         ref = new Firebase (getResources().getString(R.string.firebaseUrl));
 
         // reference
@@ -40,10 +51,24 @@ public class SignUp extends AppCompatActivity {
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
         age = (EditText)findViewById(R.id.age);
+        loginButton = (LoginButton)findViewById(R.id.login_button);
+
 
     }
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        // All providers are optional! Remove any you don't want.
+//        setEnabledAuthProvider(SocialProvider.facebook);
+////        setEnabledAuthProvider(SocialProvider.twitter);
+////        setEnabledAuthProvider(SocialProvider.google);
+////        setEnabledAuthProvider(SocialProvider.password);
+//    }
+
     public void Signup(View view) {
+        //This method is for firebase login
+//        showFirebaseLoginPrompt();
 
         // get values
         String mEmail = email.getText().toString().toLowerCase();
@@ -52,6 +77,7 @@ public class SignUp extends AppCompatActivity {
         String mFirstName = firstName.getText().toString();
         String mLastName = lastName.getText().toString();
         String mAge = age.getText().toString();
+
 
 
 
@@ -144,4 +170,5 @@ public class SignUp extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }

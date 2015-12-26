@@ -93,7 +93,12 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-
+        <!--Facebook Login activity-->
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
 
 
 
@@ -121,7 +126,8 @@
                 <category android:name="com.skuares.studio.quest" />
             </intent-filter>
         </receiver>
-
+        <!--Facebook's metadata-->
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
     </application>
 
