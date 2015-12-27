@@ -26,8 +26,8 @@ public class LoadImageFromString {
         placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.placeholder);
     }
 
-    public void loadBitmapFromString(String path, ImageView imageView) {
-        if (cancelPotentialWork(path, imageView)) {
+    public void loadBitmapFromString(String stringImage, ImageView imageView) {
+        if (cancelPotentialWork(stringImage, imageView)) {
             final StringWorkerTask task = new StringWorkerTask(imageView);
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(placeholder, task);
@@ -41,7 +41,7 @@ public class LoadImageFromString {
                  reqH = imageView.getWidth();
             }
             */
-            task.execute(path);
+            task.execute(stringImage);
 
 
 

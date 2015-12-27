@@ -1,5 +1,6 @@
 package com.skuares.studio.quest.Request;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +10,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.skuares.studio.quest.LoadImageFromString;
 import com.skuares.studio.quest.R;
+import com.skuares.studio.quest.User;
 
 import org.w3c.dom.Text;
+
+import java.util.List;
 
 /**
  * Created by salim on 12/27/2015.
@@ -42,9 +47,13 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         }
     }
 
-
-    public FriendRequestAdapter(){
-
+    List<User> users;
+    Context context;
+    private LoadImageFromString loadImageFromString;
+    public FriendRequestAdapter(Context context,List<User> users,LoadImageFromString loadImageFromString){
+        this.users = users;
+        this.context = context;
+        this.loadImageFromString = loadImageFromString;
     }
 
     @Override
@@ -61,11 +70,23 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
     public void onBindViewHolder(ViewFriendRequest holder, int position) {
 
         // actions and setters
+        if(users == null){
+            return;
+        }
 
+        holder.senderName.setText(users.get(position).getUsername());
+        loadImageFromString.loadBitmapFromString(users.get(position).getUserImage(),holder.senderImage);
+        // attach listener on buttons
+        //BRB
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+
+        if(users == null){
+            return 0;
+        }
+        return users.size();
+
     }
 }

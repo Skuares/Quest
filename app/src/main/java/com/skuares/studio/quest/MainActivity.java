@@ -39,6 +39,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.skuares.studio.quest.Request.RequestActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -216,6 +217,14 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         this.menu = menu;
+        /*
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+        } else {
+            new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+        }
+        */
+
         //Log.e("MenuInf", "Menu");
 
         //you can add some logic (hide it if the count == 0)
@@ -249,22 +258,28 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == notificationIconId) {
+        if (id == R.id.item_samplebadge) {
             // make an intent to RequestActivity
             Intent intent = new Intent(MainActivity.this, RequestActivity.class);
             // pass friendsReques.. list along
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("listOfIds", (Serializable) usersPointers);
+            intent.putExtras(bundle);
             startActivity(intent);
 
 
             // this should happen based on interaction with the requests
             badgeCount = 0;
 
-            ActionItemBadge.update(item, MainActivity.badgeCount);
+            //ActionItemBadge.update(item, MainActivity.badgeCount);
+            /*
             // check if zero let it go
             if (badgeCount <= 0) {
                 // hide it
                 ActionItemBadge.hide(item);
             }
+            */
+
             return true;
         }
         if (item.getItemId() == android.R.id.home) {
@@ -391,13 +406,19 @@ public class MainActivity extends AppCompatActivity {
                             usersPointers.add(dataSnapshot.getKey());
                             // notify user by notification icon
                             badgeCount++;
+
+                            // update the icon
+
                             // add the notification icon programmatically
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-
-                                new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
                             } else {
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
                                 //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
-                                new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
                             }
 
 
