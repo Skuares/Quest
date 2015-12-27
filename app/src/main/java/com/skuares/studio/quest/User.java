@@ -108,7 +108,7 @@ public class User {
 
     public void addFriend(String id, int state,Firebase userRef) {
 
-        if(id != null && (state == 1 || state == 2)){
+        if(id != null && (state == 0 || state == 1 || state == 2)){
             // do nothing for now
             Map<String,Object> map = new HashMap<String, Object>();
             map.put(id,state);

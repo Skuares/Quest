@@ -39,6 +39,15 @@ public class ViewProfile extends AppCompatActivity {
     private Integer userState = 0;
     private Map<String,Object> userMapFriends;
 
+    private Map<String,Object> receiverMapFriends;
+    /*
+    Receiver should go into the receive state (0)
+    Sender should go into the pending state (1)
+    if receiver accepts both go into accepted state (2)
+    if receiver ignores goes
+        delete the state from the receiver and the sender
+     */
+    private int request = 0; // receiver state
     private int pending = 1;
     private int accepted = 2;
 
@@ -48,7 +57,8 @@ public class ViewProfile extends AppCompatActivity {
 
     private LoadImageFromString loadImageFromString;
 
-    private User mUser;
+    private User mUser; // the receiver
+    private User currentUser; // the sender (the user that is doing the action)
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -71,6 +81,8 @@ public class ViewProfile extends AppCompatActivity {
         header = (ImageView) findViewById(R.id.headerView);
         floatingActionButton = (com.github.clans.fab.FloatingActionButton)findViewById(R.id.floatingPictureView);
 
+
+        currentUser = MainActivity.myUser;
         /*
          1- Receive user id via intent and find him
          2- Apply data to header and name
@@ -190,10 +202,31 @@ public class ViewProfile extends AppCompatActivity {
                                 userMapFriends = new HashMap<String, Object>();
                             }
                             userMapFriends.put(author, pending);
-                            // save to firebase
-                            mUser.addFriend(author,pending,MainActivity.userRef);
+                            // save to currentUser firebase
+                            currentUser.addFriend(author, pending, MainActivity.userRef);
                             // change user state to 1,, pending state
                             userState = pending;
+
+                            /*
+                            what should happen in the receiver side
+                            1- receiver's friends should contain this request as 0 (means request state)
+                             */
+
+                            // todo this
+                            // 1- get the user friends (mUser)
+                            // 2- insert the state to be request
+                            // * receiverMapFriends might be null. first request possibility
+                            receiverMapFriends = mUser.getFriends();
+                            if(receiverMapFriends == null){
+                                // initialize it
+                                receiverMapFriends = new HashMap<String, Object>();
+
+                            }
+                            // insert data sender Id(the current user who is doing the action) with request state 0 into the receiver friends
+                            receiverMapFriends.put(MainActivity.uid,request);
+                            // save to receiver firebase (firebase -> users -> userId ) then from add Friend (-> friends)
+                            Firebase receiverRef = MainActivity.ref.child("users").child(author);
+                            mUser.addFriend(MainActivity.uid,request,receiverRef);
                         }
 
                     }else if(userState == pending){

@@ -24,12 +24,12 @@
                 android:layout_height="100dp"
                 android:scaleType="fitXY"
                 android:layout_margin="10dp"
-                android:src="@drawable/placeholder"/>
+                />
 
             <TextView
                 android:id="@+id/senderName"
                 android:layout_toRightOf="@+id/senderImage"
-                android:text="Sal"
+                android:text=""
                 android:layout_alignTop="@+id/senderImage"
                 android:textSize="22sp"
                 android:textColor="@color/blue_grey"
