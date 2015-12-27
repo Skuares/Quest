@@ -33,6 +33,7 @@ import com.parse.SaveCallback;
 //Social login libraries
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.skuares.studio.quest.Request.RequestActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -227,8 +228,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.item_samplebadge) {
             // make an intent to RequestActivity
+            Intent intent = new Intent(MainActivity.this, RequestActivity.class);
+            startActivity(intent);
+            //Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show();
 
-            Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show();
+            // this should happen based on interaction with the requests
             MainActivity.badgeCount--;
 
             ActionItemBadge.update(item, MainActivity.badgeCount);
