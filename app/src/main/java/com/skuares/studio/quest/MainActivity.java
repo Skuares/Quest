@@ -10,10 +10,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.firebase.client.AuthData;
@@ -21,6 +23,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.mikepenz.actionitembadge.library.ActionItemBadge;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     ParseObject userObject;
     ParseInstallation parseInstallation;
+
+    public static int badgeCount = 1;
 
     private static int REQUEST_CODE= 1;
 
@@ -161,6 +167,9 @@ public class MainActivity extends AppCompatActivity {
 
         // setup drawer toggle
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this,drawerLayout, toolbar,R.string.app_name,
                 R.string.app_name);
 
@@ -177,6 +186,65 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        //Log.e("MenuInf", "Menu");
+
+        //you can add some logic (hide it if the count == 0)
+        if (MainActivity.badgeCount > 0) {
+
+            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
+                ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+            } else {
+                ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+            }
+
+
+        } else {
+            ActionItemBadge.hide(menu.findItem(R.id.item_samplebadge));
+        }
+        return true;
+
+        /*
+         //If you want to add your ActionItem programmatically you can do this too. You do the following:
+        new ActionItemBadgeAdder().act(this).menu(menu).title(R.string.sample_2).itemDetails(0, SAMPLE2_ID, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(bigStyle, 1);
+        return true;
+         */
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.item_samplebadge) {
+            // make an intent to RequestActivity
+
+            Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show();
+            MainActivity.badgeCount--;
+
+            ActionItemBadge.update(item, MainActivity.badgeCount);
+            // check if zero let it go
+            if(badgeCount <= 0){
+                // hide it
+                ActionItemBadge.hide(item);
+            }
+            return true;
+        }
+        if(item.getItemId() == android.R.id.home){
+
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -355,27 +423,6 @@ public class MainActivity extends AppCompatActivity {
         this.mAuthData = authData;
     }
 
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    */
 }

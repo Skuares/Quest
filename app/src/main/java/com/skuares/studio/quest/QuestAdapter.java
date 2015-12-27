@@ -119,8 +119,10 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
         });
 
 
-        //holder.questUserImage.setImageBitmap(list.get(position).stringToBitmap(list.get(position).getQuestUserImage()));
+
+
         // check if this user has this quest
+        /*
         if(MainActivity.myUser.getUsername() != null){
             if(MainActivity.myUser.getUsername().equals(list.get(position).getQuestUsername())){
                 holder.questUsername.setText("By you");
@@ -130,8 +132,9 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
         }else{
             holder.questUsername.setText("By " + list.get(position).getQuestUsername());
         }
+        */
 
-
+        holder.questUsername.setText("By " + list.get(position).getQuestUsername());
 
         // set listener to view the profile
         holder.questUsername.setOnClickListener(new View.OnClickListener() {

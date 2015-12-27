@@ -36,4 +36,11 @@ dependencies {
     compile files('libs/firebase-client-android-2.4.1.jar')
     compile 'com.firebaseui:firebase-ui:0.3.0'
     compile 'com.facebook.android:facebook-android-sdk:4.7.0'
+
+    compile 'com.mikepenz:actionitembadge:3.2.0@aar'
+
+    //SUB-DEPENDENCIES
+    //Android-Iconics - used to provide an easy API for icons
+    compile 'com.mikepenz:iconics-core:2.5.0@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
 }

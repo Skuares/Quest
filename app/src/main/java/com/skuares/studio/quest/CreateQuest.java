@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.mikepenz.actionitembadge.library.ActionItemBadge;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -425,6 +429,7 @@ public class CreateQuest extends AppCompatActivity {
 
 
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -436,4 +441,5 @@ public class CreateQuest extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
 
     }
+
 }
