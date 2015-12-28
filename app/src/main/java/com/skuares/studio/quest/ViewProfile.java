@@ -157,6 +157,8 @@ public class ViewProfile extends AppCompatActivity {
                             // change icon
                             Log.e("UserState", String.valueOf(userState));
                             floatingActionButton.setImageResource(R.drawable.ic_action_accept);
+                        }else if(userState == request){
+                            floatingActionButton.setImageResource(R.drawable.ic_action_time);
                         }
                     }
 
@@ -245,6 +247,13 @@ public class ViewProfile extends AppCompatActivity {
 
 
 
+                    }else if(userState == request){
+                        // this state represents the case
+                        // that I have received a request from this user
+                        // so it has to be time icon same as pending
+                        floatingActionButton.setImageResource(R.drawable.ic_action_time);
+                        Snackbar.make(v, "This user sent you a friend request", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                     }
 
                 }

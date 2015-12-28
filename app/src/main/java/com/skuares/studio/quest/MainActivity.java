@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     list<User> obtained from list<String>  and passed through the intent to RequestActivity
      */
 
-    private List<String> usersPointers;
+    public static List<String> usersPointers;
     private List<User> friendRequestUsers;
 
     private Map<String, Object> friendsMap;
@@ -404,8 +404,15 @@ public class MainActivity extends AppCompatActivity {
                             //Log.e("logmeThis",""+dataSnapshot.getKey());
                             // save this pointer in usersPointers
                             usersPointers.add(dataSnapshot.getKey());
+
+
+                            // check the value
+                            // only increment when it is 0
+                            if(dataSnapshot.getValue(Integer.class) == 0){
+                                badgeCount++;
+                            }
                             // notify user by notification icon
-                            badgeCount++;
+
 
                             // update the icon
 
@@ -418,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
                                 ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
                                 //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
-                                ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
                             }
 
 
@@ -432,11 +439,46 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            // the user accepts
+                            Log.e("MainActivityRequest","onChildChanged");
+                            // decrease the badgeCount and update the notification icon
+                            // add the notification icon programmatically
+                            //badgeCount--;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                            } else {
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                            }
 
                         }
 
                         @Override
                         public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                            // get this userId out of usersIds
+                            // so when user clicks again on the notification icon does not see this card
+                            //Log.e("MainActivityRequest","onChildRemoved ----"+dataSnapshot.getKey());
+                            usersPointers.remove(dataSnapshot.getKey());
+
+
+                            //Log.e("MainActivityRequest","onChildRemoved");
+                            // triggered when the user rejects or ignores the request
+                            //badgeCount--;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                            } else {
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                            }
 
                         }
 

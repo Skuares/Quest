@@ -79,7 +79,7 @@ public class RequestActivity extends AppCompatActivity {
                         // check to call adapter
                         if((finalI+1) == usersIds.size()){
                             // call adapter
-                            adapter = new FriendRequestAdapter(RequestActivity.this,friendsRequestUsers,loadImageFromString);
+                            adapter = new FriendRequestAdapter(RequestActivity.this,friendsRequestUsers,loadImageFromString,usersIds);
                             recyclerView.setAdapter(adapter);
                         }
 

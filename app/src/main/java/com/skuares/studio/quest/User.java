@@ -106,7 +106,7 @@ public class User {
     }
 
 
-    public void addFriend(String id, int state,Firebase userRef) {
+    public void addFriend(String id, int state,Firebase userRef) { // we can use to update too
 
         if(id != null && (state == 0 || state == 1 || state == 2)){
             // do nothing for now
@@ -116,6 +116,15 @@ public class User {
         }
 
     }
+
+    /*
+
+    public void updateFriendState(int state,Firebase userRef){
+        if((state == 0 || state == 1 || state == 2) && userRef != null){
+
+        }
+    }
+    */
 
     public Map<String, Object> getFriends() {
         return friends;
