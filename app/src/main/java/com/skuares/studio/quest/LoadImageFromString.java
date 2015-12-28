@@ -23,7 +23,7 @@ public class LoadImageFromString {
 
     public LoadImageFromString(Context context) {
         this.context = context;
-        placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.placeholder);
+        placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.images_place);
     }
 
     public void loadBitmapFromString(String stringImage, ImageView imageView) {

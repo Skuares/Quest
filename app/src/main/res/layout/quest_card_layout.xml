@@ -26,7 +26,7 @@
                 android:clickable="true"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                android:src="@drawable/download"
+                android:src="@drawable/images_place"
                 android:scaleType="fitXY"/>
 
             <TextView
@@ -51,7 +51,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/placeholder"
+                android:src="@drawable/images_place"
                 android:layout_below="@+id/questTitle"/>
 
             <TextView

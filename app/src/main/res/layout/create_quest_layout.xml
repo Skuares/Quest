@@ -47,8 +47,8 @@
                 <ImageView
                     android:id="@+id/questImageAdd"
                     android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:src="@drawable/books"
+                    android:layout_height="180dp"
+                    android:src="@drawable/images_place"
                     android:clickable="true"
                     android:scaleType="fitXY"
                     />

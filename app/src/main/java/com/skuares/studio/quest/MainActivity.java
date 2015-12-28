@@ -47,7 +47,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
 
-    ParseObject userObject;
+    public static ParseObject userObject;
     ParseInstallation parseInstallation;
 
     public static int badgeCount = 0;

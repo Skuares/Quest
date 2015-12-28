@@ -12,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.client.Firebase;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.skuares.studio.quest.LoadImageFromString;
 import com.skuares.studio.quest.MainActivity;
 import com.skuares.studio.quest.R;
@@ -19,6 +23,7 @@ import com.skuares.studio.quest.User;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +92,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         }
 
         holder.senderName.setText(users.get(position).getUsername());
-        loadImageFromString.loadBitmapFromString(users.get(position).getUserImage(),holder.senderImage);
+        loadImageFromString.loadBitmapFromString(users.get(position).getUserImage(), holder.senderImage);
         // attach listener on buttons
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +126,52 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 holder.ignore.setVisibility(View.GONE);
                 holder.accept.setVisibility(View.GONE);
                 holder.senderName.setVisibility(View.GONE);
-                holder.requestDescription.setText("You are now a friend with "+users.get(position).getUsername());
+                holder.requestDescription.setText("You are now a friend with " + users.get(position).getUsername());
+
+                // insert into Parse
+                // this user's array of friends
+                // the sender array
+
+                // reciver (this user)
+
+                ParseQuery<ParseObject> queryReceiver = ParseQuery.getQuery("Users");
+                queryReceiver.whereEqualTo("authorId", MainActivity.uid); // find the sender ,, we should pass the sender id
+                queryReceiver.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                        if (e == null) {
+
+                            ParseObject object = objects.get(0); // only one element. the id is unique
+                            object.addUnique("friends",usersIds.get(position));// senderId
+                            object.saveInBackground();
+                        } else {
+                            Log.d("score", "Error: " + e.getMessage());
+                        }
+                    }
+
+                });
+
+
+
+
+                // sender parse stuff
+                ParseQuery<ParseObject> querySender = ParseQuery.getQuery("Users");
+                querySender.whereEqualTo("authorId", usersIds.get(position)); // find the sender ,, we should pass the sender id
+                querySender.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                        if (e == null) {
+
+                            ParseObject object = objects.get(0); // only one element. the id is unique
+                            object.addUnique("friends",MainActivity.uid);
+                            object.saveInBackground();
+                        } else {
+                            Log.d("score", "Error: " + e.getMessage());
+                        }
+                    }
+
+                });
+
 
 
 
@@ -138,10 +188,10 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 // make a map with null value and its key should be sender/receiver ids
                 // begin with this user
                 Map<String,Object> mapReceiver = new HashMap<String, Object>();
-                mapReceiver.put(usersIds.get(position),null);
+                mapReceiver.put(usersIds.get(position), null);
 
                 Map<String,Object> mapSender = new HashMap<String, Object>();
-                mapSender.put(MainActivity.uid,null);
+                mapSender.put(MainActivity.uid, null);
 
                 // get references to sender/receiver
                 Firebase firebaseSenderRef = MainActivity.ref.child("users").child(usersIds.get(position)).child("friends");

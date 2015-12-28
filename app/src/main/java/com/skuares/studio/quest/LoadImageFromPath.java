@@ -22,7 +22,7 @@ public class LoadImageFromPath {
 
     public LoadImageFromPath(Context context) {
         this.context = context;
-        placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.placeholder);
+        placeholder = BitmapFactory.decodeResource(context.getResources(), R.drawable.images_place);
     }
 
     /* HOW TO CALL
