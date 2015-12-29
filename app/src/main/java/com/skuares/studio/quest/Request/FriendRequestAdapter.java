@@ -135,7 +135,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                 // reciver (this user)
 
                 ParseQuery<ParseObject> queryReceiver = ParseQuery.getQuery("Users");
-                queryReceiver.whereEqualTo("authorId", MainActivity.uid); // find the sender ,, we should pass the sender id
+                queryReceiver.whereEqualTo("authorId", MainActivity.uid); // find this user
                 queryReceiver.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> objects, com.parse.ParseException e) {
@@ -171,8 +171,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
                     }
 
                 });
-
-
 
 
             }

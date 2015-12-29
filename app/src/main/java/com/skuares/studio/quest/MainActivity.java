@@ -130,7 +130,11 @@ public class MainActivity extends AppCompatActivity {
         headerImage = (ImageView) headerView.findViewById(R.id.headerImage);
         headerText = (TextView) headerView.findViewById(R.id.headerText);
 
-
+        /*
+        Friend Request list of users pointers
+         */
+        usersPointers = new ArrayList<String>();
+        Log.e("checker", "users initialized");
         /**
          * Lets inflate the very first fragment
          * Here , we are inflating the TabFragment as the first Fragment
@@ -299,13 +303,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void fetchNotificationsFriendRequest(){
+
+    }
+
     public void retrieveUser() {
         if (mAuthData != null) {
 
             // listener for user key
             userRef = ref.child("users").child(mAuthData.getUid());
             uid = mAuthData.getUid();
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     // convert snapshot to user class
@@ -394,23 +402,39 @@ public class MainActivity extends AppCompatActivity {
                     get the users from pointers
                     activate icon
                      */
+                    // in a method otherwise we would have many listeners
+
                     // initialize the reference
-                    usersPointers = new ArrayList<String>();
+
                     friendsReqestReference = new Firebase("https://quest1.firebaseio.com/users/"+uid+"/friends");
                     Query query = friendsReqestReference.orderByValue().equalTo(0);
                     query.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             //Log.e("logmeThis",""+dataSnapshot.getKey());
-                            // save this pointer in usersPointers
-                            usersPointers.add(dataSnapshot.getKey());
+                            Log.e("RequestMainActivity", "onChildAdded");
 
 
-                            // check the value
-                            // only increment when it is 0
-                            if(dataSnapshot.getValue(Integer.class) == 0){
-                                badgeCount++;
+                            if(usersPointers.contains(dataSnapshot.getKey())){
+                                // it is already here
+                                // do nothing
+                                Log.e("checker","fail data is here");
+                            }else{
+                                // save this pointer in usersPointers
+                                usersPointers.add(dataSnapshot.getKey());
+                                Log.e("checker", "success data is nt here");
+                                for(String st: usersPointers){
+                                    Log.e("checkerData",""+st);
+                                }
+
+                                // check the value
+                                // only increment when it is 0
+                                if(dataSnapshot.getValue(Integer.class) == 0){
+
+                                    badgeCount++;
+                                }
                             }
+
                             // notify user by notification icon
 
 
@@ -440,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                             // the user accepts
-                            Log.e("MainActivityRequest","onChildChanged");
+                            Log.e("RequestMainActivity","onChildChanged");
                             // decrease the badgeCount and update the notification icon
                             // add the notification icon programmatically
                             //badgeCount--;
@@ -466,7 +490,7 @@ public class MainActivity extends AppCompatActivity {
                             usersPointers.remove(dataSnapshot.getKey());
 
 
-                            //Log.e("MainActivityRequest","onChildRemoved");
+                            Log.e("RequestMainActivity", "onChildRemoved");
                             // triggered when the user rejects or ignores the request
                             //badgeCount--;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -584,6 +608,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public List<String> getKeysFromValues(Map<String, Object> map, int value) {
         List<String> list = new ArrayList<String>();
 
@@ -600,19 +625,8 @@ public class MainActivity extends AppCompatActivity {
         return list;
     }
 
-    // called after the List<User> is filled with data
-    public void notificationStuff(List<User> users){
-        // adjust the badgeCount
-        badgeCount = users.size();
-        // show the notification icon with appropriate number based on users.size()
-         /*
-         //If you want to add your ActionItem programmatically you can do this too. You do the following:
-        new ActionItemBadgeAdder().act(this).menu(menu).title(R.string.sample_2).itemDetails(0, SAMPLE2_ID, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(bigStyle, 1);
-        return true;
-         */
-        //
-    }
 
+    /*
 
     private class CheckFriendRequests extends AsyncTask<Map<String, Object>, Void, Void> {
 
@@ -676,6 +690,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    */
 
 
 

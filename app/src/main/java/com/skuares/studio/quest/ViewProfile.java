@@ -17,15 +17,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.parse.FindCallback;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -245,6 +252,83 @@ public class ViewProfile extends AppCompatActivity {
                         // delete this user(author) from the hashmap
                         // and delete this user (current) from author's hashmap
 
+                        new MaterialDialog.Builder(ViewProfile.this)
+                                .title("Unfriend")
+                                .content("Do you want to unfriend " + mUser.getUsername() + " ?")
+                                .positiveText("Unfriend")
+                                .negativeText("Cancel")
+                                .theme(Theme.DARK)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                                        // unfriend the user
+                                        // currentUser has the other user id
+                                        Map<String, Object> currentUserMap = new HashMap<String, Object>();
+                                        currentUserMap.put(author, null);
+
+                                        Map<String, Object> unfriendedMap = new HashMap<String, Object>();
+                                        unfriendedMap.put(MainActivity.uid, null);
+
+                                        // get references to sender/receiver
+                                        Firebase firebaseUnfriendedRef = MainActivity.ref.child("users").child(author).child("friends");
+                                        Firebase firebaseThisUserRef = MainActivity.userRef.child("friends");
+
+                                        firebaseUnfriendedRef.updateChildren(unfriendedMap);
+                                        firebaseThisUserRef.updateChildren(currentUserMap);
+
+                                        // change the icon
+                                        floatingActionButton.setImageResource(R.drawable.ic_action_add_person);
+                                        // change the state
+                                        userState = null;
+
+                                        // parse stuff
+                                        // delete from user array of friends
+
+
+                                        // reciver (this user)
+
+                                        ParseQuery<ParseObject> queryThisUser = ParseQuery.getQuery("Users");
+                                        queryThisUser.whereEqualTo("authorId", MainActivity.uid); // find this user
+                                        queryThisUser.findInBackground(new FindCallback<ParseObject>() {
+                                            @Override
+                                            public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                                                if (e == null) {
+
+                                                    ParseObject object = objects.get(0); // only one element. the id is unique
+                                                    List<String> strings = new ArrayList<String>();
+                                                    strings.add(author);
+                                                    object.removeAll("friends", strings);
+                                                    object.saveInBackground();
+                                                } else {
+                                                    Log.d("score", "Error: " + e.getMessage());
+                                                }
+                                            }
+
+                                        });
+
+                                        ParseQuery<ParseObject> queryOtherUser = ParseQuery.getQuery("Users");
+                                        queryOtherUser.whereEqualTo("authorId", author); // find the other user, the one we are viewing
+                                        queryOtherUser.findInBackground(new FindCallback<ParseObject>() {
+                                            @Override
+                                            public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                                                if (e == null) {
+
+                                                    ParseObject object = objects.get(0); // only one element. the id is unique
+                                                    List<String> strings = new ArrayList<String>();
+                                                    strings.add(MainActivity.uid);
+                                                    object.removeAll("friends", strings);
+                                                    object.saveInBackground();
+                                                } else {
+                                                    Log.d("score", "Error: " + e.getMessage());
+                                                }
+                                            }
+
+                                        });
+
+
+                                    }
+                                })
+                                .show();
 
 
                     }else if(userState == request){

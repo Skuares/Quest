@@ -127,6 +127,7 @@ public class User {
     */
 
     public Map<String, Object> getFriends() {
+
         return friends;
     }
 
