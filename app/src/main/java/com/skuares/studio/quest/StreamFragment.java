@@ -16,6 +16,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -355,10 +357,14 @@ public class StreamFragment extends Fragment {
 
 
         if(questCards != null){
-            adapter = new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2);
-            recyclerView.setAdapter(adapter);
+            //adapter = new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2);
+            //recyclerView.setAdapter(adapter);
             //Log.e("assigned", "adapter gets called and finishing on activity");
 
+            // material design library
+            adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
+            recyclerView.setAdapter(adapter);
+            MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
         }
 
         return view;

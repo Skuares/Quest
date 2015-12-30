@@ -1,0 +1,15 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/circle">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:fitsSystemWindows="true"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        android:src="@drawable/rsz_quest_logo"
+        android:id="@+id/logo_white"/>
+</FrameLayout>

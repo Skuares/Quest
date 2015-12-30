@@ -174,6 +174,10 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }
+                if(item.getItemId() == R.id.thirdItem){
+                    Intent matIntent = new Intent(MainActivity.this,MaterialDes.class);
+                    startActivity(matIntent);
+                }
 
                 if (item.getItemId() == R.id.logout) {
 
@@ -222,37 +226,11 @@ public class MainActivity extends AppCompatActivity {
 
         this.menu = menu;
         /*
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
-        } else {
-            new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
-        }
-        */
 
-        //Log.e("MenuInf", "Menu");
-
-        //you can add some logic (hide it if the count == 0)
-        /*
-        if (MainActivity.badgeCount > 0) {
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
-            } else {
-                ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
-            }
-
-
-        } else {
-            ActionItemBadge.hide(menu.findItem(R.id.item_samplebadge));
-        }
         */
         return true;
 
-        /*
-         //If you want to add your ActionItem programmatically you can do this too. You do the following:
-        new ActionItemBadgeAdder().act(this).menu(menu).title(R.string.sample_2).itemDetails(0, SAMPLE2_ID, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(bigStyle, 1);
-        return true;
-         */
+
     }
 
     @Override
