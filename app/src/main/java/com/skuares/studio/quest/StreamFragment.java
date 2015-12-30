@@ -135,9 +135,11 @@ public class StreamFragment extends Fragment {
                             // ensure it gets called once
                             if (increment[0] == questCards.size()) {
                                 // call the adapter
-                                Log.e("onchild", "adapter gets called");
-                                adapter = new QuestAdapter(getContext(),questCards, loadImageFromString, loadImageFromString2);
+                                adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
                                 recyclerView.setAdapter(adapter);
+                                MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
+                                //Log.e("CheckerAdalter", "adapter is set2");
+
                             }
 
 
@@ -305,9 +307,13 @@ public class StreamFragment extends Fragment {
 
                             int i = numberOfLoops[0];
                             if (questCards.size() == i) {
-                                //Log.e("assigned", "list is ready");
-                                adapter = new QuestAdapter(getContext(),questCards, loadImageFromString, loadImageFromString2);
+
+                                adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
                                 recyclerView.setAdapter(adapter);
+                                MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
+                                //Log.e("CheckerAdalter", "adapter is set2");
+
+
 
                             }
 
@@ -347,12 +353,22 @@ public class StreamFragment extends Fragment {
         View view = inflater.inflate(R.layout.stream_layout,container,false);
         //Log.e("assigned","I am here on create view");
 
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // set recyle stuff
         recyclerView = (RecyclerView)view.findViewById(R.id.recycleview);
         recyclerView.setHasFixedSize(true); // only one view
 
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+
+
 
 
 
@@ -365,9 +381,13 @@ public class StreamFragment extends Fragment {
             adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
             recyclerView.setAdapter(adapter);
             MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
-        }
+            Log.e("CheckerAdalter", "adapter is set2");
 
-        return view;
+        }
+        //MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
+        Log.e("CheckerAdalter", "register");
+
+
     }
 
     @Override
@@ -386,6 +406,7 @@ public class StreamFragment extends Fragment {
                 startActivity(intentQuest);
             }
         });
+
 
 
     }

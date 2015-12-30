@@ -3,13 +3,16 @@ package com.skuares.studio.quest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -26,16 +29,15 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
+import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
-import com.mikepenz.actionitembadge.library.ActionItemBadgeAdder;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
 //Social login libraries
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.skuares.studio.quest.Request.RequestActivity;
 
@@ -69,8 +71,21 @@ public class MainActivity extends AppCompatActivity {
 
     private Map<String, Object> friendsMap;
 
-    DrawerLayout drawerLayout;
+
+
+
+    private MaterialViewPager mViewPager;
+
+    private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private Toolbar toolbar;
+
+
+
+
     NavigationView navigationView;
+
+
     android.support.v4.app.FragmentTransaction transaction;
     android.support.v4.app.FragmentManager manager;
 
@@ -98,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         // check user
         ref = new Firebase(getResources().getString(R.string.firebaseUrl));
         // authinticate user if logged in send him to home
@@ -115,10 +129,152 @@ public class MainActivity extends AppCompatActivity {
          * user and hide hide any login buttons */
         ref.addAuthStateListener(mAuthStateListener);
 
+
+        mViewPager = (MaterialViewPager)findViewById(R.id.materialViewPager);
+        setTitle("");
+
+        toolbar = mViewPager.getToolbar();
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout2);
+
+        //new MyAdapter(getChildFragmentManager(),getContext())
+        mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+
+            @Override
+            public Fragment getItem(int position) {
+                switch (position){
+
+                    case 0: return new StreamFragment();
+                    case 1: return new MapFragment();
+                    case 2: return new PersonStreamFragment();
+                }
+                return null;
+            }
+
+            @Override
+            public int getCount() {
+                return 3;
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                switch (position % 3) {
+                    case 0:
+                        return "Home";
+                    case 1:
+                        return "Map";
+                    case 2:
+                        return "Personnel";
+
+                }
+                return "";
+            }
+        });
+
+        /*
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                            } else {
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                            }
+         */
+
+        // NEED ADJUSTMENT BASED ON API
+        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+            @Override
+            public HeaderDesign getHeaderDesign(int page) {
+                switch (page) {
+                    case 0:
+
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.green,
+                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
+                    case 1:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.blue,
+                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
+                    case 2:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.cyan,
+                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+                }
+
+                //execute others actions if needed (ex : modify your header logo)
+
+                return null;
+            }
+        });
+
+        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+
+            final ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayUseLogoEnabled(false);
+                actionBar.setHomeButtonEnabled(true);
+            }
+        }
+
+        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawer,toolbar,R.string.app_name,R.string.app_name);
+        mDrawer.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+
+
+
+
         // **********************************************************
         // ******************************************************8888
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+
+        /*
+        Friend Request list of users pointers
+         */
+
+        badgeCount = 0;
+        usersPointers = new ArrayList<String>();
+        Log.e("checker", "users initialized");
+
+
+        /**
+         * Lets inflate the very first fragment
+         * Here , we are inflating the TabFragment as the first Fragment
+         */
+
+        //manager = getSupportFragmentManager();
+        //transaction = manager.beginTransaction();
+        //transaction.replace(R.id.containerView, new TabFragment()).commit();
+
+        /**
+         * Setup click events on the Navigation View Items.
+         */
+
+
+        View logo = findViewById(R.id.logo_white);
+        if (logo != null)
+            logo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.notifyHeaderChanged();
+                    Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+
+
+        //drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         navigationView = (NavigationView) findViewById(R.id.shitstuff);
 
         // we need the header view
@@ -130,29 +286,11 @@ public class MainActivity extends AppCompatActivity {
         headerImage = (ImageView) headerView.findViewById(R.id.headerImage);
         headerText = (TextView) headerView.findViewById(R.id.headerText);
 
-        /*
-        Friend Request list of users pointers
-         */
-        usersPointers = new ArrayList<String>();
-        Log.e("checker", "users initialized");
-        /**
-         * Lets inflate the very first fragment
-         * Here , we are inflating the TabFragment as the first Fragment
-         */
-
-        manager = getSupportFragmentManager();
-        transaction = manager.beginTransaction();
-        transaction.replace(R.id.containerView, new TabFragment()).commit();
-
-        /**
-         * Setup click events on the Navigation View Items.
-         */
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 // when user clicks close the drawer
-                drawerLayout.closeDrawers();
+                mDrawer.closeDrawers();
 
                 if (item.getItemId() == R.id.edit_profile) {
 
@@ -167,17 +305,18 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (item.getItemId() == R.id.secondItem) {
+                    /*
                     android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
                     transaction.replace(R.id.containerView, new NothingFragment());
                     transaction.addToBackStack("other");
                     transaction.commit();
-
+                    */
 
                 }
                 if(item.getItemId() == R.id.thirdItem){
-                    Intent matIntent = new Intent(MainActivity.this,MaterialDes.class);
-                    startActivity(matIntent);
+
                 }
+
 
                 if (item.getItemId() == R.id.logout) {
 
@@ -197,23 +336,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         // setup drawer toggle
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
 
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
-                R.string.app_name);
+        //ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
+          //      R.string.app_name);
 
-        drawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+        //drawerLayout.setDrawerListener(mDrawerToggle);
+        //mDrawerToggle.syncState();
 
-
-        badgeCount = 0;
-
-        /*
-        Parse Stuff
-        Should be in retrieve user , cause we need the data
-         */
 
 
     }

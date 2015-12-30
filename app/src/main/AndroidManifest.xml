@@ -64,14 +64,6 @@
         </activity>
 
         <activity
-            android:name=".MaterialDes"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name"
-            android:theme="@style/AppThemeMaterial">
-        </activity>
-
-
-        <activity
             android:name="com.skuares.studio.quest.TodosActivity"
             android:screenOrientation="portrait"
             android:label="@string/app_name"
