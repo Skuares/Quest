@@ -53,9 +53,12 @@ import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 
 //Social login libraries
@@ -444,14 +447,48 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             Log.e("PLACEPICKED",String.valueOf(placeLikelihoodHolder.getPlace().getName()));
                             // get the best place and save it in user firebase and in user Parse
                             // try first getting the first location
-                            Place place = placeLikelihoodHolder.getPlace();
+                            final Place place = placeLikelihoodHolder.getPlace();
 
-                            UserPlace userPlace = new UserPlace(place.getName().toString(),place.getAddress().toString(),
+                            final UserPlace userPlace = new UserPlace(place.getName().toString(),place.getAddress().toString(),
                                     place.getId(),place.getLatLng().latitude,place.getLatLng().longitude);
 
                             if(userRef != null){
                                 Log.e("placeInsert","doing it now");
                                 userRef.child("place").setValue(userPlace);
+
+                                // insert into parse
+                                // get the user authorId
+
+                                ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+                                String authorId = (String) installation.get("installationAuthorId");
+                                // make sure we have a valid data in parse
+                                if(authorId != null){
+                                    // get the user now
+                                    ParseQuery<ParseObject> queryOtherUser = ParseQuery.getQuery("Users");
+                                    queryOtherUser.whereEqualTo("authorId", authorId); // find the other user, the one we are viewing
+                                    queryOtherUser.findInBackground(new FindCallback<ParseObject>() {
+                                        @Override
+                                        public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                                            if (e == null) {
+
+                                                ParseObject object = objects.get(0); // only one element. the id is unique
+                                                // create a ParseGeoPoint
+                                                ParseGeoPoint parseGeoPoint = new ParseGeoPoint(userPlace.getPlaceLatitude(),userPlace.getPlaceLongitude());
+                                                // insert the coordinates into it
+
+                                                object.put("location", parseGeoPoint);
+                                                object.saveInBackground();
+                                            } else {
+                                                Log.d("score", "Error: " + e.getMessage());
+                                            }
+                                        }
+
+                                    });
+
+
+                                }
+
+
                             }
 
 
