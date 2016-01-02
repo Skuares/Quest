@@ -1,11 +1,20 @@
 package com.skuares.studio.quest;
 
+import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +22,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -31,6 +42,16 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -43,10 +64,11 @@ import com.skuares.studio.quest.Request.RequestActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     public static ParseObject userObject;
@@ -60,11 +82,11 @@ public class MainActivity extends AppCompatActivity {
 
     Menu menu;
 
-    /* Bad strategy a better approach in retreive user method
-    2 lists to get the friend requests
-    list<String> to hold all the friend requests identified by 0 and contains the users pointers
-    list<User> obtained from list<String>  and passed through the intent to RequestActivity
-     */
+        /* Bad strategy a better approach in retreive user method
+        2 lists to get the friend requests
+        list<String> to hold all the friend requests identified by 0 and contains the users pointers
+        list<User> obtained from list<String>  and passed through the intent to RequestActivity
+         */
 
     public static List<String> usersPointers;
     private List<User> friendRequestUsers;
@@ -72,15 +94,11 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, Object> friendsMap;
 
 
-
-
     private MaterialViewPager mViewPager;
 
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar toolbar;
-
-
 
 
     NavigationView navigationView;
@@ -108,6 +126,20 @@ public class MainActivity extends AppCompatActivity {
     public static User myUser = null;
     public static Bitmap userImageStatic = null;
 
+
+    /*
+    Google Places Api
+     */
+    private boolean runOncePlaceGetter = false;
+    private GoogleApiClient mGoogleApiClient;
+
+    // Request code to use when launching the resolution activity
+    private static final int REQUEST_RESOLVE_ERROR = 1001;
+    // Unique tag for the error dialog fragment
+    private static final String DIALOG_ERROR = "dialog_error";
+    // Bool to track whether the app is already resolving an error
+    private boolean mResolvingError = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,12 +157,13 @@ public class MainActivity extends AppCompatActivity {
                 setAuthenticatedUser(authData);
             }
         };
-        /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
-         * user and hide hide any login buttons */
+            /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
+             * user and hide hide any login buttons */
         ref.addAuthStateListener(mAuthStateListener);
 
+        runOncePlaceGetter = true;
 
-        mViewPager = (MaterialViewPager)findViewById(R.id.materialViewPager);
+        mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
         setTitle("");
 
         toolbar = mViewPager.getToolbar();
@@ -141,11 +174,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public Fragment getItem(int position) {
-                switch (position){
+                switch (position) {
 
-                    case 0: return new StreamFragment();
-                    case 1: return new MapFragment();
-                    case 2: return new PersonStreamFragment();
+                    case 0:
+                        return new StreamFragment();
+                    case 1:
+                        return new MapFragment();
+                    case 2:
+                        return new PersonStreamFragment();
                 }
                 return null;
             }
@@ -170,18 +206,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
-                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
-                            } else {
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
-                                //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
-                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
-                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                            }
-         */
+            /*
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                    //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                    ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                    //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                } else {
+                                    ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                    //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+                                    //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                    //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                }
+             */
 
         // NEED ADJUSTMENT BASED ON API
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
@@ -191,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
 
                         return HeaderDesign.fromColorResAndUrl(
-                                R.color.green,
+                                R.color.bluesh,
                                 "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
                     case 1:
                         return HeaderDesign.fromColorResAndUrl(
@@ -225,12 +261,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawer,toolbar,R.string.app_name,R.string.app_name);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.app_name, R.string.app_name);
         mDrawer.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-
-
-
 
 
         // **********************************************************
@@ -238,9 +271,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        /*
-        Friend Request list of users pointers
-         */
+            /*
+            Friend Request list of users pointers
+             */
 
         badgeCount = 0;
         usersPointers = new ArrayList<String>();
@@ -270,8 +303,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
                 }
             });
-
-
 
 
         //drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -305,15 +336,15 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (item.getItemId() == R.id.secondItem) {
-                    /*
-                    android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.containerView, new NothingFragment());
-                    transaction.addToBackStack("other");
-                    transaction.commit();
-                    */
+                        /*
+                        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+                        transaction.replace(R.id.containerView, new NothingFragment());
+                        transaction.addToBackStack("other");
+                        transaction.commit();
+                        */
 
                 }
-                if(item.getItemId() == R.id.thirdItem){
+                if (item.getItemId() == R.id.thirdItem) {
 
                 }
 
@@ -321,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.logout) {
 
                     if (mAuthData != null) {
-                        /* logout of Firebase */
+                            /* logout of Firebase */
                         ref.unauth();
                     } else {
 
@@ -335,21 +366,221 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // setup drawer toggle
-        //android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
-
-        //ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name,
-          //      R.string.app_name);
-
-        //drawerLayout.setDrawerListener(mDrawerToggle);
-        //mDrawerToggle.syncState();
-
+        // Create a GoogleApiClient instance
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
 
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mResolvingError) {  // more about this later
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+
+    }
+    /*
+    Get current place of user
+
+    likelihood is from 0 to 1.0
+
+    CONSIDER DOING IT IN A BACKGROUND (done)
+     */
+
+    private class UserPlaceBackground extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //  Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Log.e("placesno","returned");
+                return null;
+            }
+
+            // restric this to run only once
+            // not every time we change activity
+            if(runOncePlaceGetter){
+                PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                        .getCurrentPlace(mGoogleApiClient, null);
+                result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+                    @Override
+                    public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
+
+                        PlaceLikelihood placeLikelihoodHolder = null;
+                        float likelihood = (float) 0.0;
+
+                        for (PlaceLikelihood placeLikelihood : likelyPlaces) {
+
+                            if(placeLikelihood.getLikelihood() > likelihood){
+                                // this is good place
+                                placeLikelihoodHolder = placeLikelihood;
+                                // set the likelihood to the new value
+                                likelihood = placeLikelihood.getLikelihood();
+                            }
+
+
+                        }
+                        if(placeLikelihoodHolder != null){
+
+                            Log.e("PLACEPICKED",String.valueOf(placeLikelihoodHolder.getPlace().getName()));
+                            // get the best place and save it in user firebase and in user Parse
+                            // try first getting the first location
+                            Place place = placeLikelihoodHolder.getPlace();
+
+                            UserPlace userPlace = new UserPlace(place.getName().toString(),place.getAddress().toString(),
+                                    place.getId(),place.getLatLng().latitude,place.getLatLng().longitude);
+
+                            if(userRef != null){
+                                Log.e("placeInsert","doing it now");
+                                userRef.child("place").setValue(userPlace);
+                            }
+
+
+                        }
+
+                        likelyPlaces.release();
+                    }
+                });
+
+                // set it back to false
+                runOncePlaceGetter = false;
+            }
+
+            return null;
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        // get the current place
+        // this runs every time we navigate between activities
+        // needs to be solved
+        UserPlaceBackground userPlaceBackground = new UserPlaceBackground();
+        userPlaceBackground.execute();
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (mResolvingError) {
+            // Already attempting to resolve an error.
+            return;
+        } else if (result.hasResolution()) {
+            try {
+                mResolvingError = true;
+                result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
+            } catch (IntentSender.SendIntentException e) {
+                // There was an error with the resolution intent. Try again.
+                mGoogleApiClient.connect();
+            }
+        } else {
+            // Show dialog using GoogleApiAvailability.getErrorDialog()
+            showErrorDialog(result.getErrorCode());
+            mResolvingError = true;
+        }
+
+    }
+
+    // The rest of this code is all about building the error dialog
+
+    /* Creates a dialog for an error message */
+    private void showErrorDialog(int errorCode) {
+        // Create a fragment for the error dialog
+        ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
+        // Pass the error that should be displayed
+        Bundle args = new Bundle();
+        args.putInt(DIALOG_ERROR, errorCode);
+        dialogFragment.setArguments(args);
+        dialogFragment.show(getSupportFragmentManager(), "errordialog");
+    }
+
+    /* Called from ErrorDialogFragment when the dialog is dismissed. */
+    public void onDialogDismissed() {
+        mResolvingError = false;
+    }
+
+    /* A fragment to display an error dialog */
+    public static class ErrorDialogFragment extends DialogFragment {
+
+        public ErrorDialogFragment() {
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Get the error code and retrieve the appropriate dialog
+            int errorCode = this.getArguments().getInt(DIALOG_ERROR);
+            return GoogleApiAvailability.getInstance().getErrorDialog(
+                    this.getActivity(), errorCode, REQUEST_RESOLVE_ERROR);
+        }
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+
+            //((MainActivity) getActivity()).onDialogDismissed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_RESOLVE_ERROR) {
+            mResolvingError = false;
+            if (resultCode == RESULT_OK) {
+                // Make sure the app is not already connected or attempting to connect
+                if (!mGoogleApiClient.isConnecting() &&
+                        !mGoogleApiClient.isConnected()) {
+                    mGoogleApiClient.connect();
+                }
+            }
+        }
+    }
+
+
+    // Animation
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupWindowAnimations() {
+        Slide slide = (Slide) TransitionInflater.from(this).inflateTransition(R.transition.activity_slide);
+        getWindow().setExitTransition(slide);
+    }
+
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -357,9 +588,9 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
         this.menu = menu;
-        /*
+            /*
 
-        */
+            */
         return true;
 
 
@@ -386,13 +617,13 @@ public class MainActivity extends AppCompatActivity {
             badgeCount = 0;
 
             //ActionItemBadge.update(item, MainActivity.badgeCount);
-            /*
-            // check if zero let it go
-            if (badgeCount <= 0) {
-                // hide it
-                ActionItemBadge.hide(item);
-            }
-            */
+                /*
+                // check if zero let it go
+                if (badgeCount <= 0) {
+                    // hide it
+                    ActionItemBadge.hide(item);
+                }
+                */
 
             return true;
         }
@@ -404,16 +635,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Logs 'install' and 'app activate' App Events.
-        AppEventsLogger.activateApp(this);
-    }
 
 
-    public void fetchNotificationsFriendRequest(){
+
+    public void fetchNotificationsFriendRequest() {
 
     }
 
@@ -440,17 +665,17 @@ public class MainActivity extends AppCompatActivity {
                     // change the name
                     headerText.setText(myUser.getUsername());
 
-                    /*
-                    1- Put parse stuff to create the user class
-                    2- set up the Parse Installation .. add the author id to it
-                    so it can be unique
-                     */
+                        /*
+                        1- Put parse stuff to create the user class
+                        2- set up the Parse Installation .. add the author id to it
+                        so it can be unique
+                         */
 
-                    /*
-                    Ensure this gets called once
-                    not every time user opens the account
+                        /*
+                        Ensure this gets called once
+                        not every time user opens the account
 
-                     */
+                         */
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                     if (sharedPreferences.getBoolean("firstTime", true)) {
                         // run once
@@ -505,18 +730,18 @@ public class MainActivity extends AppCompatActivity {
                         editor.commit();
                     }
 
-                    /*
-                    Better approach attach a listener on users/userId/friends by value 0
-                    when this triggered
-                    get the users pointers
-                    get the users from pointers
-                    activate icon
-                     */
+                        /*
+                        Better approach attach a listener on users/userId/friends by value 0
+                        when this triggered
+                        get the users pointers
+                        get the users from pointers
+                        activate icon
+                         */
                     // in a method otherwise we would have many listeners
 
                     // initialize the reference
 
-                    friendsReqestReference = new Firebase("https://quest1.firebaseio.com/users/"+uid+"/friends");
+                    friendsReqestReference = new Firebase("https://quest1.firebaseio.com/users/" + uid + "/friends");
                     Query query = friendsReqestReference.orderByValue().equalTo(0);
                     query.addChildEventListener(new ChildEventListener() {
                         @Override
@@ -525,21 +750,21 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("RequestMainActivity", "onChildAdded");
 
 
-                            if(usersPointers.contains(dataSnapshot.getKey())){
+                            if (usersPointers.contains(dataSnapshot.getKey())) {
                                 // it is already here
                                 // do nothing
-                                Log.e("checker","fail data is here");
-                            }else{
+                                Log.e("checker", "fail data is here");
+                            } else {
                                 // save this pointer in usersPointers
                                 usersPointers.add(dataSnapshot.getKey());
                                 Log.e("checker", "success data is nt here");
-                                for(String st: usersPointers){
-                                    Log.e("checkerData",""+st);
+                                for (String st : usersPointers) {
+                                    Log.e("checkerData", "" + st);
                                 }
 
                                 // check the value
                                 // only increment when it is 0
-                                if(dataSnapshot.getValue(Integer.class) == 0){
+                                if (dataSnapshot.getValue(Integer.class) == 0) {
 
                                     badgeCount++;
                                 }
@@ -553,20 +778,17 @@ public class MainActivity extends AppCompatActivity {
                             // add the notification icon programmatically
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
                             } else {
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
                             }
 
 
-
-                           // new ActionItemBadgeAdder().act(this).menu(menu).title("").itemDetails(0, 123123, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(1);
-
-
+                            // new ActionItemBadgeAdder().act(this).menu(menu).title("").itemDetails(0, 123123, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(1);
 
 
                         }
@@ -574,16 +796,16 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                             // the user accepts
-                            Log.e("RequestMainActivity","onChildChanged");
+                            Log.e("RequestMainActivity", "onChildChanged");
                             // decrease the badgeCount and update the notification icon
                             // add the notification icon programmatically
                             //badgeCount--;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
                             } else {
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
@@ -605,10 +827,10 @@ public class MainActivity extends AppCompatActivity {
                             //badgeCount--;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
                             } else {
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
@@ -632,73 +854,73 @@ public class MainActivity extends AppCompatActivity {
                     // store the keys in list<String> named usersPointers
                     // check this list
                     // if it's size 0, no friend requests
-                        // do nothing
+                    // do nothing
                     // else do the job of retriving the users' list in the background then activiate the notification icon
 
                     // let's do it
 
                     // 1- get the friends hashmap
-                    /*
-                    friendsMap = myUser.getFriends();
-                    // get all the keys that corresponds to 0 value using getKeysFromValue Method(might return null carefull)
+                        /*
+                        friendsMap = myUser.getFriends();
+                        // get all the keys that corresponds to 0 value using getKeysFromValue Method(might return null carefull)
 
-                    if (friendsMap == null) {
-                        // do nothing
-                    } else {
-                        // go go go
-                        // do in background
-                        //CheckFriendRequests checkFriendRequests = new CheckFriendRequests();
-                        //checkFriendRequests.execute(friendsMap);
-
-
-
-                        usersPointers = getKeysFromValues(friendsMap, 0);
-                        // check if usersPointers has values
-                        if (usersPointers != null) {
-                            friendRequestUsers = new ArrayList<User>();
-
-                            // loop through the list
-                            // attach listener for one time for each user pointer and store it in list<User> named friendRequestUser
-                            // reference
-                            Firebase firebase;
-                            final int[] checker = {0};
-                            for (int i = 0; i < usersPointers.size(); i++) {
-
-                                firebase = new Firebase("https://quest1.firebaseio.com/users/" + usersPointers.get(i));
-                                // attach listener for one time
+                        if (friendsMap == null) {
+                            // do nothing
+                        } else {
+                            // go go go
+                            // do in background
+                            //CheckFriendRequests checkFriendRequests = new CheckFriendRequests();
+                            //checkFriendRequests.execute(friendsMap);
 
 
-                                final int finalI = i;
-                                firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        // cast it to User and store it
-                                        User user = dataSnapshot.getValue(User.class);
-                                        friendRequestUsers.add(user);
-                                        Log.e("elseHas", "listener is called");
-                                        checker[0] = finalI;
 
-                                        // we need to know when to return
-                                        // call on last time we loop
-                                        if(checker[0]+1 == usersPointers.size()){
-                                            notificationStuff(friendRequestUsers);
+                            usersPointers = getKeysFromValues(friendsMap, 0);
+                            // check if usersPointers has values
+                            if (usersPointers != null) {
+                                friendRequestUsers = new ArrayList<User>();
+
+                                // loop through the list
+                                // attach listener for one time for each user pointer and store it in list<User> named friendRequestUser
+                                // reference
+                                Firebase firebase;
+                                final int[] checker = {0};
+                                for (int i = 0; i < usersPointers.size(); i++) {
+
+                                    firebase = new Firebase("https://quest1.firebaseio.com/users/" + usersPointers.get(i));
+                                    // attach listener for one time
+
+
+                                    final int finalI = i;
+                                    firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            // cast it to User and store it
+                                            User user = dataSnapshot.getValue(User.class);
+                                            friendRequestUsers.add(user);
+                                            Log.e("elseHas", "listener is called");
+                                            checker[0] = finalI;
+
+                                            // we need to know when to return
+                                            // call on last time we loop
+                                            if(checker[0]+1 == usersPointers.size()){
+                                                notificationStuff(friendRequestUsers);
+                                            }
+
+
                                         }
 
+                                        @Override
+                                        public void onCancelled(FirebaseError firebaseError) {
 
-                                    }
-
-                                    @Override
-                                    public void onCancelled(FirebaseError firebaseError) {
-
-                                    }
-                                });
+                                        }
+                                    });
 
 
+                                }
                             }
                         }
-                    }
 
-                    */ //else ends here
+                        */ //else ends here
 
 
                 }
@@ -736,73 +958,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
+        /*
 
-    private class CheckFriendRequests extends AsyncTask<Map<String, Object>, Void, Void> {
+        private class CheckFriendRequests extends AsyncTask<Map<String, Object>, Void, Void> {
 
-        Map<String, Object> map;
+            Map<String, Object> map;
 
-        @SafeVarargs
-        @Override
-        protected final Void doInBackground(Map<String, Object>... params) {
+            @SafeVarargs
+            @Override
+            protected final Void doInBackground(Map<String, Object>... params) {
 
-            map = params[0];
-            usersPointers = getKeysFromValues(map, 0);
-            // check if usersPointers has values
-            if (usersPointers == null) {
-                return null;
-            }else{
-                friendRequestUsers = new ArrayList<User>();
+                map = params[0];
+                usersPointers = getKeysFromValues(map, 0);
+                // check if usersPointers has values
+                if (usersPointers == null) {
+                    return null;
+                }else{
+                    friendRequestUsers = new ArrayList<User>();
 
-                // loop through the list
-                // attach listener for one time for each user pointer and store it in list<User> named friendRequestUser
-                // reference
-                Firebase firebase;
-                final int[] checker = {0};
-                for (int i = 0; i < usersPointers.size(); i++) {
+                    // loop through the list
+                    // attach listener for one time for each user pointer and store it in list<User> named friendRequestUser
+                    // reference
+                    Firebase firebase;
+                    final int[] checker = {0};
+                    for (int i = 0; i < usersPointers.size(); i++) {
 
-                    firebase = new Firebase("https://quest1.firebaseio.com/users/" + usersPointers.get(i));
-                    // attach listener for one time
+                        firebase = new Firebase("https://quest1.firebaseio.com/users/" + usersPointers.get(i));
+                        // attach listener for one time
 
 
-                    final int finalI = i;
-                    firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            // cast it to User and store it
-                            User user = dataSnapshot.getValue(User.class);
-                            friendRequestUsers.add(user);
-                            Log.e("elseHas", "listener is called");
-                            checker[0] = finalI;
+                        final int finalI = i;
+                        firebase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // cast it to User and store it
+                                User user = dataSnapshot.getValue(User.class);
+                                friendRequestUsers.add(user);
+                                Log.e("elseHas", "listener is called");
+                                checker[0] = finalI;
 
-                            // we need to know when to return
-                            // call on last time we loop
-                            if(checker[0]+1 == usersPointers.size()){
-                                notificationStuff(friendRequestUsers);
+                                // we need to know when to return
+                                // call on last time we loop
+                                if(checker[0]+1 == usersPointers.size()){
+                                    notificationStuff(friendRequestUsers);
+                                }
+
+
                             }
 
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
 
-                        }
+                            }
+                        });
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
 
-                        }
-                    });
-
+                    }
 
                 }
 
+                return null;
             }
 
-            return null;
+
         }
-
-
-    }
-    */
-
-
+        */
 
 
     @Override
@@ -817,7 +1037,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
 
-        if(UserProfile.imageHasChanged){
+        if (UserProfile.imageHasChanged) {
 
             String sImage = myUser.getUserImage();
             // convert string to bitmap and assign it
@@ -831,7 +1051,7 @@ public class MainActivity extends AppCompatActivity {
             // refresh the stream Fragment
 
             //Log.e("imagechanged","changed");
-        }else{
+        } else {
             //Log.e("imagechanged","not changed");
         }
 
@@ -839,7 +1059,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAuthenticatedUser(AuthData authData) {
-        if(authData != null){
+        if (authData != null) {
 
             retrieveUser();
 
@@ -848,9 +1068,9 @@ public class MainActivity extends AppCompatActivity {
             //Intent intent = new Intent(MainActivity.this,SignUp.class);
             //startActivity(intent);
             //finish();
-        }else{
+        } else {
 
-            Intent intent = new Intent(MainActivity.this,SignUp.class);
+            Intent intent = new Intent(MainActivity.this, SignUp.class);
             startActivity(intent);
             finish();
             // user is not authenticated through him out to log in
@@ -859,7 +1079,6 @@ public class MainActivity extends AppCompatActivity {
         // store the auth for later use
         this.mAuthData = authData;
     }
-
 
 
 }

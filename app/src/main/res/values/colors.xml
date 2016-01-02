@@ -17,7 +17,8 @@
     <!--Pink 700-->
     <color name="accent_700">#C2185B</color>
     <color name="black_trans80">#14000000</color>
-
+    <color name="nice_grey">#b1b1b1</color>
+    <color name="bluesh">#0a70c2</color>
     <color name="indicator_unselected">#4D000000</color>
     <color name="clouds">#fbfcfc</color>
     <color name="black">#000</color>

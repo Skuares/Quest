@@ -7,6 +7,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.firebase.client.Firebase;
+import com.google.android.gms.location.places.Place;
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.ByteArrayOutputStream;
@@ -35,6 +36,8 @@ public class User {
     2- Friend
      */
     private Map<String,Object> friends;
+
+    private UserPlace userPlace;
 
 
     public User(){}
@@ -90,7 +93,8 @@ public class User {
                 @JsonProperty("age") int age,
                 @JsonProperty("description") String description,
                 @JsonProperty("userImage") String bitmapString,
-                @JsonProperty("friends") Map<String,Object> friends){
+                @JsonProperty("friends") Map<String,Object> friends,
+                @JsonProperty("place") UserPlace userPlace){
         // for firebase
         this.firstName = firstName;
         this.lastName = lastName;
@@ -103,8 +107,14 @@ public class User {
         this.userImage = bitmapString;
         this.friends = friends;
         //Log.e("UserClass",String.valueOf(this.friends));
+        this.userPlace = userPlace;
+
+
     }
 
+    public UserPlace getUserPlace() {
+        return userPlace;
+    }
 
     public void addFriend(String id, int state,Firebase userRef) { // we can use to update too
 
@@ -117,14 +127,8 @@ public class User {
 
     }
 
-    /*
 
-    public void updateFriendState(int state,Firebase userRef){
-        if((state == 0 || state == 1 || state == 2) && userRef != null){
 
-        }
-    }
-    */
 
     public Map<String, Object> getFriends() {
 
@@ -132,16 +136,7 @@ public class User {
     }
 
 
-    /* NO LONGER USERFUL.. IT HAS TO BE A HASHMAP , THE ADD FREIND HAS 3 STATES
-    public void addFriends(String friendsUid,Firebase userRef) {
-        friends.add(friendsUid);
-        // save to firebase
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("friends",friends);
 
-        userRef.updateChildren(map);
-    }
-    */
 
     private String bitmapToString(Bitmap bitmap){
 
@@ -340,6 +335,7 @@ public class User {
         }
 
     }
+
 
 
 }

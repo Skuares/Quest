@@ -1,21 +1,39 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="240dp"
     android:orientation="vertical">
     <ImageView
-        android:id="@+id/headerImage"
+        android:id="@+id/headerBack"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/placeholderuser"
+        android:background="@color/bluesh"
         android:scaleType="fitXY"
 
          />
+    <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
+        android:layout_gravity="left"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/headerImage"
+        app:siShape="@drawable/shape_rounded_image"
+        android:scaleType="fitXY"
+        android:src="@drawable/placeholder"
+        app:siSquare="true"/>
+
+
     <TextView
         android:id="@+id/headerText"
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
+        android:gravity="center"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:text="Name Here"

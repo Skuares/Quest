@@ -22,14 +22,24 @@ import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapte
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 /**
  * Created by salim on 12/13/2015.
  */
 public class StreamFragment extends Fragment {
 
+
+
+    /*
+    GoogleApiClient Connection
+     */
+
+
     // identify the caller
     int onResumeCaller = 100;
     int onCreateCaller = 1;
+
 
 
     private LoadImageFromString loadImageFromString;
@@ -402,10 +412,12 @@ public class StreamFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // open create quest
+
                 Intent intentQuest = new Intent(getContext(),CreateQuest.class);
                 startActivity(intentQuest);
             }
         });
+
 
 
 
