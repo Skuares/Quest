@@ -1,5 +1,6 @@
 package com.skuares.studio.quest;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,21 +10,46 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.firebase.client.Firebase;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,7 +60,7 @@ import static com.skuares.studio.quest.UserProfile.getPath;
 /**
  * Created by salim on 12/19/2015.
  */
-public class CreateQuest extends AppCompatActivity {
+public class CreateQuest extends AppCompatActivity{
 
 
     public static List<ToDo> todosList;
@@ -53,6 +79,18 @@ public class CreateQuest extends AppCompatActivity {
 
     LoadImageFromPath loadImageFromPath;
 
+    /*
+    Todos Dialg layout
+     */
+    protected GoogleApiClient mGoogleApiClient;
+    ToDo toDo;
+    EditText addMoneyDialog,addTimeDialog,addDescriptionDialog;
+    ImageButton addDialog;
+    ListView listViewDialog;
+    PlaceAutocompleteFragment autocompleteFragment;
+    MaterialDialog dialog;
+
+
     private String pathString = null;
 
     private Firebase ref;
@@ -64,7 +102,7 @@ public class CreateQuest extends AppCompatActivity {
 
     EditText questTitleAdd;
     EditText questDescriptionAdd;
-    Button addTodos;
+
 
     private User userQuest;
 
@@ -76,6 +114,8 @@ public class CreateQuest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_quest_layout);
+
+       // buildGoogleApiClient();
 
         relativeLayout = (RelativeLayout)findViewById(R.id.appGone);
 
@@ -102,31 +142,8 @@ public class CreateQuest extends AppCompatActivity {
         questTitleAdd = (EditText)findViewById(R.id.questTitleAdd);
         publish = (Button)findViewById(R.id.publish);
 
-        addTodos = (Button)findViewById(R.id.addTodos);
-        addTodos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                /*
-
-                    // get red of the UI
-                //relativeLayout.setVisibility(View.INVISIBLE);
-                // populate the fragment
-                Fragment fragment = new TodoFragment();
-                android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-                transaction.add(R.id.relative, fragment,"TodoFragment");
-                //transaction.addToBackStack(null);
-                transaction.commit();
 
 
-                //Toast.makeText(CreateQuest.this,"clicked",Toast.LENGTH_LONG).show();
-
-                 */
-                Intent intent = new Intent(CreateQuest.this,TodoQuestActivity.class);
-                startActivity(intent);
-            }
-        });
         // get user
         if(MainActivity.myUser != null){
             userQuest = MainActivity.myUser;
@@ -232,32 +249,60 @@ public class CreateQuest extends AppCompatActivity {
 
     /*
 
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Toast.makeText(this, "Connection true",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Toast.makeText(this, "Connection Suspended",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(this, "Connection Failed",Toast.LENGTH_SHORT).show();
+
+    }
+    */
+
+
+    /*
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e("CreateQuest", "TO SEE IF ONSTART IS CALLED");
-        // get back the UI
-        relativeLayout.setVisibility(View.VISIBLE);
 
+        if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()){
+            Log.v("Google API","Connecting");
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if(mGoogleApiClient.isConnected()){
+            Log.v("Google API","Dis-Connecting");
+            mGoogleApiClient.disconnect();
+        }
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("CreateQuest", "TO SEE IF ONRESume IS CALLED");
-        relativeLayout.setVisibility(View.VISIBLE);
+
     }
     */
 
-    /*
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.e("CreateQuest","TO SEE IF ONRESTART IS CALLED");
-        // get back the UI
-        relativeLayout.setVisibility(View.VISIBLE);
-    }
-    */
 
 
 
@@ -427,8 +472,11 @@ public class CreateQuest extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.todos_menu, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -438,8 +486,168 @@ public class CreateQuest extends AppCompatActivity {
             finish();
             return true;
         }
+
+        if(item.getItemId() == R.id.action_todos){
+            // do todos stuff
+            // create a custum dialog
+            boolean wrapInScrollView = false;
+            dialog = new MaterialDialog.Builder(this)
+                    .title("Add Todo")
+                    .customView(R.layout.todos_dialog_input, wrapInScrollView)
+                    .positiveText("Done")
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(MaterialDialog dialog, DialogAction which) {
+                            // do stuff
+                            getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment)).commit();
+                        }
+                    })
+                    .build();
+
+            // do referencing and todos stuff
+            if(dialog != null){
+
+                final APlace[] aPlace = {null};
+                autocompleteFragment = (PlaceAutocompleteFragment)
+
+                        getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+                autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                    @Override
+                    public void onPlaceSelected(Place place) {
+                        //  Get info about the selected place.
+                        aPlace[0] = new APlace(place.getName().toString(),place.getAddress().toString(),
+                                place.getId(),place.getLatLng().latitude,place.getLatLng().longitude);
+
+                        //Toast.makeText(CreateQuest.this,"GOT IT Place: +"+  place.getName(),Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(Status status) {
+                        //  Handle the error.
+                        Toast.makeText(CreateQuest.this,"GOT IT Error: +"+ status,Toast.LENGTH_SHORT).show();
+                        Log.e("GOT IT ERROR", "An error occurred: " + status);
+                    }
+                });
+
+
+                addDescriptionDialog = (EditText) dialog.getCustomView().findViewById(R.id.addDescriptionDialog);
+                addTimeDialog = (EditText) dialog.getCustomView().findViewById(R.id.addTimeDialog);
+                addMoneyDialog = (EditText) dialog.getCustomView().findViewById(R.id.addMoneyDialog);
+                addDialog = (ImageButton)dialog.getCustomView().findViewById(R.id.addDialog);
+                listViewDialog = (ListView)dialog.getCustomView().findViewById(R.id.listViewDialog);
+
+
+                addDialog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // get all the values
+                        String desc = addDescriptionDialog.getText().toString();
+                        String time = addTimeDialog.getText().toString();
+                        String money = addMoneyDialog.getText().toString();
+
+                        if(desc.equals("") || time.equals("") || money.equals("")){
+                            Toast.makeText(CreateQuest.this,"Please Fill In The Fields",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        double moneys = Double.parseDouble(money);
+                        // create a to--do object
+                        APlace aPlace1 = aPlace[0];
+                        if(aPlace1 != null){
+                            toDo = new ToDo(desc,time,moneys,aPlace1);
+                            // add it to the list
+                            todosList.add(toDo);
+                            // call adapter
+                            listViewDialog.setAdapter(new CustomAdapterListView(CreateQuest.this,todosList));
+
+                            // empty fields
+                            addDescriptionDialog.setText("");
+                            addTimeDialog.setText("");
+                            addMoneyDialog.setText("");
+                        }else{
+                            Toast.makeText(CreateQuest.this,"You Must Choose a Place",Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+            }
+
+            dialog.show();
+
+
+
+            return true;
+        }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private class CustomAdapterListView extends BaseAdapter {
+
+        List<ToDo> list;
+        Context context;
+        private LayoutInflater inflater=null;
+
+        public CustomAdapterListView(Context context, List<ToDo> list){
+
+            this.context = context;
+            this.list = new ArrayList<ToDo>();
+            this.list = list;
+            inflater = ( LayoutInflater )context.
+                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public class Holder
+        {
+            TextView descText;
+            TextView costText;
+            TextView placeText;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            Holder holder;
+            View rowView = convertView;
+
+            if(convertView == null){
+
+                rowView = inflater.inflate(R.layout.todo_list_item, null);
+                holder = new Holder();
+                holder.descText=(TextView) rowView.findViewById(R.id.todoDesc);
+                holder.costText=(TextView) rowView.findViewById(R.id.todoCost);
+                holder.placeText = (TextView)rowView.findViewById(R.id.todoPlace);
+                rowView.setTag(holder);
+            }else{
+                holder = (Holder)rowView.getTag();
+            }
+
+            ToDo toDo = list.get(position);
+
+            holder.descText.setText(toDo.getDesc());
+            String mo = String.valueOf(toDo.getMoney());
+            String placeholder = mo+"RM"+" /"+toDo.getTime()+"H";
+            APlace aPlace = toDo.getaPlace();
+            holder.placeText.setText(aPlace.getPlaceAddress());
+            holder.costText.setText(placeholder);
+            return rowView;
+        }
     }
 
 }

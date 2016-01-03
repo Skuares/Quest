@@ -131,13 +131,6 @@
             android:textColor="#fff"
             android:text="Publish"/>
 
-        <Button
-            android:id="@+id/addTodos"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="@color/turq"
-            android:text="Add Todos"
-            android:layout_height="wrap_content" />
 
 
     </LinearLayout>

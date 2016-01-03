@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:float="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent">
+
+  <android.support.v7.widget.CardView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+
+      android:layout_margin="10dp"
+
+      >
+
+
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+        />
+
+  </android.support.v7.widget.CardView>
+
+    <EditText
+        android:id="@+id/addDescriptionDialog"
+        android:layout_width="match_parent"
+        android:hint="Description"
+        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingBottom="12dp"
+        android:textColorHint="@color/nice_grey"
+        android:layout_margin="10dp"
+        android:inputType="textCapSentences"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/addTimeDialog"
+        android:textColorHint="@color/nice_grey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingBottom="12dp"
+        android:inputType="number"
+        android:layout_margin="10dp"
+        android:hint="Hours To Finish?"/>
+
+
+
+    <EditText
+        android:id="@+id/addMoneyDialog"
+        android:inputType="number"
+        android:paddingLeft="5dp"
+        android:paddingStart="5dp"
+        android:paddingBottom="12dp"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/nice_grey"
+        android:hint="Cost, 0 If None?"/>
+
+
+
+
+    <ImageButton
+        android:id="@+id/addDialog"
+
+        android:src="@drawable/ic_action_new"
+        android:layout_width="match_parent"
+        android:background="#fff"
+        android:padding="8dp"
+        android:layout_height="wrap_content" />
+
+
+    <ListView
+        android:id="@+id/listViewDialog"
+        android:layout_below="@+id/add"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
+
+
+
+</LinearLayout>

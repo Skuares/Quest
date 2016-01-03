@@ -51,7 +51,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -67,7 +66,6 @@ import com.skuares.studio.quest.Request.RequestActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -432,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         float likelihood = (float) 0.0;
 
                         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-
+                            Toast.makeText(MainActivity.this,"I m in LOOP",Toast.LENGTH_SHORT).show();
                             if(placeLikelihood.getLikelihood() > likelihood){
                                 // this is good place
                                 placeLikelihoodHolder = placeLikelihood;
@@ -449,12 +447,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             // try first getting the first location
                             final Place place = placeLikelihoodHolder.getPlace();
 
-                            final UserPlace userPlace = new UserPlace(place.getName().toString(),place.getAddress().toString(),
+                            final APlace aPlace = new APlace(place.getName().toString(),place.getAddress().toString(),
                                     place.getId(),place.getLatLng().latitude,place.getLatLng().longitude);
 
                             if(userRef != null){
                                 Log.e("placeInsert","doing it now");
-                                userRef.child("place").setValue(userPlace);
+                                userRef.child("place").setValue(aPlace);
 
                                 // insert into parse
                                 // get the user authorId
@@ -473,7 +471,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                                                 ParseObject object = objects.get(0); // only one element. the id is unique
                                                 // create a ParseGeoPoint
-                                                ParseGeoPoint parseGeoPoint = new ParseGeoPoint(userPlace.getPlaceLatitude(),userPlace.getPlaceLongitude());
+                                                ParseGeoPoint parseGeoPoint = new ParseGeoPoint(aPlace.getPlaceLatitude(), aPlace.getPlaceLongitude());
                                                 // insert the coordinates into it
 
                                                 object.put("location", parseGeoPoint);
@@ -501,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 // set it back to false
                 runOncePlaceGetter = false;
             }
-
+            Log.e("places","I m in rETURN NULL");
             return null;
         }
     }
@@ -512,6 +510,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // get the current place
         // this runs every time we navigate between activities
         // needs to be solved
+        //Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
         UserPlaceBackground userPlaceBackground = new UserPlaceBackground();
         userPlaceBackground.execute();
 

@@ -7,7 +7,6 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.firebase.client.Firebase;
-import com.google.android.gms.location.places.Place;
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.ByteArrayOutputStream;
@@ -37,7 +36,7 @@ public class User {
      */
     private Map<String,Object> friends;
 
-    private UserPlace userPlace;
+    private APlace aPlace;
 
 
     public User(){}
@@ -94,7 +93,7 @@ public class User {
                 @JsonProperty("description") String description,
                 @JsonProperty("userImage") String bitmapString,
                 @JsonProperty("friends") Map<String,Object> friends,
-                @JsonProperty("place") UserPlace userPlace){
+                @JsonProperty("place") APlace aPlace){
         // for firebase
         this.firstName = firstName;
         this.lastName = lastName;
@@ -107,13 +106,13 @@ public class User {
         this.userImage = bitmapString;
         this.friends = friends;
         //Log.e("UserClass",String.valueOf(this.friends));
-        this.userPlace = userPlace;
+        this.aPlace = aPlace;
 
 
     }
 
-    public UserPlace getUserPlace() {
-        return userPlace;
+    public APlace getaPlace() {
+        return aPlace;
     }
 
     public void addFriend(String id, int state,Firebase userRef) { // we can use to update too

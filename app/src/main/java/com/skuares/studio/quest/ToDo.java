@@ -12,18 +12,26 @@ public class ToDo implements Serializable{
     private String desc;
     private String time;
     private double money;
+    private APlace aPlace;
 
     public ToDo(){}
 
 
     public ToDo(@JsonProperty("desc") String desc,
                 @JsonProperty("time") String time,
-                @JsonProperty("money") double money){
+                @JsonProperty("money") double money,
+                @JsonProperty("aPlace") APlace aPlace){
 
         this.desc = desc;
         this.time = time;
         this.money = money;
+        this.aPlace = aPlace;
     }
+
+    public APlace getaPlace() {
+        return aPlace;
+    }
+
     /*
     public ToDo(String desc, String time, double money){
 

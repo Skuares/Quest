@@ -1,29 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
 
-    <TextView
-        android:id="@+id/todoDesc"
-        android:text=""
-        android:textColor="@color/wet"
-        android:layout_width="0dp"
-        android:padding="5dp"
-        android:textSize="18sp"
-        android:layout_weight="4"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/todoCost"
-        android:text=""
-        android:padding="5dp"
-        android:textSize="16sp"
-        android:textColor="#000"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="Desciption: "
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/todoDesc"
+            android:text=""
+            android:textColor="@color/wet"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+
+        <TextView
+            android:text="Cost: "
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/todoCost"
+            android:text=""
+            android:padding="5dp"
+            android:textSize="16sp"
+            android:textColor="@color/wet"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="Address: "
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/todoPlace"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_weight="2"
+            android:textSize="18sp"
+            android:textColor="@color/wet"
+
+            />
+</LinearLayout>
 
 </LinearLayout>

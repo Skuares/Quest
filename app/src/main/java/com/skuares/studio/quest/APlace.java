@@ -5,7 +5,7 @@ import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by salim on 1/2/2016.
  */
-public class UserPlace {
+public class APlace {
 
     String placeName;
     String placeAddress;
@@ -14,9 +14,9 @@ public class UserPlace {
     double placeLongitude;
 
 
-    public UserPlace(){}
+    public APlace(){}
     /*
-    public UserPlace(String placeName, String placeAddress, String placeId,double placeLatitude, double placeLongitude){
+    public APlace(String placeName, String placeAddress, String placeId,double placeLatitude, double placeLongitude){
         this.placeName = placeName;
         this.placeAddress = placeAddress;
         this.placeId = placeId;
@@ -25,11 +25,11 @@ public class UserPlace {
     }
     */
 
-    public UserPlace(@JsonProperty("placeName") String placeName,
-                     @JsonProperty("placeAddress") String placeAddress,
-                     @JsonProperty("placeId") String placeId,
-                     @JsonProperty("placeLatitude") double placeLatitude,
-                     @JsonProperty("placeLongitude") double placeLongitude){
+    public APlace(@JsonProperty("placeName") String placeName,
+                  @JsonProperty("placeAddress") String placeAddress,
+                  @JsonProperty("placeId") String placeId,
+                  @JsonProperty("placeLatitude") double placeLatitude,
+                  @JsonProperty("placeLongitude") double placeLongitude){
 
         this.placeName = placeName;
         this.placeAddress = placeAddress;
