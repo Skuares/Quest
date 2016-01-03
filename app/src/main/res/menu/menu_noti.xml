@@ -2,12 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.skuares.studio.quest.MainActivity">
+
+
+
     <item
-        android:id="@+id/action_edit"
-        android:orderInCategory="100"
-        android:title="Edit"
-        app:showAsAction="never" />
+        android:id="@+id/item_samplebadge"
+        android:icon="@drawable/ic_stat_bell"
+
+        app:showAsAction="always"
+        android:title="" />
+
 </menu>
-
-
-
