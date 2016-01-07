@@ -9,6 +9,7 @@ import com.firebase.client.Firebase;
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Map;
 /**
  * Created by salim on 12/19/2015.
  */
-public class QuestCard {
+public class QuestCard implements Serializable{
 
 
     private String questImage;

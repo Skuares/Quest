@@ -85,8 +85,18 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
             public void onClick(View v) {
                 // when clicked I wanna view the todos list
                 // let's try intent
-                Intent intent = new Intent(context,TodosActivity.class);
+                // WE NEED TO PASS THE WHOLE QUEST
+                /*
+                STRATEGY FOR PICTURES
+                EACH QUEST SHOULD HAVE A FOLDER (ENTRY) OF IMAGES
+                AND WE STORE THE KEY OF THIS FOLDER IN QUEST SO WE CAN GET THEM WHEN WE WANT
+
+                 */
+                Intent intent = new Intent(context,QuestOpenedActivity.class);
+                // WE NO LONGER NEED THIS WE CAN GET TODOS FROM THE QUEST ITSELF .. TO BE CONTINUED
                 intent.putExtra("todos",new DataWrapperTodo(list.get(position).getTodos()));
+                // let's pass the quest to the activity
+                intent.putExtra("quest",list.get(position));
                 context.startActivity(intent);
                 //Toast.makeText(context,"Hello",Toast.LENGTH_SHORT).show();
             }

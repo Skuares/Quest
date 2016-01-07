@@ -430,7 +430,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         float likelihood = (float) 0.0;
 
                         for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                            Toast.makeText(MainActivity.this,"I m in LOOP",Toast.LENGTH_SHORT).show();
+
                             if(placeLikelihood.getLikelihood() > likelihood){
                                 // this is good place
                                 placeLikelihoodHolder = placeLikelihood;

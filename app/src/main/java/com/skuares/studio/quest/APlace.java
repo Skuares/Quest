@@ -2,10 +2,12 @@ package com.skuares.studio.quest;
 
 import com.shaded.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Created by salim on 1/2/2016.
  */
-public class APlace {
+public class APlace implements Serializable{
 
     String placeName;
     String placeAddress;
