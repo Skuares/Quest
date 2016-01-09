@@ -106,6 +106,8 @@ public class CreateQuest extends AppCompatActivity{
 
     private User userQuest;
 
+    String questKey;
+
     String cost = "";
     String questDesc = "";
     String questTitle = "";
@@ -129,6 +131,7 @@ public class CreateQuest extends AppCompatActivity{
 
         questRef = ref.child("Quests");
         newQuestRef = questRef.push();
+        questKey = newQuestRef.getKey();
 
 
         loadImageFromPath = new LoadImageFromPath(this);
@@ -333,7 +336,7 @@ public class CreateQuest extends AppCompatActivity{
             // now call save quest from here
 
 
-            QuestCard questCard = new QuestCard(questImage,questTitle,MainActivity.uid,questDesc,cost,todosList);
+            QuestCard questCard = new QuestCard(questImage,questTitle,MainActivity.uid,questDesc,cost,todosList,questKey);
             // SAVE TO FIREBASE
             SaveQuest saveQuest = new SaveQuest();
             saveQuest.execute(questCard,newQuestRef);

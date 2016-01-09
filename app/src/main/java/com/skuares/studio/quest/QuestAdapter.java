@@ -97,6 +97,8 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
                 intent.putExtra("todos",new DataWrapperTodo(list.get(position).getTodos()));
                 // let's pass the quest to the activity
                 intent.putExtra("quest",list.get(position));
+                // pass the quest key
+
                 context.startActivity(intent);
                 //Toast.makeText(context,"Hello",Toast.LENGTH_SHORT).show();
             }

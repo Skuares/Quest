@@ -24,6 +24,7 @@ import com.yalantis.contextmenu.lib.interfaces.OnMenuItemLongClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by salim on 12/23/2015.
@@ -35,11 +36,12 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
     private DataWrapperTodo dataWrapperTodo;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private QuestOpenedAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private QuestCard questCard;
     LoadImageFromString loadImageFromString;
+
 
     private FragmentManager fragmentManager;
     private ContextMenuDialogFragment mMenuDialogFragment;
@@ -49,10 +51,15 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
     private int mDatasetTypes[] = {QUEST, TODO};
 
     private String authorId = null;
+    private String questKey = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quest_opened_activity);
+
+        // initialize the communicattor
+        //communicator = new Communicator();
 
         toolbar = (Toolbar) findViewById(R.id.toolbarTodos);
         setSupportActionBar(toolbar);
@@ -65,6 +72,10 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
         questCard = (QuestCard) getIntent().getSerializableExtra("quest");
         // get the authorId
         authorId = questCard.getAuthorId();
+        questKey = questCard.getQuestKey();
+
+        Log.e("myvlaues",authorId);
+        Log.e("myvlaues", questKey);
 
 
         fragmentManager = getSupportFragmentManager();
@@ -89,7 +100,10 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
         adapter = new QuestOpenedAdapter(this,list,questCard,loadImageFromString,mDatasetTypes);
         recyclerView.setAdapter(adapter);
 
+
     }
+
+
 
     private void initMenuFragment() {
         MenuParams menuParams = new MenuParams();
@@ -231,9 +245,39 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
 
 
 
-
     @Override
     public void onMenuItemClick(View clickedView, int position) {
         Toast.makeText(this, "Clicked on position: " + position, Toast.LENGTH_SHORT).show();
+        if(position == 1){
+
+            if(adapter != null){
+                // restrict the use
+                // if this user has already liked do not allow him to click
+
+                // get the map containing usersWhoLiked
+                if(questCard.getUsersWhoLiked() == null){
+
+                    // it means he has not clicked before, and no one has clicked before .. Split to avoid null exception
+                    adapter.like(authorId,questKey);
+                }else if (questCard.getUsersWhoLiked().get(authorId) == null){
+
+                    adapter.like(authorId, questKey);
+
+                }else{
+                    /*
+                    BETTER APPROACH CHANGE THE COLOR OF THE ICON
+                     */
+                    // spit out a toast telling the user that is already clicked
+                    Toast.makeText(this, "Already liked it", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+
+        }
+
     }
+
+
+
 }

@@ -143,7 +143,7 @@ public class LoadImageFromString {
             return bitmap;
         }catch (Exception e){
 
-            Log.e("ErrorImage", e.getMessage());
+//            Log.e("ErrorImage", e.getMessage());
             return null;
         }
     }

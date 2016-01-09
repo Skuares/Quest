@@ -12,7 +12,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.MutableData;
+import com.firebase.client.Transaction;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by salim on 12/24/2015.
@@ -21,6 +29,66 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
 
     public static final int QUEST = 0;
     public static final int TODO = 1;
+
+    // global reference to textview of likes in order to change it from like method
+    public TextView likeTextView;
+
+
+
+
+    public void like(final String author, final String questKey) {
+
+        //increment the number of likes
+        //insert the author id in a map called usersWhoLiked
+
+
+        final Firebase like = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey+"/numberOfLikes");
+
+        // use this to update the data with a map called usersWhoLiked
+        final Firebase questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey);
+
+
+
+
+        like.runTransaction(new Transaction.Handler() {
+        @Override
+        public Transaction.Result doTransaction(MutableData currentData) {
+            if(currentData.getValue() == null) {
+                currentData.setValue(1.0);
+
+            }   else  {
+
+                currentData.setValue((Double) currentData.getValue() + 1.0);
+
+            }
+
+            return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+        }
+
+            @Override
+          public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+                //This method will be called once with the results of the transaction.
+                Log.e("myvalies","null us here"+currentData.getValue());
+                // update the number now of likes with this data
+                //like.setValue(currentData.getValue());
+                // update the numberOfLikes in questCard object
+                questCard.increaseLikes();
+                Log.e("likes",""+questCard.getNumberOfLikes());
+                // update the values on the UI
+                likeTextView.setText("" + (int) questCard.getNumberOfLikes() + " Likes");
+
+                // insert the user into map called usersWhoLiked
+                // get the usersWhoLiked map from the quest
+                // if it is null, this is the first like then initialize it and call addUserLike
+
+                // no need for above just call the method
+                questCard.addUserLike(questRef,author);
+
+
+            }
+        });
+
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ViewHolder(View v) {
@@ -119,6 +187,8 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
 
             viewQuest.nTakers.setText(""+(int) questCard.getNumberOfTakers()+" Takers");
             viewQuest.nLikes.setText(""+(int) questCard.getNumberOfLikes()+" Likes");
+
+            likeTextView = viewQuest.nLikes;
         }else{
 
             ViewTodos viewTodos = (ViewTodos) holder;
@@ -133,6 +203,5 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
     public int getItemCount() {
         return list.size()+1;
     }
-
 
 }

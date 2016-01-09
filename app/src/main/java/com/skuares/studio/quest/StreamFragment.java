@@ -20,8 +20,9 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 
 /**
@@ -41,6 +42,10 @@ public class StreamFragment extends Fragment {
     int onCreateCaller = 1;
 
 
+    /*
+    a map to help us identifyying which quest has been changed
+     */
+    Map<String,QuestCard> map;
 
     private LoadImageFromString loadImageFromString;
     private LoadImageFromString loadImageFromString2;
@@ -54,6 +59,8 @@ public class StreamFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        map = new HashMap<String,QuestCard>();
 
         loadImageFromString = new LoadImageFromString(getContext());
         loadImageFromString2 = new LoadImageFromString(getContext());
@@ -133,12 +140,15 @@ public class StreamFragment extends Fragment {
 
 
                             // use the full data constructor
-                            adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos());
+                            adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers());
                             // increment i so we the next one next time
                             i[0] = i[0] + 1;
                             //Log.e("onchild",String.valueOf(i[0]));
-                            // add it to the list
 
+                            // add it to the map
+                            map.put(adapterQuest[0].getQuestKey(),adapterQuest[0]);
+
+                            // add it to the list
                             questCards.add(adapterQuest[0]);
                             //Log.e("onchild", "I AM ADDED");
 
@@ -167,6 +177,32 @@ public class StreamFragment extends Fragment {
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    // update the data of the quest
+
+                    // HOW TO DO IT
+                    // convert to quest card
+                    QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
+                    // get the keyy and index it into the map
+                    String key = updatedQuestCard.getQuestKey();
+                    Log.e("indexes",""+key);
+                    QuestCard oldQuest = map.get(key);
+                    Log.e("indexes",""+oldQuest.getQuestKey());
+                    if(oldQuest == null){
+                        // not of interest to this user
+                    }else{
+                        // get the index of the oldQuest
+                        int index = questCards.indexOf(oldQuest);
+                        // use this index to update the quest
+                        Log.e("indexes",""+index);
+                        Log.e("indexes", "" + questCards.size());
+                        if(index >= 0){// because of the firebase issue of calling ondatachanged many times
+                            questCards.set(index,updatedQuestCard);
+                            // notify the adapter
+                            adapter.notifyDataSetChanged();
+                        }
+
+                    }
+
 
                 }
 
@@ -308,7 +344,7 @@ public class StreamFragment extends Fragment {
                             username[0] = user[0].getUsername();
 
                             // use the full data constructor
-                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos());
+                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos(),finalPost.getQuestKey(),finalPost.getUsersWhoLiked(),finalPost.getNumberOfLikes(),finalPost.getNumberOfTakers());
                             // add it to the list
 
                             questCards.add(adapterQuest[0]);
