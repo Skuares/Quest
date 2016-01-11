@@ -35,7 +35,7 @@ public class User {
     2- Friend
      */
     private Map<String,Object> friends;
-
+    private Map<String,Object> invites;
     private APlace aPlace;
 
 
@@ -62,27 +62,6 @@ public class User {
     }
 
 
-    // dummy constructor NO LONGER IN USE , WE HAD TO ADD FRIEND FIELD
-    /*
-    public User(@JsonProperty("firstName") String firstName,
-                @JsonProperty("lastName") String lastName,
-                @JsonProperty("username") String username,
-                @JsonProperty("email") String email,
-                @JsonProperty("age") int age,
-                @JsonProperty("description") String description,
-                @JsonProperty("userImage") String bitmapString){
-        // for firebase
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.email = email;
-        this.age = age;
-        this.description = description;
-        // if this contsructor is used, use placeholder image
-        //this.userImage = BitmapFactory.decodeResource(Resources.getSystem(),R.drawable.placeholderuser);
-        this.userImage = bitmapString;
-    }
-    */
 
     // another firebase constructor to receive friends
     public User(@JsonProperty("firstName") String firstName,
@@ -93,7 +72,8 @@ public class User {
                 @JsonProperty("description") String description,
                 @JsonProperty("userImage") String bitmapString,
                 @JsonProperty("friends") Map<String,Object> friends,
-                @JsonProperty("place") APlace aPlace){
+                @JsonProperty("place") APlace aPlace,
+                @JsonProperty("invites") Map<String,Object> invites){
         // for firebase
         this.firstName = firstName;
         this.lastName = lastName;
@@ -108,6 +88,7 @@ public class User {
         //Log.e("UserClass",String.valueOf(this.friends));
         this.aPlace = aPlace;
 
+        this.invites = invites;
 
     }
 
@@ -118,7 +99,7 @@ public class User {
     public void addFriend(String id, int state,Firebase userRef) { // we can use to update too
 
         if(id != null && (state == 0 || state == 1 || state == 2)){
-            // do nothing for now
+
             Map<String,Object> map = new HashMap<String, Object>();
             map.put(id,state);
             userRef.child("friends").updateChildren(map);
@@ -126,16 +107,22 @@ public class User {
 
     }
 
-
-
-
     public Map<String, Object> getFriends() {
 
         return friends;
     }
 
+    public Map<String, Object> getInvites() {
+        return invites;
+    }
 
-
+    public void updateInviteState(String questId, int state, Firebase userRef){
+        if(questId != null && userRef != null && (state == 0 || state == 1 || state == 2 || state == 3)){
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put(questId,state);
+            userRef.child("invites").updateChildren(map);
+        }
+    }
 
     private String bitmapToString(Bitmap bitmap){
 

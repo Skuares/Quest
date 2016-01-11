@@ -7,8 +7,13 @@
 
     <item
         android:id="@+id/item_samplebadge"
-        android:icon="@drawable/ic_stat_bell"
+        android:icon="@drawable/ic_action_person"
+        app:showAsAction="always"
+        android:title="" />
 
+    <item
+        android:id="@+id/item_badge_broadcast"
+        android:icon="@drawable/ic_action_signal"
         app:showAsAction="always"
         android:title="" />
 

@@ -16,6 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+import com.parse.FindCallback;
+import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
@@ -23,6 +29,8 @@ import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemLongClickListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +38,18 @@ import java.util.Map;
  * Created by salim on 12/23/2015.
  */
 public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItemClickListener {
+
+
+
+    /*
+    Define the states about the broadcast
+     */
+
+    private int noReactionState = 0;
+    private int comingState = 1;
+    private int maybeState = 2;
+    private int noState = 3;
+
 
     private Toolbar toolbar;
     private List<ToDo> list;
@@ -106,16 +126,9 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
         MenuParams menuParams = new MenuParams();
         menuParams.setActionBarSize((int) getResources().getDimension(R.dimen.tool_bar_height));
 
-        if(authorId.equals(MainActivity.uid)){
-            // this is the author
 
-            menuParams.setMenuObjects(getMenuObjectsAuthor());
-        }else{
-            // not the author
-            // do not show broadcast option
+        menuParams.setMenuObjects(getMenuObjectsAuthor());
 
-            menuParams.setMenuObjects(getMenuObjects());
-        }
 
         menuParams.setClosableOutside(false);
         mMenuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams);
@@ -240,10 +253,6 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
 
     }
 
-
-
-
-
     @Override
     public void onMenuItemClick(View clickedView, int position) {
         Toast.makeText(this, "Clicked on position: " + position, Toast.LENGTH_SHORT).show();
@@ -284,7 +293,7 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                 else if(questCard.getTakers() == null){
 
                     // first time
-                    adapter.take(MainActivity.uid,questKey);
+                    adapter.take(MainActivity.uid, questKey);
                 }else if (questCard.getTakers().get(MainActivity.uid) == null){
                     // first time for this user
                     adapter.take(MainActivity.uid,questKey);
@@ -298,8 +307,95 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
             }
         }
 
+        if(position == 4){// broadcast case
+
+            // check if this user is the author if he is let him broadcast
+            // if not, check if he is a taker and let him broadcast
+            // if not taker nor authod tell him he must take the quest to broadcast
+
+            if(MainActivity.uid.equals(authorId)){
+                // this user is the author
+                Toast.makeText(this, "Author can broadcast", Toast.LENGTH_SHORT).show();
+                // get the friends array from parse
+                // pass it to a dailog
+                // and let the user broadcast
+
+                ParseQuery<ParseObject> queryThisUser = ParseQuery.getQuery("Users");
+                queryThisUser.whereEqualTo("authorId", MainActivity.uid);
+                queryThisUser.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                        if (e == null) {
+
+                            ParseObject object = objects.get(0);
+
+
+                            // the notification
+                            ParseQuery pushQuery = ParseInstallation.getQuery();
+                            pushQuery.whereContainedIn("installationAuthorId",object.getList("friends") );
+
+
+                            // set up the data in Quest and User in firebase
+                            /*
+                            Strategy:
+                            2 firebase references ,1- for the quest to add the joiners,2- for users and then we loop on it for every
+                            user
+
+                             */
+
+                            // get the users potential joiners
+                            List<String> potentialJoiners = object.getList("friends");
+                            potentialJoiners.remove(0);// get rid of the empty entry in parse
+
+                            Firebase questRefJoiners = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey+"/joiners");
+                            Firebase generalUserRef;
+
+
+                            // convert the list to map
+                            Map<String,Object> map = new HashMap<String,Object>();
+                            for (String i : potentialJoiners){
+                                // insert into the map
+                                map.put(i,noReactionState);
+                                // get the user and insert into it
+                                generalUserRef = new Firebase("https://quest1.firebaseio.com/users/"+i+"/invites");
+                                Map<String ,Object> inviteMap = new HashMap<String, Object>();
+                                inviteMap.put(questKey,noReactionState);
+                                generalUserRef.updateChildren(inviteMap);
+
+                            }
+                            // insert into the quest
+                            questRefJoiners.updateChildren(map);
+
+                            // we need to insert the invites into every user we have in the list
+
+
+                            // Send push notification to query
+                            ParsePush push = new ParsePush();
+                            push.setQuery(pushQuery); // Set our Installation query
+                            push.setMessage("You have an invitation from "+object.get("username"));
+                            push.sendInBackground();
+
+
+                        } else {
+                            Log.d("score", "Error: " + e.getMessage());
+                        }
+                    }
+
+                });
+
+            }else if(questCard.getTakers() == null) {
+                // no takers at all
+                Toast.makeText(this, "Please take the quest so you can broadcast", Toast.LENGTH_SHORT).show();
+
+            }else if (questCard.getTakers().get(MainActivity.uid).equals(MainActivity.uid)){
+                // this user is a taker
+                Toast.makeText(this, "Taker can broadcast", Toast.LENGTH_SHORT).show();
+
+            }else{
+                // not taker nor author
+                Toast.makeText(this, "Please take the quest so you can broadcast", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
-
-
-
 }

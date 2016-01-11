@@ -62,7 +62,7 @@ import com.parse.SaveCallback;
 
 //Social login libraries
 import com.facebook.appevents.AppEventsLogger;
-import com.skuares.studio.quest.Request.RequestActivity;
+import com.skuares.studio.quest.Request.FriendRequestActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     ParseInstallation parseInstallation;
 
     public static int badgeCount = 0;
+    public static int badgeCountBroadcast = 0;
+
 
     private static int REQUEST_CODE = 1;
 
@@ -86,14 +88,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         /* Bad strategy a better approach in retreive user method
         2 lists to get the friend requests
         list<String> to hold all the friend requests identified by 0 and contains the users pointers
-        list<User> obtained from list<String>  and passed through the intent to RequestActivity
+        list<User> obtained from list<String>  and passed through the intent to FriendRequestActivity
          */
 
     public static List<String> usersPointers;
-    private List<User> friendRequestUsers;
-
-    private Map<String, Object> friendsMap;
-
+    public static List<String> questNotificationBroadcast;
+    Firebase invitesReferenc;
 
     private MaterialViewPager mViewPager;
 
@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         //new MyAdapter(getChildFragmentManager(),getContext())
         mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+
 
             @Override
             public Fragment getItem(int position) {
@@ -272,23 +273,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             Friend Request list of users pointers
              */
 
-        badgeCount = 0;
+        badgeCount = 0; // referes to friend requests               | we do it this way so badge does not increment every time the app opens
+        badgeCountBroadcast = 0; // referes to broadcast requests   |
         usersPointers = new ArrayList<String>();
-        Log.e("checker", "users initialized");
-
-
-        /**
-         * Lets inflate the very first fragment
-         * Here , we are inflating the TabFragment as the first Fragment
-         */
-
-        //manager = getSupportFragmentManager();
-        //transaction = manager.beginTransaction();
-        //transaction.replace(R.id.containerView, new TabFragment()).commit();
-
-        /**
-         * Setup click events on the Navigation View Items.
-         */
+        questNotificationBroadcast = new ArrayList<String>();
 
 
         View logo = findViewById(R.id.logo_white);
@@ -636,8 +624,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         int id = item.getItemId();
 
         if (id == R.id.item_samplebadge) {
-            // make an intent to RequestActivity
-            Intent intent = new Intent(MainActivity.this, RequestActivity.class);
+            // make an intent to FriendRequestActivity
+            Intent intent = new Intent(MainActivity.this, FriendRequestActivity.class);
             // pass friendsReques.. list along
             Bundle bundle = new Bundle();
             bundle.putSerializable("listOfIds", (Serializable) usersPointers);
@@ -809,18 +797,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                             // add the notification icon programmatically
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
-                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_action_person), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+
                             } else {
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
-                                //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
-                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
-                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_action_person), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                             }
 
 
-                            // new ActionItemBadgeAdder().act(this).menu(menu).title("").itemDetails(0, 123123, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(1);
+
 
 
                         }
@@ -834,10 +819,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             //badgeCount--;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_action_person), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
                             } else {
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_action_person), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
@@ -859,10 +844,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                             //badgeCount--;
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getDrawable(R.drawable.ic_action_person), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
                             } else {
-                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge), getResources().getDrawable(R.drawable.ic_action_person), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCount);
                                 //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
                                 //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
                                 //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
@@ -881,78 +866,98 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         }
                     });
 
-
-                    // get the friends map that only contains 0
-                    // store the keys in list<String> named usersPointers
-                    // check this list
-                    // if it's size 0, no friend requests
-                    // do nothing
-                    // else do the job of retriving the users' list in the background then activiate the notification icon
-
-                    // let's do it
-
-                    // 1- get the friends hashmap
-                        /*
-                        friendsMap = myUser.getFriends();
-                        // get all the keys that corresponds to 0 value using getKeysFromValue Method(might return null carefull)
-
-                        if (friendsMap == null) {
-                            // do nothing
-                        } else {
-                            // go go go
-                            // do in background
-                            //CheckFriendRequests checkFriendRequests = new CheckFriendRequests();
-                            //checkFriendRequests.execute(friendsMap);
-
-
-
-                            usersPointers = getKeysFromValues(friendsMap, 0);
-                            // check if usersPointers has values
-                            if (usersPointers != null) {
-                                friendRequestUsers = new ArrayList<User>();
-
-                                // loop through the list
-                                // attach listener for one time for each user pointer and store it in list<User> named friendRequestUser
-                                // reference
-                                Firebase firebase;
-                                final int[] checker = {0};
-                                for (int i = 0; i < usersPointers.size(); i++) {
-
-                                    firebase = new Firebase("https://quest1.firebaseio.com/users/" + usersPointers.get(i));
-                                    // attach listener for one time
-
-
-                                    final int finalI = i;
-                                    firebase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            // cast it to User and store it
-                                            User user = dataSnapshot.getValue(User.class);
-                                            friendRequestUsers.add(user);
-                                            Log.e("elseHas", "listener is called");
-                                            checker[0] = finalI;
-
-                                            // we need to know when to return
-                                            // call on last time we loop
-                                            if(checker[0]+1 == usersPointers.size()){
-                                                notificationStuff(friendRequestUsers);
-                                            }
-
-
-                                        }
-
-                                        @Override
-                                        public void onCancelled(FirebaseError firebaseError) {
-
-                                        }
-                                    });
-
-
+                    // similar approach to friend request
+                    invitesReferenc = new Firebase("https://quest1.firebaseio.com/users/" + uid + "/invites");
+                    Query invitesQuery = invitesReferenc.orderByValue().equalTo(0);
+                    invitesQuery.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            // invites contain questIds
+                            if (questNotificationBroadcast.contains(dataSnapshot.getKey())) {
+                                // it is already here
+                                // do nothing
+                                Log.e("checker", "fail data is here");
+                            } else {
+                                // save this questId in the list
+                                questNotificationBroadcast.add(dataSnapshot.getKey());
+                                Log.e("checker", "success data is nt here");
+                                for (String st : questNotificationBroadcast) {
+                                    Log.e("checkerData", "" + st);
                                 }
+
+                                // check the value
+                                // only increment when it is 0
+                                if (dataSnapshot.getValue(Integer.class) == 0) {
+
+                                    badgeCountBroadcast++;
+                                }
+                            }
+
+                            // notify user by notification icon
+                            // update the icon
+                            // add the notification icon programmatically
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_badge_broadcast), getDrawable(R.drawable.ic_action_signal), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCountBroadcast);
+
+                            } else {
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_badge_broadcast), getResources().getDrawable(R.drawable.ic_action_signal), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCountBroadcast);
+                            }
+
+
+
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_badge_broadcast), getDrawable(R.drawable.ic_action_signal), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCountBroadcast);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                            } else {
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_badge_broadcast), getResources().getDrawable(R.drawable.ic_action_signal), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCountBroadcast);
+                                //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
                             }
                         }
 
-                        */ //else ends here
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            // no removal
+                            // we need the states to keep track
+
+                            // delete it for now
+                            // since we are going to keep the track in the quest itself
+
+                            questNotificationBroadcast.remove(dataSnapshot.getKey());
+
+
+                            Log.e("RequestMainActivity", "onChildRemoved");
+                            // triggered when the user rejects or ignores the request
+                            //badgeCount--;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_badge_broadcast), getDrawable(R.drawable.ic_action_signal), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCountBroadcast);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                            } else {
+                                ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_badge_broadcast), getResources().getDrawable(R.drawable.ic_action_signal), ActionItemBadge.BadgeStyles.DARK_GREY, badgeCountBroadcast);
+                                //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
+                                //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
+                                //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
+                            }
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
 
 
                 }

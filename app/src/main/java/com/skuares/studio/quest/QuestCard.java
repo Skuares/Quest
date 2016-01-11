@@ -34,7 +34,7 @@ public class QuestCard implements Serializable{
     // user id as a key in the map, value boolean!!!
     private Map<String,Object> takers;
     // user id as a key in the map, value is boolean
-    private Map<String,Object> followers;
+    private Map<String,Object> joiners;
 
     private String questCost;
 
@@ -59,7 +59,8 @@ public class QuestCard implements Serializable{
                       Map<String,Object> usersWhoLiked,
                       Map<String, Object> takers,
                       double numberOfLikes,
-                      double numberOfTakers){
+                      double numberOfTakers,
+                      Map<String,Object> joiners){
 
         this.questImage = questImage;
         this.questTitle = questTitle;
@@ -79,7 +80,7 @@ public class QuestCard implements Serializable{
         this.numberOfFollowers = 0;
 
 
-        followers = new HashMap<String,Object>();
+        this.joiners = joiners;
 
 
         this.questKey = questKey;
@@ -120,7 +121,7 @@ public class QuestCard implements Serializable{
 
         // initialize the maps
         takers = new HashMap<String,Object>();
-        followers = new HashMap<String,Object>();
+        joiners = new HashMap<String, Object>();
 
         usersWhoLiked = new HashMap<String, Object>();
 
@@ -142,7 +143,8 @@ public class QuestCard implements Serializable{
                      @JsonProperty("todos") List<ToDo> todos,
                      @JsonProperty("questKey") String questKey,
                      @JsonProperty("usersWhoLiked") Map<String,Object> usersWhoLiked,
-                     @JsonProperty("takers") Map<String, Object> takers){
+                     @JsonProperty("takers") Map<String, Object> takers,
+                     @JsonProperty("joiners") Map<String,Object> joiners){
 
 
         this.questImage = questImage;
@@ -159,13 +161,15 @@ public class QuestCard implements Serializable{
 
         // initialize the maps
         this.takers = takers;
-        this.followers = followers;
+
 
         this.questKey = questKey;
 
         this.usersWhoLiked = usersWhoLiked;
 
         this.todos = todos;
+
+        this.joiners = joiners;
     }
 
     public Map<String, Object> getUsersWhoLiked() {
@@ -188,6 +192,7 @@ public class QuestCard implements Serializable{
                 this.usersWhoLiked = new HashMap<String, Object>();
                 this.usersWhoLiked.put(authorId,true);
             }
+
 
 
             // save to firebase
@@ -224,7 +229,9 @@ public class QuestCard implements Serializable{
         return todos;
     }
 
-
+    public Map<String, Object> getJoiners() {
+        return joiners;
+    }
 
     public void setQuestImage(Bitmap bitmap,Firebase questRef){
         if(bitmap != null && questRef != null){
@@ -301,9 +308,6 @@ public class QuestCard implements Serializable{
         numberOfLikes++;
     }
 
-    public void increaseFollowers(){
-        numberOfFollowers++;
-    }
 
     public void increaseTakers(){
         numberOfTakers++;
@@ -343,10 +347,6 @@ public class QuestCard implements Serializable{
 
     public double getNumberOfTakers() {
         return numberOfTakers;
-    }
-
-    public double getNumberOfFollowers() {
-        return numberOfFollowers;
     }
 
 

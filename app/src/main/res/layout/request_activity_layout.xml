@@ -12,7 +12,7 @@
         android:background="@color/wet"
         android:id="@+id/toolbarRequest"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Notifications" />
+        app:title="Friend Request" />
 
 
     <android.support.v7.widget.RecyclerView

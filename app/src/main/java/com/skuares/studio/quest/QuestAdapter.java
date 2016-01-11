@@ -30,6 +30,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
 
         // COME BACK FOR BUTTONS LATERZZZ
 
+
         public ViewH(View view) {
             super(view);
             cardView = (CardView)view.findViewById(R.id.questCard);

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by salim on 12/27/2015.
  */
-public class RequestActivity extends AppCompatActivity {
+public class FriendRequestActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager manager;
@@ -79,7 +79,7 @@ public class RequestActivity extends AppCompatActivity {
                         // check to call adapter
                         if((finalI+1) == usersIds.size()){
                             // call adapter
-                            adapter = new FriendRequestAdapter(RequestActivity.this,friendsRequestUsers,loadImageFromString,usersIds);
+                            adapter = new FriendRequestAdapter(FriendRequestActivity.this,friendsRequestUsers,loadImageFromString,usersIds);
                             recyclerView.setAdapter(adapter);
                         }
 

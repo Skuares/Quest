@@ -113,6 +113,8 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
                 questCard.addUserLike(questRef,author);
 
 
+
+
             }
         });
 
