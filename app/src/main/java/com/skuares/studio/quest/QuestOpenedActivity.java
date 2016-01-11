@@ -74,9 +74,6 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
         authorId = questCard.getAuthorId();
         questKey = questCard.getQuestKey();
 
-        Log.e("myvlaues",authorId);
-        Log.e("myvlaues", questKey);
-
 
         fragmentManager = getSupportFragmentManager();
         initMenuFragment();
@@ -245,6 +242,8 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
 
 
 
+
+
     @Override
     public void onMenuItemClick(View clickedView, int position) {
         Toast.makeText(this, "Clicked on position: " + position, Toast.LENGTH_SHORT).show();
@@ -258,10 +257,10 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                 if(questCard.getUsersWhoLiked() == null){
 
                     // it means he has not clicked before, and no one has clicked before .. Split to avoid null exception
-                    adapter.like(authorId,questKey);
-                }else if (questCard.getUsersWhoLiked().get(authorId) == null){
+                    adapter.like(MainActivity.uid,questKey);
+                }else if (questCard.getUsersWhoLiked().get(MainActivity.uid) == null){
 
-                    adapter.like(authorId, questKey);
+                    adapter.like(MainActivity.uid, questKey);
 
                 }else{
                     /*
@@ -270,10 +269,33 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                     // spit out a toast telling the user that is already clicked
                     Toast.makeText(this, "Already liked it", Toast.LENGTH_SHORT).show();
                 }
-
             }
+        }
 
+        if(position == 2){
 
+            // take the quest
+            if(adapter != null){
+                if(MainActivity.uid.equals(authorId)){
+
+                    // it is yours, you cant take it
+                    Toast.makeText(this, "It is yours", Toast.LENGTH_SHORT).show();
+                }
+                else if(questCard.getTakers() == null){
+
+                    // first time
+                    adapter.take(MainActivity.uid,questKey);
+                }else if (questCard.getTakers().get(MainActivity.uid) == null){
+                    // first time for this user
+                    adapter.take(MainActivity.uid,questKey);
+                }else{
+                     /*
+                    BETTER APPROACH CHANGE THE COLOR OF THE ICON
+                     */
+                    // spit out a toast telling the user that is already clicked
+                    Toast.makeText(this, "Already Took it", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
 
     }

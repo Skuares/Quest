@@ -182,43 +182,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     case 1:
                         return new MapFragment();
                     case 2:
-                        return new PersonStreamFragment();
+                        return new QOwnStreamFragment();
+                    case 3:
+                        return new QTookStreamFragment();
                 }
                 return null;
             }
 
             @Override
             public int getCount() {
-                return 3;
+                return 4;
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
-                switch (position % 3) {
+                switch (position % 4) {
                     case 0:
                         return "Home";
                     case 1:
                         return "Map";
                     case 2:
-                        return "Personnel";
+                        return "Q you own";
+                    case 3:
+                        return "Q you took";
 
                 }
                 return "";
             }
         });
 
-            /*
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                                    //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                    ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
-                                    //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getDrawable(R.drawable.ic_stat_bell),badgeCount);
-                                } else {
-                                    ActionItemBadge.update(MainActivity.this, menu.findItem(R.id.item_samplebadge),getResources().getDrawable(R.drawable.ic_stat_bell) ,ActionItemBadge.BadgeStyles.DARK_GREY,badgeCount);
-                                    //ActionItemBadge.update(this, menu.findItem(R.id.item_samplebadge), this.getResources().getDrawable(R.drawable.ic_stat_bell), ActionItemBadge.BadgeStyles.DARK_GREY, MainActivity.badgeCount);
-                                    //new ActionItemBadgeAdder().act(MainActivity.this).menu(menu).title("title").itemDetails(0,notificationIconId, 1).showAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS).add(getResources().getDrawable(R.drawable.ic_stat_bell),badgeCount);
-                                    //ActionItemBadge.update(menu.findItem(R.id.item_samplebadge),badgeCount);
-                                }
-             */
 
         // NEED ADJUSTMENT BASED ON API
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
@@ -238,6 +230,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.cyan,
                                 "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+                    case 3:
+                        return HeaderDesign.fromColorResAndUrl(
+                                R.color.bluesh,
+                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
                 }
 
                 //execute others actions if needed (ex : modify your header logo)

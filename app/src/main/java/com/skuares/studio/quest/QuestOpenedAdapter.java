@@ -32,23 +32,51 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
 
     // global reference to textview of likes in order to change it from like method
     public TextView likeTextView;
+    public TextView takeTextView;
 
 
+    // similar to like
+    public void take(final String author, final String questKey){
+        final Firebase takeRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey+"/numberOfTakers");
+        final Firebase questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey);
+
+        takeRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData currentData) {
+                if (currentData.getValue() == null) {
+                    currentData.setValue(1.0);
+
+                } else {
+
+                    currentData.setValue((Double) currentData.getValue() + 1.0);
+
+                }
+
+                return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+            }
+
+            @Override
+            public void onComplete(FirebaseError firebaseError, boolean committed, DataSnapshot currentData) {
+                //This method will be called once with the results of the transaction.
+                questCard.increaseTakers();
+                takeTextView.setText("" + (int) questCard.getNumberOfTakers() + " Takers");
+                questCard.addTaker(questRef, author);
+
+
+            }
+        });
+
+    }
 
 
     public void like(final String author, final String questKey) {
 
         //increment the number of likes
         //insert the author id in a map called usersWhoLiked
-
-
         final Firebase like = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey+"/numberOfLikes");
 
         // use this to update the data with a map called usersWhoLiked
         final Firebase questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey);
-
-
-
 
         like.runTransaction(new Transaction.Handler() {
         @Override
@@ -95,6 +123,8 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
             super(v);
         }
     }
+
+
 
 
     public static class ViewQuest extends ViewHolder{
@@ -185,10 +215,11 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
             ViewQuest viewQuest = (ViewQuest) holder;
             loadImageFromString.loadBitmapFromString(questCard.getQuestImage(), viewQuest.qImage);
 
-            viewQuest.nTakers.setText(""+(int) questCard.getNumberOfTakers()+" Takers");
+            viewQuest.nTakers.setText("" + (int) questCard.getNumberOfTakers() + " Takers");
             viewQuest.nLikes.setText(""+(int) questCard.getNumberOfLikes()+" Likes");
 
             likeTextView = viewQuest.nLikes;
+            takeTextView = viewQuest.nTakers;
         }else{
 
             ViewTodos viewTodos = (ViewTodos) holder;

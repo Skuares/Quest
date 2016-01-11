@@ -103,7 +103,8 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
                 //Toast.makeText(context,"Hello",Toast.LENGTH_SHORT).show();
             }
         });
-        // ABOVE IS MORE EFFICIENT holder.questImage.setImageBitmap(list.get(position).stringToBitmap(list.get(position).getQuestImage()));
+
+
 
         holder.questTitle.setText(list.get(position).getQuestTitle());
 

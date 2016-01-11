@@ -77,7 +77,7 @@ public class TabFragment extends Fragment {
 
                 case 0: return new StreamFragment();
                 case 1: return new MapFragment();
-                case 2: return new PersonStreamFragment();
+                case 2: return new QOwnStreamFragment();
             }
             return null;
         }

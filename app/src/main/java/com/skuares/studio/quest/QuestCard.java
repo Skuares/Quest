@@ -49,7 +49,7 @@ public class QuestCard implements Serializable{
     private Map<String,Object> usersWhoLiked;
 
 
-    // another constructor to use when we get the user's image and user's username
+    // another constructor to use when we get the user's image and user's username (for stream)
     public  QuestCard(String questImage, String questTitle,String authorId,
                       String questUsername,
                       String questUserImage,
@@ -57,6 +57,7 @@ public class QuestCard implements Serializable{
 
                       String questKey,
                       Map<String,Object> usersWhoLiked,
+                      Map<String, Object> takers,
                       double numberOfLikes,
                       double numberOfTakers){
 
@@ -77,13 +78,15 @@ public class QuestCard implements Serializable{
         this.numberOfTakers = 0;
         this.numberOfFollowers = 0;
 
-        // initialize the maps
-        takers = new HashMap<String,Object>();
+
         followers = new HashMap<String,Object>();
 
 
         this.questKey = questKey;
         this.usersWhoLiked = usersWhoLiked;
+
+
+        this.takers = takers;
 
         this.numberOfLikes = numberOfLikes;
         this.numberOfTakers = numberOfTakers;
@@ -92,6 +95,8 @@ public class QuestCard implements Serializable{
         this.todos = todos;
 
     }
+
+
     public QuestCard(){}
 
     // to save the quest
@@ -136,7 +141,8 @@ public class QuestCard implements Serializable{
 
                      @JsonProperty("todos") List<ToDo> todos,
                      @JsonProperty("questKey") String questKey,
-                     @JsonProperty("usersWhoLiked") Map<String,Object> usersWhoLiked){
+                     @JsonProperty("usersWhoLiked") Map<String,Object> usersWhoLiked,
+                     @JsonProperty("takers") Map<String, Object> takers){
 
 
         this.questImage = questImage;
@@ -166,6 +172,10 @@ public class QuestCard implements Serializable{
         return usersWhoLiked;
     }
 
+    public Map<String, Object> getTakers() {
+        return takers;
+    }
+
     public void addUserLike(Firebase questRef, String authorId){
         if(questRef != null && authorId != null){
             // update the usersWhoLiked
@@ -187,6 +197,25 @@ public class QuestCard implements Serializable{
         }
     }
 
+    public void addTaker(Firebase questRef, String authorId){
+        if(questRef != null && authorId != null){
+            if(this.takers != null){
+                this.takers.put(authorId,authorId);
+            }else{
+                this.takers = new HashMap<String, Object>();
+                this.takers.put(authorId, authorId);
+            }
+
+            // save to firebase
+            Map<String,Object> map = new HashMap<String, Object>();
+            map.put(authorId,authorId);
+            questRef.child("takers").updateChildren(map);
+
+        }
+    }
+
+
+
     public String getQuestKey() {
         return questKey;
     }
@@ -195,18 +224,7 @@ public class QuestCard implements Serializable{
         return todos;
     }
 
-    // STILL IN DEVELOPMENT .. NOT FINISHED.. STICK WITH IT FOR NOW.. AND THEN DUPLICATE IT TO FOLLOWERS
-    public void addTaker(String userId, Firebase questRef){
 
-        if(userId != null && questRef != null){
-
-            takers.put("takers/"+userId,true);
-
-            // STILL IN TEST
-            questRef.updateChildren(takers);
-        }
-
-    }
 
     public void setQuestImage(Bitmap bitmap,Firebase questRef){
         if(bitmap != null && questRef != null){

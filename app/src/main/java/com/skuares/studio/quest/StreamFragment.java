@@ -32,10 +32,6 @@ public class StreamFragment extends Fragment {
 
 
 
-    /*
-    GoogleApiClient Connection
-     */
-
 
     // identify the caller
     int onResumeCaller = 100;
@@ -43,7 +39,7 @@ public class StreamFragment extends Fragment {
 
 
     /*
-    a map to help us identifyying which quest has been changed
+    a map to help us identifying which quest has been changed
      */
     Map<String,QuestCard> map;
 
@@ -140,7 +136,7 @@ public class StreamFragment extends Fragment {
 
 
                             // use the full data constructor
-                            adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers());
+                            adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers());
                             // increment i so we the next one next time
                             i[0] = i[0] + 1;
                             //Log.e("onchild",String.valueOf(i[0]));
@@ -344,7 +340,7 @@ public class StreamFragment extends Fragment {
                             username[0] = user[0].getUsername();
 
                             // use the full data constructor
-                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos(),finalPost.getQuestKey(),finalPost.getUsersWhoLiked(),finalPost.getNumberOfLikes(),finalPost.getNumberOfTakers());
+                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos(),finalPost.getQuestKey(),finalPost.getUsersWhoLiked(),finalPost.getTakers(),finalPost.getNumberOfLikes(),finalPost.getNumberOfTakers());
                             // add it to the list
 
                             questCards.add(adapterQuest[0]);
