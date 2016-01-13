@@ -35,6 +35,7 @@ public class FriendRequestActivity extends AppCompatActivity {
     Firebase firebase;
     private Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

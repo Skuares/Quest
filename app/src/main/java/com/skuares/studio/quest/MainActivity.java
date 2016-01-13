@@ -62,6 +62,7 @@ import com.parse.SaveCallback;
 
 //Social login libraries
 import com.facebook.appevents.AppEventsLogger;
+import com.skuares.studio.quest.Request.BroadcastRequestActivity;
 import com.skuares.studio.quest.Request.FriendRequestActivity;
 
 import java.io.Serializable;
@@ -288,6 +289,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
                 }
             });
+
+
 
 
         //drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -646,6 +649,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 */
 
             return true;
+        }
+
+        if(item.getItemId() == R.id.item_badge_broadcast){
+            // make an intent to FriendRequestActivity
+            Intent intent = new Intent(MainActivity.this, BroadcastRequestActivity.class);
+            // pass friendsReques.. list along
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("listOfQuestIds", (Serializable) questNotificationBroadcast);
+            intent.putExtras(bundle);
+            startActivity(intent);
+
+
+            // this should happen based on interaction with the requests
+            badgeCountBroadcast = 0;
+
         }
         if (item.getItemId() == android.R.id.home) {
 

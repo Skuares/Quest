@@ -116,10 +116,10 @@ public class User {
         return invites;
     }
 
-    public void updateInviteState(String questId, int state, Firebase userRef){
-        if(questId != null && userRef != null && (state == 0 || state == 1 || state == 2 || state == 3)){
+    public void updateInviteState(String broadcastId, int state, Firebase userRef){
+        if(broadcastId != null && userRef != null && (state == 0 || state == 1 || state == 2 || state == 3)){
             Map<String,Object> map = new HashMap<String, Object>();
-            map.put(questId,state);
+            map.put(broadcastId,state);
             userRef.child("invites").updateChildren(map);
         }
     }

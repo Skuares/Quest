@@ -359,8 +359,10 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                                 // get the user and insert into it
                                 generalUserRef = new Firebase("https://quest1.firebaseio.com/users/"+i+"/invites");
                                 Map<String ,Object> inviteMap = new HashMap<String, Object>();
-                                inviteMap.put(questKey,noReactionState);
+                                String combine = questKey+"----"+authorId;
+                                inviteMap.put(combine,noReactionState);
                                 generalUserRef.updateChildren(inviteMap);
+
 
                             }
                             // insert into the quest

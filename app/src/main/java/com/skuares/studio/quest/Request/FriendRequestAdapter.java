@@ -73,6 +73,7 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<FriendRequestAdap
         this.usersIds = usersIds;
     }
 
+
     @Override
     public ViewFriendRequest onCreateViewHolder(ViewGroup parent, int viewType) {
 

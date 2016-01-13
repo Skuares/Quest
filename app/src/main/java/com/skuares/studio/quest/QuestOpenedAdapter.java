@@ -115,6 +115,7 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
 
 
 
+
             }
         });
 

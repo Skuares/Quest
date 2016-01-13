@@ -77,6 +77,13 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
+        <activity
+            android:name=".Request.BroadcastRequestActivity"
+            android:screenOrientation="portrait"
+
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
 
         <activity
             android:name="com.skuares.studio.quest.CreateQuest"
