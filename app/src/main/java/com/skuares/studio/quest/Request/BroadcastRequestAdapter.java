@@ -75,111 +75,113 @@ public class BroadcastRequestAdapter extends RecyclerView.Adapter<BroadcastReque
         if(questCards == null || users == null){
             return;
         }else{
+            if(users.size() > 0 && questCards.size() > 0){// prevent outofbound exception , happends when user fastly opens the activity
+                holder.senderNameB.setText(users.get(position).getUsername());
+                loadImageFromString.loadBitmapFromString(users.get(position).getUserImage(), holder.senderImageB);
 
-            holder.senderNameB.setText(users.get(position).getUsername());
-            loadImageFromString.loadBitmapFromString(users.get(position).getUserImage(), holder.senderImageB);
+                // set up the listners for buttons
+                holder.comingButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            // set up the listners for buttons
-            holder.comingButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                        // change the state in the user who presses in his data (invites)
+                        if (MainActivity.myUser != null) {
+                            MainActivity.myUser.updateInviteState(broadcastIds.get(position),comingState,MainActivity.userRef);
+                        }
 
-                    // change the state in the user who presses in his data (invites)
-                    if (MainActivity.myUser != null) {
-                        MainActivity.myUser.updateInviteState(broadcastIds.get(position),comingState,MainActivity.userRef);
-                    }
-
-                    // change the state under the quest itself
-                    // get the quest ref
-                    questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)+"/joiners");
-                    // set up the map
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    map.put(MainActivity.uid,comingState);
-                    questRef.updateChildren(map);
-                    // remove the buttons and tell the user that he is a joiner of this quest
+                        // change the state under the quest itself
+                        // get the quest ref
+                        questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)+"/joiners");
+                        // set up the map
+                        Map<String,Object> map = new HashMap<String,Object>();
+                        map.put(MainActivity.uid,comingState);
+                        questRef.updateChildren(map);
+                        // remove the buttons and tell the user that he is a joiner of this quest
                     /*
                     holder.ignore.setVisibility(View.GONE);
                 holder.accept.setVisibility(View.GONE);
                 holder.senderName.setVisibility(View.GONE);
                 holder.requestDescription.setText("You are now a friend with " + users.get(position).getUsername());
                      */
-                    holder.comingButton.setVisibility(View.GONE);
-                    holder.maybeButton.setVisibility(View.GONE);
-                    holder.noButton.setVisibility(View.GONE);
-                    holder.senderNameB.setVisibility(View.GONE);
-                    holder.requestDescriptionB.setText("You are now a joiner of this quest");
+                        holder.comingButton.setVisibility(View.GONE);
+                        holder.maybeButton.setVisibility(View.GONE);
+                        holder.noButton.setVisibility(View.GONE);
+                        holder.senderNameB.setVisibility(View.GONE);
+                        holder.requestDescriptionB.setText("You are now a joiner of this quest");
 
-                }
-            });
-
-
-            holder.maybeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // change the state in the user who presses in his data (invites)
-                    // change the state under the quest itself
-                    // remove the buttons
-                    // change the state in the user who presses in his data (invites)
-                    if (MainActivity.myUser != null) {
-                        MainActivity.myUser.updateInviteState(broadcastIds.get(position),maybeState,MainActivity.userRef);
                     }
+                });
 
-                    // change the state under the quest itself
-                    // get the quest ref
-                    questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)+"/joiners");
-                    // set up the map
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    map.put(MainActivity.uid,maybeState);
-                    questRef.updateChildren(map);
-                    // remove the buttons and tell the user that he is a joiner of this quest
+
+                holder.maybeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // change the state in the user who presses in his data (invites)
+                        // change the state under the quest itself
+                        // remove the buttons
+                        // change the state in the user who presses in his data (invites)
+                        if (MainActivity.myUser != null) {
+                            MainActivity.myUser.updateInviteState(broadcastIds.get(position),maybeState,MainActivity.userRef);
+                        }
+
+                        // change the state under the quest itself
+                        // get the quest ref
+                        questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)+"/joiners");
+                        // set up the map
+                        Map<String,Object> map = new HashMap<String,Object>();
+                        map.put(MainActivity.uid,maybeState);
+                        questRef.updateChildren(map);
+                        // remove the buttons and tell the user that he is a joiner of this quest
                     /*
                     holder.ignore.setVisibility(View.GONE);
                     holder.accept.setVisibility(View.GONE);
                     holder.senderName.setVisibility(View.GONE);
                     holder.requestDescription.setText("You are now a friend with " + users.get(position).getUsername());
                      */
-                    holder.comingButton.setVisibility(View.GONE);
-                    holder.maybeButton.setVisibility(View.GONE);
-                    holder.noButton.setVisibility(View.GONE);
-                    holder.senderNameB.setVisibility(View.GONE);
-                    holder.requestDescriptionB.setText("We hope you make it");
-                }
-            });
-
-            holder.noButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // change the state in the user who presses in his data (invites)
-                    // change the state under the quest itself
-                    // remove the buttons
-
-                    // change the state in the user who presses in his data (invites)
-                    if (MainActivity.myUser != null) {
-                        MainActivity.myUser.updateInviteState(broadcastIds.get(position),noState,MainActivity.userRef);
+                        holder.comingButton.setVisibility(View.GONE);
+                        holder.maybeButton.setVisibility(View.GONE);
+                        holder.noButton.setVisibility(View.GONE);
+                        holder.senderNameB.setVisibility(View.GONE);
+                        holder.requestDescriptionB.setText("We hope you make it");
                     }
+                });
 
-                    // change the state under the quest itself
-                    // get the quest ref
-                    questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)+"/joiners");
-                    // set up the map
-                    Map<String,Object> map = new HashMap<String,Object>();
-                    map.put(MainActivity.uid,noState);
-                    questRef.updateChildren(map);
-                    // remove the buttons and tell the user that he is a joiner of this quest
+                holder.noButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // change the state in the user who presses in his data (invites)
+                        // change the state under the quest itself
+                        // remove the buttons
+
+                        // change the state in the user who presses in his data (invites)
+                        if (MainActivity.myUser != null) {
+                            MainActivity.myUser.updateInviteState(broadcastIds.get(position),noState,MainActivity.userRef);
+                        }
+
+                        // change the state under the quest itself
+                        // get the quest ref
+                        questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)+"/joiners");
+                        // set up the map
+                        Map<String,Object> map = new HashMap<String,Object>();
+                        map.put(MainActivity.uid,noState);
+                        questRef.updateChildren(map);
+                        // remove the buttons and tell the user that he is a joiner of this quest
                     /*
                     holder.ignore.setVisibility(View.GONE);
                 holder.accept.setVisibility(View.GONE);
                 holder.senderName.setVisibility(View.GONE);
                 holder.requestDescription.setText("You are now a friend with " + users.get(position).getUsername());
                      */
-                    holder.comingButton.setVisibility(View.GONE);
-                    holder.maybeButton.setVisibility(View.GONE);
-                    holder.noButton.setVisibility(View.GONE);
-                    holder.senderNameB.setVisibility(View.GONE);
-                    holder.requestDescriptionB.setText("No problem");
-                }
-            });
+                        holder.comingButton.setVisibility(View.GONE);
+                        holder.maybeButton.setVisibility(View.GONE);
+                        holder.noButton.setVisibility(View.GONE);
+                        holder.senderNameB.setVisibility(View.GONE);
+                        holder.requestDescriptionB.setText("No problem");
+                    }
+                });
 
+
+            }
 
         }
     }

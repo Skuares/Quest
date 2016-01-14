@@ -317,7 +317,7 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                 // this user is the author
                 Toast.makeText(this, "Author can broadcast", Toast.LENGTH_SHORT).show();
                 // get the friends array from parse
-                // pass it to a dailog
+
                 // and let the user broadcast
 
                 ParseQuery<ParseObject> queryThisUser = ParseQuery.getQuery("Users");
@@ -392,6 +392,81 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
             }else if (questCard.getTakers().get(MainActivity.uid).equals(MainActivity.uid)){
                 // this user is a taker
                 Toast.makeText(this, "Taker can broadcast", Toast.LENGTH_SHORT).show();
+
+
+                ParseQuery<ParseObject> queryTaker = ParseQuery.getQuery("Users");
+                queryTaker.whereEqualTo("authorId", MainActivity.uid);
+                queryTaker.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, com.parse.ParseException e) {
+                        if (e == null) {
+
+                            ParseObject objectTaker = objects.get(0);
+
+
+                            // the notification
+                            ParseQuery pushQueryTaker = ParseInstallation.getQuery();
+                            pushQueryTaker.whereContainedIn("installationAuthorId", objectTaker.getList("friends"));
+
+
+                            // set up the data in Quest and User in firebase
+                            /*
+                            Strategy:
+                            2 firebase references ,1- for the quest to add the joiners,2- for users and then we loop on it for every
+                            user
+
+                             */
+
+                            // get the users potential joiners
+                            List<String> potentialJoinersTaker = objectTaker.getList("friends");
+                            potentialJoinersTaker.remove(0);// get rid of the empty entry in parse
+
+                            // remove the author (case: the author might be this taker broadcaster friend, so it
+                            // doeesn't make sense to broadcast to him)
+                            if(potentialJoinersTaker.contains(authorId)){
+                                potentialJoinersTaker.remove(authorId);
+                            }
+
+
+                            Firebase questRefJoinersTaker = new Firebase("https://quest1.firebaseio.com/Quests/" + questKey + "/joiners");
+                            Firebase generalUserRefTaker;
+
+
+                            // convert the list to map
+                            Map<String, Object> mapTaker = new HashMap<String, Object>();
+                            for (String i : potentialJoinersTaker) {
+                                // insert into the map
+                                mapTaker.put(i, noReactionState);
+                                // get the user and insert into it
+                                generalUserRefTaker = new Firebase("https://quest1.firebaseio.com/users/" + i + "/invites");
+                                Map<String, Object> inviteMap = new HashMap<String, Object>();
+                                String combine = questKey + "----" + MainActivity.uid;
+                                inviteMap.put(combine, noReactionState);
+                                generalUserRefTaker.updateChildren(inviteMap);
+
+
+                            }
+                            // insert into the quest
+                            questRefJoinersTaker.updateChildren(mapTaker);
+
+                            // we need to insert the invites into every user we have in the list
+
+
+                            // Send push notification to query
+                            ParsePush pushTaker = new ParsePush();
+                            pushTaker.setQuery(pushQueryTaker); // Set our Installation query
+                            pushTaker.setMessage("You have an invitation from " + objectTaker.get("username"));
+                            pushTaker.sendInBackground();
+
+
+                        } else {
+                            Log.d("score", "Error: " + e.getMessage());
+                        }
+                    }
+
+                });
+
+
 
             }else{
                 // not taker nor author
