@@ -25,10 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by salim on 1/10/2016.
+ * Created by salim on 1/17/2016.
  */
-public class QTookStreamFragment extends Fragment {
-
+public class QJoinStreamFragment extends Fragment {
 
 
     /*
@@ -42,7 +41,7 @@ public class QTookStreamFragment extends Fragment {
     private List<QuestCard> questCards = null;
     private User mUser;
 
-    RecyclerView rvQTookStream;
+    RecyclerView rvQJoinStream;
     RecyclerView.LayoutManager manager;
     RecyclerView.Adapter adapter;
 
@@ -50,7 +49,6 @@ public class QTookStreamFragment extends Fragment {
     FOR NOW USE THE STREAM ADAPTER(QUEST ADAPTER)
     TILL WE DESIGN 2 LAYOUT FOR AUTHOR QUEST AND TAKER QUEST
      */
-
 
 
     @Override
@@ -75,6 +73,7 @@ public class QTookStreamFragment extends Fragment {
 
     public void fetchTokenQuest(){
 
+
         questCards = new ArrayList<QuestCard>();
 
 
@@ -97,15 +96,13 @@ public class QTookStreamFragment extends Fragment {
         final int[] i = {0};
 
 
-        // construct the query    questRef.orderByChild("authorId").equalTo(MainActivity.uid);     questRef.orderByChild("takers/"+MainActivity.uid).equalTo(MainActivity.uid);
-        Query query = questRef.orderByChild("takers/"+MainActivity.uid).equalTo(MainActivity.uid);
-        query.addChildEventListener(new ChildEventListener() {
 
+        Query query = questRef.orderByChild("joiners/"+MainActivity.uid).equalTo(1);
+        query.addChildEventListener(new ChildEventListener() {
             QuestCard fireQuest;
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 fireQuest = dataSnapshot.getValue(QuestCard.class);
                 // track
                 questCardsHolders.add(fireQuest);
@@ -148,9 +145,8 @@ public class QTookStreamFragment extends Fragment {
                         if (increment[0] == questCards.size()) {
                             // call the adapter
                             adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
-                            rvQTookStream.setAdapter(adapter);
-                            MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvQTookStream, null);
-                            //Log.e("CheckerAdalter", "adapter is set2");
+                            rvQJoinStream.setAdapter(adapter);
+                            MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvQJoinStream, null);
 
                         }
 
@@ -210,14 +206,16 @@ public class QTookStreamFragment extends Fragment {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
-    }
 
+        });
+
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.q_took_stream_layout,container,false);
+        View view = inflater.inflate(R.layout.qjoin_stream_layout,container,false);
 
         return view;
     }
@@ -227,23 +225,21 @@ public class QTookStreamFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rvQTookStream = (RecyclerView)view.findViewById(R.id.rvQTook);
-        rvQTookStream.setHasFixedSize(true); // only one view
+        rvQJoinStream = (RecyclerView)view.findViewById(R.id.rvQJoinStream);
+        rvQJoinStream.setHasFixedSize(true); // only one view
 
         manager = new LinearLayoutManager(getContext());
-        rvQTookStream.setLayoutManager(manager);
+        rvQJoinStream.setLayoutManager(manager);
 
         if(questCards != null){
 
             // material design library
             adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
-            rvQTookStream.setAdapter(adapter);
-            MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvQTookStream, null);
+            rvQJoinStream.setAdapter(adapter);
+            MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvQJoinStream, null);
         }
 
     }
-
-
 
 
 }

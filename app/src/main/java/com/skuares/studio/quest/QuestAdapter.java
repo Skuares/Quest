@@ -91,7 +91,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
                 STRATEGY FOR PICTURES
                 EACH QUEST SHOULD HAVE A FOLDER (ENTRY) OF IMAGES
                 AND WE STORE THE KEY OF THIS FOLDER IN QUEST SO WE CAN GET THEM WHEN WE WANT
-
                  */
                 Intent intent = new Intent(context,QuestOpenedActivity.class);
                 // WE NO LONGER NEED THIS WE CAN GET TODOS FROM THE QUEST ITSELF .. TO BE CONTINUED

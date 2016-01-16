@@ -182,11 +182,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     case 0:
                         return new StreamFragment();
                     case 1:
-                        return new MapFragment();
-                    case 2:
                         return new QOwnStreamFragment();
-                    case 3:
+                    case 2:
                         return new QTookStreamFragment();
+                    case 3:
+                        return new QJoinStreamFragment();
+
                 }
                 return null;
             }
@@ -202,11 +203,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     case 0:
                         return "Home";
                     case 1:
-                        return "Map";
-                    case 2:
                         return "Q you own";
-                    case 3:
+                    case 2:
                         return "Q you took";
+
+                    case 3:
+                        return "Q you Join";
 
                 }
                 return "";
@@ -232,10 +234,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.cyan,
                                 "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
+
                     case 3:
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.bluesh,
                                 "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
+
                 }
 
                 //execute others actions if needed (ex : modify your header logo)
@@ -324,12 +328,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 }
 
                 if (item.getItemId() == R.id.secondItem) {
-                        /*
-                        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-                        transaction.replace(R.id.containerView, new NothingFragment());
-                        transaction.addToBackStack("other");
-                        transaction.commit();
-                        */
+                       Intent intentMap = new Intent(MainActivity.this,MapActivity.class);
+                       startActivity(intentMap);
 
                 }
                 if (item.getItemId() == R.id.thirdItem) {
@@ -424,6 +424,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                 // set the likelihood to the new value
                                 likelihood = placeLikelihood.getLikelihood();
                             }
+
 
 
                         }

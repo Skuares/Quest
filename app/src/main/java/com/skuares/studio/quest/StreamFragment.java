@@ -30,22 +30,18 @@ import java.util.Map;
  */
 public class StreamFragment extends Fragment {
 
-
-
-
     // identify the caller
     int onResumeCaller = 100;
     int onCreateCaller = 1;
 
-
     /*
     a map to help us identifying which quest has been changed
-     */
+    */
+
     Map<String,QuestCard> map;
 
     private LoadImageFromString loadImageFromString;
     private LoadImageFromString loadImageFromString2;
-
     public static List<QuestCard> questCards = null;
     private User mUser;
     private RecyclerView recyclerView;
@@ -63,10 +59,8 @@ public class StreamFragment extends Fragment {
         // attach listener
         //Log.e("onchildadded", "ON CREATE IS CALLED");
 
-
         // ensure fetch is called only once ,, otherwise the listener is set multiple times;
         if(questCards == null){
-
             fetchData(onCreateCaller);
         }
 
@@ -79,7 +73,6 @@ public class StreamFragment extends Fragment {
 
         final Firebase questRef = new Firebase("https://quest1.firebaseio.com/Quests");
         final Firebase[] usersRef = new Firebase[1];
-
 
         final User[] user = new User[1];
         final String[] userImage = new String[1];
@@ -94,7 +87,6 @@ public class StreamFragment extends Fragment {
         final List<QuestCard> questCardsHolders = new ArrayList<QuestCard>();
         // attach listener for childs approach
         final int[] i = {0};
-
 
         // determine the caller
         if(caller == 1){
@@ -132,8 +124,7 @@ public class StreamFragment extends Fragment {
                             /*
                             to use descending set i[0] = increment and then start subtracting
                             TO BE CONTINUED LATERZZZ
-                             */
-
+                            */
 
                             // use the full data constructor
                             adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers(),questCardsHolders.get(i[0]).getJoiners());
@@ -169,7 +160,6 @@ public class StreamFragment extends Fragment {
 
 
                 }
-
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -326,7 +316,7 @@ public class StreamFragment extends Fragment {
                         the data in the quest will be consistent
                         otherwise if we save the user's image and user's name along with the quest
                         the data won't be able to be changed then
-                         */
+                        */
 
                     String author = post.getAuthorId();
                     usersRef[0] = new Firebase("https://quest1.firebaseio.com/users/"+author);
