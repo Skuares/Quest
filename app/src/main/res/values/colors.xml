@@ -42,9 +42,14 @@
     <color name="deep_orange">#FF5722</color>
 
 
+    <color name="iron">#CCCCCC</color>
 
     <color name="qBlack">#221f1f</color>
     <color name="qBlue">#3a5897</color>
 
+    <color name="googleBlue">#26C6DA</color>
+    <color name="googleBlueDark">#00BCD4</color>
+    <color name="colorTextAppbar">#004147</color>
+    <color name="colorText">#828282</color>
 
 </resources>

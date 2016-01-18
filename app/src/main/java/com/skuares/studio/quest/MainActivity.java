@@ -51,6 +51,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.MapView;
 import com.mikepenz.actionitembadge.library.ActionItemBadge;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -361,6 +362,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+
 
 
     }
@@ -1126,7 +1129,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             //finish();
         } else {
 
-            Intent intent = new Intent(MainActivity.this, SignUp.class);
+            Intent intent = new Intent(MainActivity.this, SignIn.class);
             startActivity(intent);
             finish();
             // user is not authenticated through him out to log in

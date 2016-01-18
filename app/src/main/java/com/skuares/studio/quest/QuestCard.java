@@ -349,8 +349,9 @@ public class QuestCard implements Serializable{
         return numberOfTakers;
     }
 
-
-
+    public double getNumberOfFollowers() {
+        return numberOfFollowers;
+    }
 
     private String bitmapToString(Bitmap bitmap){
 

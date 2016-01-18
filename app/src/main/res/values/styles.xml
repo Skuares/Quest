@@ -5,8 +5,28 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/clouds</item>
     </style>
+
+    <!-- back button color -->
+    <style name="ToolbarColoredBackArrow" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/clouds</item>
+
+    </style>
+
+
+
+    <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/clouds</item>
+        <item name="android:textColorPrimary">@color/iron</item>
+        <item name="android:background">@color/qBlue</item>
+    </style>
+
+
+    <style name="toolbar_theme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorSecondary">@color/colorTextAppbar</item>
+    </style>
+
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>

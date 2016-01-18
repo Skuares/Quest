@@ -10,6 +10,6 @@
         android:fitsSystemWindows="true"
         android:adjustViewBounds="true"
         android:layout_gravity="center"
-        android:src="@drawable/rsz_quest_logo"
+        android:src="@drawable/rsz_quest_logo2"
         android:id="@+id/logo_white"/>
 </FrameLayout>

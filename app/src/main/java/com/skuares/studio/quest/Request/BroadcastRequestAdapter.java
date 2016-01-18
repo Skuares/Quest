@@ -11,7 +11,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.MutableData;
+import com.firebase.client.Transaction;
 import com.skuares.studio.quest.LoadImageFromString;
 import com.skuares.studio.quest.MainActivity;
 import com.skuares.studio.quest.Quest;
@@ -96,13 +100,31 @@ public class BroadcastRequestAdapter extends RecyclerView.Adapter<BroadcastReque
                         Map<String,Object> map = new HashMap<String,Object>();
                         map.put(MainActivity.uid,comingState);
                         questRef.updateChildren(map);
+
+                        // update the numberOfFollowers
+                        Firebase follower = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)+"/numberOfFollowers");
+                        follower.runTransaction(new Transaction.Handler() {
+                            @Override
+                            public Transaction.Result doTransaction(MutableData currentData) {
+                                if(currentData.getValue() == null) {
+                                    currentData.setValue(1.0);
+
+                                }   else  {
+
+                                    currentData.setValue((Double) currentData.getValue() + 1.0);
+
+                                }
+
+                                return Transaction.success(currentData); //we can also abort by calling Transaction.abort()
+                            }
+
+                            @Override
+                            public void onComplete(FirebaseError firebaseError, boolean b, DataSnapshot dataSnapshot) {
+
+                            }
+                        });
+
                         // remove the buttons and tell the user that he is a joiner of this quest
-                    /*
-                    holder.ignore.setVisibility(View.GONE);
-                holder.accept.setVisibility(View.GONE);
-                holder.senderName.setVisibility(View.GONE);
-                holder.requestDescription.setText("You are now a friend with " + users.get(position).getUsername());
-                     */
                         holder.comingButton.setVisibility(View.GONE);
                         holder.maybeButton.setVisibility(View.GONE);
                         holder.noButton.setVisibility(View.GONE);
@@ -131,13 +153,8 @@ public class BroadcastRequestAdapter extends RecyclerView.Adapter<BroadcastReque
                         Map<String,Object> map = new HashMap<String,Object>();
                         map.put(MainActivity.uid,maybeState);
                         questRef.updateChildren(map);
+
                         // remove the buttons and tell the user that he is a joiner of this quest
-                    /*
-                    holder.ignore.setVisibility(View.GONE);
-                    holder.accept.setVisibility(View.GONE);
-                    holder.senderName.setVisibility(View.GONE);
-                    holder.requestDescription.setText("You are now a friend with " + users.get(position).getUsername());
-                     */
                         holder.comingButton.setVisibility(View.GONE);
                         holder.maybeButton.setVisibility(View.GONE);
                         holder.noButton.setVisibility(View.GONE);
@@ -166,12 +183,6 @@ public class BroadcastRequestAdapter extends RecyclerView.Adapter<BroadcastReque
                         map.put(MainActivity.uid,noState);
                         questRef.updateChildren(map);
                         // remove the buttons and tell the user that he is a joiner of this quest
-                    /*
-                    holder.ignore.setVisibility(View.GONE);
-                holder.accept.setVisibility(View.GONE);
-                holder.senderName.setVisibility(View.GONE);
-                holder.requestDescription.setText("You are now a friend with " + users.get(position).getUsername());
-                     */
                         holder.comingButton.setVisibility(View.GONE);
                         holder.maybeButton.setVisibility(View.GONE);
                         holder.noButton.setVisibility(View.GONE);

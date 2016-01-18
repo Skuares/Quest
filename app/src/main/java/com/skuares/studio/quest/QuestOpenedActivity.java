@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -62,9 +64,14 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
     private QuestCard questCard;
     LoadImageFromString loadImageFromString;
 
+    ImageView uImage;
+    TextView uText;
+    TextView qTitle;
+    TextView qSubTitle;
 
     private FragmentManager fragmentManager;
     private ContextMenuDialogFragment mMenuDialogFragment;
+
 
     public static final int QUEST = 0;
     public static final int TODO = 1;
@@ -85,8 +92,8 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // get the questCard
         questCard = (QuestCard) getIntent().getSerializableExtra("quest");
@@ -105,6 +112,17 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
         list = dataWrapperTodo.getToDos();
 
 
+
+        uImage = (ImageView)findViewById(R.id.uImage);
+        uText = (TextView)findViewById(R.id.uText);
+        qTitle = (TextView)findViewById(R.id.qTitle);
+        qSubTitle = (TextView)findViewById(R.id.qSubTitle);
+
+        // get user info from the questCard
+        loadImageFromString.loadBitmapFromString(questCard.getQuestUserImage(),uImage);
+        uText.setText(questCard.getQuestUsername());
+        qTitle.setText(questCard.getQuestTitle());
+        qSubTitle.setText(questCard.getQuestDescription());
 
         // set recyle stuff
         recyclerView = (RecyclerView) findViewById(R.id.recycleviewTodos);
@@ -320,7 +338,7 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
 
                 // and let the user broadcast
 
-                ParseQuery<ParseObject> queryThisUser = ParseQuery.getQuery("Users");
+                final ParseQuery<ParseObject> queryThisUser = ParseQuery.getQuery("Users");
                 queryThisUser.whereEqualTo("authorId", MainActivity.uid);
                 queryThisUser.findInBackground(new FindCallback<ParseObject>() {
                     @Override
@@ -347,6 +365,21 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                             List<String> potentialJoiners = object.getList("friends");
                             potentialJoiners.remove(0);// get rid of the empty entry in parse
 
+                            // add restriction
+                            // do not broadcast to users who has already join the quest
+                            for(String string: potentialJoiners){
+                                // if this user is already in the joiners map
+                                if(questCard.getJoiners().containsKey(string)){
+                                    // check now if he/she has accepted the request
+                                    int result = (int)questCard.getJoiners().get(string);
+                                    if(result == 1){
+                                        potentialJoiners.remove(string);
+                                    }
+                                }
+
+                            }
+
+
                             Firebase questRefJoiners = new Firebase("https://quest1.firebaseio.com/Quests/"+questKey+"/joiners");
                             Firebase generalUserRef;
 
@@ -357,6 +390,7 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                                 // insert into the map
                                 map.put(i,noReactionState);
                                 // get the user and insert into it
+
                                 generalUserRef = new Firebase("https://quest1.firebaseio.com/users/"+i+"/invites");
                                 Map<String ,Object> inviteMap = new HashMap<String, Object>();
                                 String combine = questKey+"----"+authorId;
@@ -425,6 +459,20 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
                             // doeesn't make sense to broadcast to him)
                             if(potentialJoinersTaker.contains(authorId)){
                                 potentialJoinersTaker.remove(authorId);
+                            }
+
+                            // add restriction
+                            // do not broadcast to users who has already join the quest
+                            for(String string: potentialJoinersTaker){
+                                // if this user is already in the joiners map
+                                if(questCard.getJoiners().containsKey(string)){
+                                    // check now if he/she has accepted the request
+                                    int result = (int)questCard.getJoiners().get(string);
+                                    if(result == 1){
+                                        potentialJoinersTaker.remove(string);
+                                    }
+                                }
+
                             }
 
 

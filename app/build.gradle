@@ -62,7 +62,10 @@ dependencies {
     // image shapes
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 
+    //sticky
+    compile 'se.emilsjolander:StickyScrollViewItems:1.1.0'
 
+    compile 'com.jakewharton:butterknife:7.0.1'
 
     //SUB-DEPENDENCIES
     //Android-Iconics - used to provide an easy API for icons

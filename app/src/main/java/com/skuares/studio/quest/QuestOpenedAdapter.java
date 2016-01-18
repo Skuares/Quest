@@ -143,6 +143,9 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
             nTakers = (TextView)view.findViewById(R.id.nTakers);
 
             qCard = (CardView) view.findViewById(R.id.qCard);
+            qCard.setPreventCornerOverlap(false);
+            qCard.setCardElevation(0);
+            qCard.setMaxCardElevation(0);
             qImage = (ImageView)view.findViewById(R.id.qImage);
         }
     }
