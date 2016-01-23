@@ -132,7 +132,7 @@ public class QTookStreamFragment extends Fragment {
 
 
                         // use the full data constructor
-                        adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers(),questCardsHolders.get(i[0]).getJoiners());
+                        adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers(),questCardsHolders.get(i[0]).getNumberOfFollowers(),questCardsHolders.get(i[0]).getJoiners());
                         // increment i so we the next one next time
                         i[0] = i[0] + 1;
                         //Log.e("onchild",String.valueOf(i[0]));
@@ -175,17 +175,17 @@ public class QTookStreamFragment extends Fragment {
                 QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
                 // get the keyy and index it into the map
                 String key = updatedQuestCard.getQuestKey();
-                Log.e("indexes", "" + key);
+                //Log.e("indexes", "" + key);
                 QuestCard oldQuest = map.get(key);
-                Log.e("indexes",""+oldQuest.getQuestKey());
+               // Log.e("indexes",""+oldQuest.getQuestKey());
                 if(oldQuest == null){
                     // not of interest to this user
                 }else{
                     // get the index of the oldQuest
                     int index = questCards.indexOf(oldQuest);
                     // use this index to update the quest
-                    Log.e("indexes",""+index);
-                    Log.e("indexes", "" + questCards.size());
+                    //Log.e("indexes",""+index);
+                    //Log.e("indexes", "" + questCards.size());
                     if(index >= 0){// because of the firebase issue of calling ondatachanged many times
                         questCards.set(index,updatedQuestCard);
                         // notify the adapter

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/qBlue"
+    android:background="@color/clouds"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -14,7 +14,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView android:src="@drawable/logo"
+        <ImageView android:src="@drawable/questicon"
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
@@ -28,8 +28,8 @@
             android:layout_marginBottom="8dp">
             <EditText android:id="@+id/input_name"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/clouds"
-                android:textColor="@color/clouds"
+                android:textColorHint="@color/qBlue"
+                android:textColor="@color/qBlue"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="Username" />
@@ -42,8 +42,8 @@
             android:layout_marginBottom="8dp">
             <EditText android:id="@+id/input_fname"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/clouds"
-                android:textColor="@color/clouds"
+                android:textColorHint="@color/qBlue"
+                android:textColor="@color/qBlue"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="First Name" />
@@ -56,8 +56,8 @@
             android:layout_marginBottom="8dp">
             <EditText android:id="@+id/input_lname"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/clouds"
-                android:textColor="@color/clouds"
+                android:textColorHint="@color/qBlue"
+                android:textColor="@color/qBlue"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="Last Name" />
@@ -70,8 +70,8 @@
             android:layout_marginBottom="8dp">
             <EditText android:id="@+id/input_age"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/clouds"
-                android:textColor="@color/clouds"
+                android:textColorHint="@color/qBlue"
+                android:textColor="@color/qBlue"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:hint="Age" />
@@ -85,8 +85,8 @@
             android:layout_marginBottom="8dp">
             <EditText android:id="@+id/input_email"
                 android:layout_width="match_parent"
-                android:textColorHint="@color/clouds"
-                android:textColor="@color/clouds"
+                android:textColorHint="@color/qBlue"
+                android:textColor="@color/qBlue"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="Email" />
@@ -101,8 +101,8 @@
             <EditText android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColorHint="@color/clouds"
-                android:textColor="@color/clouds"
+                android:textColorHint="@color/qBlue"
+                android:textColor="@color/qBlue"
                 android:inputType="textPassword"
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
@@ -113,8 +113,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:textColor="@color/clouds"
             android:layout_marginBottom="24dp"
-            android:background="#0090ff"
+            android:background="@color/qBlue"
             android:padding="12dp"
             android:text="Create Account"/>
 
@@ -122,7 +123,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:textColor="@color/clouds"
+            android:textColor="@color/qBlue"
             android:text="Already a member? Login"
             android:gravity="center"
             android:textSize="16dip"/>

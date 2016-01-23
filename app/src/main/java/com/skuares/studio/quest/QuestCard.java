@@ -60,6 +60,7 @@ public class QuestCard implements Serializable{
                       Map<String, Object> takers,
                       double numberOfLikes,
                       double numberOfTakers,
+                      double numberOfFollowers,
                       Map<String,Object> joiners){
 
         this.questImage = questImage;
@@ -91,6 +92,7 @@ public class QuestCard implements Serializable{
 
         this.numberOfLikes = numberOfLikes;
         this.numberOfTakers = numberOfTakers;
+        this.numberOfFollowers = numberOfFollowers;
 
         this.todos = new ArrayList<ToDo>();
         this.todos = todos;
@@ -268,6 +270,7 @@ public class QuestCard implements Serializable{
     }
 
     /*
+
 
     author id cannot be changed
     quest username cannot be changed

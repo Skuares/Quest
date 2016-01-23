@@ -71,7 +71,7 @@
 
         android:src="@drawable/ic_action_new"
         android:layout_width="match_parent"
-        android:background="#fff"
+        android:background="@color/iron"
         android:padding="8dp"
         android:layout_height="wrap_content" />
 

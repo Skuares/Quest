@@ -21,6 +21,7 @@ import com.skuares.studio.quest.MainActivity;
 import com.skuares.studio.quest.Quest;
 import com.skuares.studio.quest.QuestCard;
 import com.skuares.studio.quest.R;
+import com.skuares.studio.quest.ToDo;
 import com.skuares.studio.quest.User;
 
 import java.util.HashMap;
@@ -123,6 +124,16 @@ public class BroadcastRequestAdapter extends RecyclerView.Adapter<BroadcastReque
 
                             }
                         });
+                        // insert this user into participants of every todos
+                         /*
+                HOW TO DO IT
+                1- loop through the todos we have and call addParticipant on each one
+                 */
+                        for(int i = 0; i < questCards.get(position).getTodos().size(); i++){
+                            ToDo toDo = questCards.get(position).getTodos().get(i);
+                            toDo.addParticipant(MainActivity.uid,questRef = new Firebase("https://quest1.firebaseio.com/Quests/"+questsIds.get(position)),
+                                    String.valueOf(i));
+                        }
 
                         // remove the buttons and tell the user that he is a joiner of this quest
                         holder.comingButton.setVisibility(View.GONE);

@@ -27,7 +27,12 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_action_new"
-        app:fab_colorNormal="@color/turq"
+
+        app:fab_showAnimation="@anim/fab_scale_up"
+        app:fab_hideAnimation="@anim/fab_scale_down"
+
+        app:fab_size="normal"
+        app:fab_colorNormal="@color/qBlue"
         app:fab_colorPressed="@color/wet"
         />
 

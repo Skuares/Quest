@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.RelativeLayout;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -127,7 +130,7 @@ public class StreamFragment extends Fragment {
                             */
 
                             // use the full data constructor
-                            adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers(),questCardsHolders.get(i[0]).getJoiners());
+                            adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers(),questCardsHolders.get(i[0]).getNumberOfFollowers(),questCardsHolders.get(i[0]).getJoiners());
                             // increment i so we the next one next time
                             i[0] = i[0] + 1;
                             //Log.e("onchild",String.valueOf(i[0]));
@@ -330,7 +333,7 @@ public class StreamFragment extends Fragment {
                             username[0] = user[0].getUsername();
 
                             // use the full data constructor
-                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos(),finalPost.getQuestKey(),finalPost.getUsersWhoLiked(),finalPost.getTakers(),finalPost.getNumberOfLikes(),finalPost.getNumberOfTakers(),finalPost.getJoiners());
+                            adapterQuest[0] = new QuestCard(finalPost.getQuestImage(), finalPost.getQuestTitle(), finalPost.getAuthorId(), username[0], userImage[0], finalPost.getQuestDescription(), finalPost.getQuestCost(), finalPost.getTodos(),finalPost.getQuestKey(),finalPost.getUsersWhoLiked(),finalPost.getTakers(),finalPost.getNumberOfLikes(),finalPost.getNumberOfTakers(),finalPost.getNumberOfFollowers(),finalPost.getJoiners());
                             // add it to the list
 
                             questCards.add(adapterQuest[0]);
@@ -344,8 +347,6 @@ public class StreamFragment extends Fragment {
                                 recyclerView.setAdapter(adapter);
                                 MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
                                 //Log.e("CheckerAdalter", "adapter is set2");
-
-
 
                             }
 
@@ -429,7 +430,7 @@ public class StreamFragment extends Fragment {
 
 
 
-        com.github.clans.fab.FloatingActionButton fab = (com.github.clans.fab.FloatingActionButton)getActivity().findViewById(R.id.fabStream);
+        final com.github.clans.fab.FloatingActionButton fab = (com.github.clans.fab.FloatingActionButton)getActivity().findViewById(R.id.fabStream);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -441,11 +442,24 @@ public class StreamFragment extends Fragment {
         });
 
 
+        recyclerView.setOnScrollListener(new HidingScrollListener() {
 
+            @Override
+            public void onShow() {
+                fab.animate().translationY(0)
+                        .setInterpolator(new DecelerateInterpolator(2)).start();
+            }
 
+            @Override
+            public void onHide() {
+                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) fab
+                        .getLayoutParams();
+                int fabMargin = lp.bottomMargin;
+                fab.animate().translationY(fab.getHeight() + fabMargin)
+                        .setInterpolator(new AccelerateInterpolator(2)).start();
+            }
+        });
     }
-
-
 
     @Override
     public void onResume() {

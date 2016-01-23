@@ -53,7 +53,9 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.skuares.studio.quest.UserProfile.getPath;
 
@@ -78,6 +80,8 @@ public class CreateQuest extends AppCompatActivity{
     boolean userChooseImage = false;
 
     LoadImageFromPath loadImageFromPath;
+
+    private Map<String,Object> participants;
 
     /*
     Todos Dialg layout
@@ -137,6 +141,7 @@ public class CreateQuest extends AppCompatActivity{
         loadImageFromPath = new LoadImageFromPath(this);
         // initialize the list
         todosList = new ArrayList<ToDo>();
+
         // reference
         questImageAdd = (ImageView)findViewById(R.id.questImageAdd);
         questUserImageAdd = (ImageView)findViewById(R.id.questUserImageAdd);
@@ -149,6 +154,10 @@ public class CreateQuest extends AppCompatActivity{
 
         // get user
         if(MainActivity.myUser != null){
+            // initialize the todo map and get it ready
+            participants = new HashMap<String, Object>();
+            participants.put(MainActivity.uid,false);
+
             userQuest = MainActivity.myUser;
 
             // get user image and get usernamse
@@ -175,6 +184,9 @@ public class CreateQuest extends AppCompatActivity{
                     questDesc = questDescriptionAdd.getText().toString();
                     questTitle = questTitleAdd.getText().toString();
 
+                    /*
+
+                     */
                     // check list
                     if(todosList == null || todosList.size() == 0){
                         Toast.makeText(CreateQuest.this,"You must add a todos",Toast.LENGTH_LONG).show();
@@ -202,6 +214,11 @@ public class CreateQuest extends AppCompatActivity{
                         Toast.makeText(CreateQuest.this,"You must authenticate",Toast.LENGTH_LONG).show();
                         return;
                     }
+
+                    // done validating take the user to the next page
+
+
+                    //
 
                     // we need to meausre the cost
                     double sumMoney = 0;
@@ -249,63 +266,6 @@ public class CreateQuest extends AppCompatActivity{
         }
 
     }
-
-    /*
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .build();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Toast.makeText(this, "Connection true",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Toast.makeText(this, "Connection Suspended",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(this, "Connection Failed",Toast.LENGTH_SHORT).show();
-
-    }
-    */
-
-
-    /*
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (!mGoogleApiClient.isConnected() && !mGoogleApiClient.isConnecting()){
-            Log.v("Google API","Connecting");
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        if(mGoogleApiClient.isConnected()){
-            Log.v("Google API","Dis-Connecting");
-            mGoogleApiClient.disconnect();
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-    */
-
 
 
 
@@ -549,16 +509,21 @@ public class CreateQuest extends AppCompatActivity{
                         String time = addTimeDialog.getText().toString();
                         String money = addMoneyDialog.getText().toString();
 
+
+
                         if(desc.equals("") || time.equals("") || money.equals("")){
                             Toast.makeText(CreateQuest.this,"Please Fill In The Fields",Toast.LENGTH_SHORT).show();
                             return;
                         }
 
+
+
                         double moneys = Double.parseDouble(money);
                         // create a to--do object
                         APlace aPlace1 = aPlace[0];
-                        if(aPlace1 != null){
-                            toDo = new ToDo(desc,time,moneys,aPlace1);
+                        if(aPlace1 != null && participants != null){
+
+                            toDo = new ToDo(desc,time,moneys,aPlace1,participants,0); // usersFinishedThisTodo 0 by default
                             // add it to the list
                             todosList.add(toDo);
                             // call adapter

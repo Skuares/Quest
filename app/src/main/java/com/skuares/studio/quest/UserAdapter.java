@@ -13,6 +13,7 @@ import android.widget.TextView;
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // reference what do you have in the layout
         CardView cardViewUserInfo;
