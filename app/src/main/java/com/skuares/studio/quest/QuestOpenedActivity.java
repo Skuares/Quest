@@ -283,6 +283,7 @@ public class QuestOpenedActivity extends AppCompatActivity implements OnMenuItem
 
     }
 
+
     @Override
     public void onMenuItemClick(View clickedView, int position) {
         Toast.makeText(this, "Clicked on position: " + position, Toast.LENGTH_SHORT).show();

@@ -418,33 +418,49 @@ public class QOwnStreamFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                        /*
-                        // update the data of the quest
 
-                        // HOW TO DO IT
-                        // convert to quest card
-                        QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
-                        // get the keyy and index it into the map
-                        String key = updatedQuestCard.getQuestKey();
-                        //Log.e("indexes", "" + key);
-                        QuestCard oldQuest = map.get(key);
-                        //Log.e("indexes",""+oldQuest.getQuestKey());
-                        if(oldQuest == null){
-                            // not of interest to this user
-                        }else{
-                            // get the index of the oldQuest
-                            int index = questCards.indexOf(oldQuest);
-                            // use this index to update the quest
-                            //Log.e("indexes",""+index);
-                            //Log.e("indexes", "" + questCards.size());
-                            if(index >= 0){// because of the firebase issue of calling ondatachanged many times
-                                questCards.set(index,updatedQuestCard);
-                                // notify the adapter
-                                adapter.notifyDataSetChanged();
-                            }
+                QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
 
-                        }
-                        */
+
+                // loop through the questCard
+                // find the quest that matches the key of this quest
+                // get it's position and notify
+
+
+
+                for(int i = 0; i < questCards.size(); i++){
+
+                    QuestCard qc = questCards.get(i);
+
+                    if(qc.getQuestKey().equals(updatedQuestCard.getQuestKey())){
+
+
+
+                        QuestCard newConst = new QuestCard(updatedQuestCard.getQuestImage(),
+                                updatedQuestCard.getQuestTitle(),
+                                updatedQuestCard.getAuthorId(),
+                                qc.getQuestUsername(),
+                                qc.getQuestUserImage(),
+                                updatedQuestCard.getQuestDescription(),
+                                updatedQuestCard.getQuestCost(),
+                                updatedQuestCard.getTodos(),
+                                updatedQuestCard.getQuestKey(),
+                                updatedQuestCard.getUsersWhoLiked(),
+                                updatedQuestCard.getTakers(),
+                                updatedQuestCard.getNumberOfLikes(),
+                                updatedQuestCard.getNumberOfTakers(),
+                                updatedQuestCard.getNumberOfFollowers(),
+                                updatedQuestCard.getJoiners()
+                        );
+
+                        // TAKE out the old quest and insert this one instead
+                        questCards.set(i,newConst);
+
+                    }
+                }
+
+
+
 
             }
 

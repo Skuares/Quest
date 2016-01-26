@@ -318,9 +318,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                        startActivity(intentMap);
 
                 }
-                if (item.getItemId() == R.id.thirdItem) {
-
-                }
 
 
                 if (item.getItemId() == R.id.logout) {

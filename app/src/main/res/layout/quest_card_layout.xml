@@ -19,10 +19,16 @@
 
             >
 
+            <View
+                android:layout_alignBottom="@+id/questImage"
+                android:background="@color/black"
+                android:id="@+id/dimView"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"/>
             <ImageView
                 android:id="@+id/questImage"
                 android:clickable="true"
-                android:padding="2dp"
+                android:alpha="0.8"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:src="@drawable/images_place"
@@ -55,8 +61,8 @@
                 android:id="@+id/questTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/likeButton"
-                android:layout_alignBottom="@+id/likeButton"
+                android:layout_alignBottom="@+id/dimView"
+                android:layout_alignTop="@+id/dimView"
 
                 android:text="Title Goes here"
                 android:gravity="left"
@@ -64,11 +70,11 @@
                 android:maxLines="1"
                 android:minLines="1"
                 android:ems="@android:integer/config_longAnimTime"
-                android:padding="5dp"
-                android:textColor="@color/black"
+                android:paddingLeft="5dp"
+                android:textColor="@color/clouds"
                 android:layout_margin="4dp"
 
-                android:layout_below="@+id/questImage"
+
                 />
 
 
@@ -79,10 +85,13 @@
                 android:textSize="18sp"
                 android:layout_below="@id/questTitle"
                 android:layout_alignLeft="@id/questTitle"
-                android:padding="5dp"
+
                 android:maxLines="3"
+                android:layout_toLeftOf="@+id/likeButton"
+                android:paddingTop="10dp"
                 android:textColor="@color/qBlack"
                 android:paddingRight="4dp"
+                android:paddingLeft="5dp"
                 android:minLines="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

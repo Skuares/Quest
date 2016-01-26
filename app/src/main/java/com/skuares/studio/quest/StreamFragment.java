@@ -194,24 +194,6 @@ public class StreamFragment extends Fragment {
 
                         if(qc.getQuestKey().equals(updatedQuestCard.getQuestKey())){
 
-                            // convert to another constructor
-                             /*
-                            QuestCard(String questImage, String questTitle,String authorId,
-                      String questUsername,
-                      String questUserImage,
-                      String questDescription, String questCost,List<ToDo> todos,
-
-                      String questKey,
-                      Map<String,Object> usersWhoLiked,
-                      Map<String, Object> takers,
-                      double numberOfLikes,
-                      double numberOfTakers,
-                      double numberOfFollowers,
-                      Map<String,Object> joiners){
-
-                      QuestCard(Bitmap questImage, String questTitle,String authorId,
-                     String questDescription, String questCost,List<ToDo> todos,String questKey){
-                             */
 
 
                         QuestCard newConst = new QuestCard(updatedQuestCard.getQuestImage(),
@@ -239,32 +221,6 @@ public class StreamFragment extends Fragment {
 
 
 
-                    // update the data of the quest
-                    /*
-                    // HOW TO DO IT
-                    // convert to quest card
-                    QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
-                    // get the keyy and index it into the map
-                    String key = updatedQuestCard.getQuestKey();
-                    Log.e("indexes",""+key);
-                    QuestCard oldQuest = map.get(key);
-                    Log.e("indexes",""+oldQuest.getQuestKey());
-                    if(oldQuest == null){
-                        // not of interest to this user
-                    }else{
-                        // get the index of the oldQuest
-                        int index = questCards.indexOf(oldQuest);
-                        // use this index to update the quest
-                        Log.e("indexes",""+index);
-                        Log.e("indexes", "" + questCards.size());
-                        if(index >= 0){// because of the firebase issue of calling ondatachanged many times
-                            questCards.set(index,updatedQuestCard);
-                            // notify the adapter
-                            adapter.notifyDataSetChanged();
-                        }
-
-                    }
-                    */
 
 
                 }

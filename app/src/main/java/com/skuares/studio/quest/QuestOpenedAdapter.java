@@ -150,6 +150,7 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
 
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ViewHolder(View v) {
             super(v);
