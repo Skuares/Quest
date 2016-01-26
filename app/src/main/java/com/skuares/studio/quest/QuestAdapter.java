@@ -23,10 +23,10 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
         CardView cardView;
         ImageView questImage;
         TextView questTitle;
-        ImageView questUserImage;
+        //ImageView questUserImage;
         TextView questDescription;
-        TextView questUsername;
-        TextView questCost;
+        //TextView questUsername;
+        //TextView questCost;
 
         // COME BACK FOR BUTTONS LATERZZZ
 
@@ -36,10 +36,10 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
             cardView = (CardView)view.findViewById(R.id.questCard);
             questImage = (ImageView)view.findViewById(R.id.questImage);
             questTitle = (TextView)view.findViewById(R.id.questTitle);
-            questUserImage = (ImageView)view.findViewById(R.id.questUserImage);
+            //questUserImage = (ImageView)view.findViewById(R.id.questUserImage);
             questDescription = (TextView)view.findViewById(R.id.questDescription);
-            questUsername = (TextView)view.findViewById(R.id.questUserName);
-            questCost = (TextView)view.findViewById(R.id.questCost);
+            //questUsername = (TextView)view.findViewById(R.id.questUserName);
+            //questCost = (TextView)view.findViewById(R.id.questCost);
 
 
         }
@@ -108,6 +108,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
 
         holder.questTitle.setText(list.get(position).getQuestTitle());
 
+        /*
         // get them from users .. WE GOT THEM
         userImage = list.get(position).getQuestUserImage();
         loadImageFromString2.loadBitmapFromString(userImage, holder.questUserImage);
@@ -130,6 +131,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
 
             }
         });
+        */
 
 
 
@@ -147,6 +149,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
         }
         */
 
+        /*
         holder.questUsername.setText("By " + list.get(position).getQuestUsername());
 
         // set listener to view the profile
@@ -170,10 +173,11 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewH> {
 
             }
         });
+        */
 
         holder.questDescription.setText(list.get(position).getQuestDescription());
 
-        holder.questCost.setText(list.get(position).getQuestCost());
+       // holder.questCost.setText(list.get(position).getQuestCost());
 
 
     }

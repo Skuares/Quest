@@ -184,10 +184,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         return new StreamFragment();
                     case 1:
                         return new QOwnStreamFragment();
-                    case 2:
-                        return new QTookStreamFragment();
-                    case 3:
-                        return new QJoinStreamFragment();
+
 
                 }
                 return null;
@@ -195,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             @Override
             public int getCount() {
-                return 4;
+                return 2;
             }
 
             @Override
@@ -204,12 +201,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                     case 0:
                         return "Home";
                     case 1:
-                        return "Q you own";
-                    case 2:
-                        return "Q you took";
+                        return "Personnel";
 
-                    case 3:
-                        return "Q you Join";
 
                 }
                 return "";
@@ -231,15 +224,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.blue,
                                 "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
-                    case 2:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.cyan,
-                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
 
-                    case 3:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.bluesh,
-                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
 
                 }
 

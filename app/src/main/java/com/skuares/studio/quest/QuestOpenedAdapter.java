@@ -94,6 +94,8 @@ public class QuestOpenedAdapter extends RecyclerView.Adapter<QuestOpenedAdapter.
                     toDo.addParticipant(MainActivity.uid,questRef,String.valueOf(i));
                 }
 
+
+
             }
         });
 

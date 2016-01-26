@@ -96,8 +96,8 @@ public class QOwnStreamFragment extends Fragment {
 
 
         // construct the query    questRef.orderByChild("authorId").equalTo(MainActivity.uid);     questRef.orderByChild("takers/"+MainActivity.uid).equalTo(MainActivity.uid);
-        Query query = questRef.orderByChild("authorId").equalTo(MainActivity.uid);
-        query.addChildEventListener(new ChildEventListener() {
+        Query query1 = questRef.orderByChild("authorId").equalTo(MainActivity.uid);
+        query1.addChildEventListener(new ChildEventListener() {
 
             QuestCard fireQuest;
             @Override
@@ -144,8 +144,12 @@ public class QOwnStreamFragment extends Fragment {
                         // add it to the list
                         questCards.add(adapterQuest[0]);
                         //Log.e("onchild", "I AM ADDED");
+                        adapter.notifyDataSetChanged();
 
+
+                        /*
                         // ensure it gets called once
+
                         if (increment[0] == questCards.size()) {
                             // call the adapter
                             adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
@@ -154,6 +158,7 @@ public class QOwnStreamFragment extends Fragment {
                             //Log.e("CheckerAdalter", "adapter is set2");
 
                         }
+                        */
 
 
                     }
@@ -169,6 +174,9 @@ public class QOwnStreamFragment extends Fragment {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 // update the data of the quest
 
+                // notify that this quest has changed
+
+                /*
                 // HOW TO DO IT
                 // convert to quest card
                 QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
@@ -192,6 +200,7 @@ public class QOwnStreamFragment extends Fragment {
                     }
 
                 }
+                */
 
             }
 
@@ -209,6 +218,251 @@ public class QOwnStreamFragment extends Fragment {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
+        });
+
+        // do query2(takers) and try to combine them and notify at the end
+
+        Query query2 = questRef.orderByChild("takers/"+MainActivity.uid).equalTo(MainActivity.uid);
+        query2.addChildEventListener(new ChildEventListener() {
+
+            QuestCard fireQuest;
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                fireQuest = dataSnapshot.getValue(QuestCard.class);
+                // track
+                questCardsHolders.add(fireQuest);
+
+
+                increment[0]++;
+
+                // get user image and username
+                String author = fireQuest.getAuthorId();
+                usersRef[0] = new Firebase("https://quest1.firebaseio.com/users/" + author);
+                // attach listener
+                usersRef[0].addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        user[0] = dataSnapshot.getValue(User.class);
+                        userImage[0] = user[0].getUserImage();
+                        username[0] = user[0].getUsername();
+
+
+                            /*
+                            to use descending set i[0] = increment and then start subtracting
+                            TO BE CONTINUED LATERZZZ
+                             */
+
+
+                        // use the full data constructor
+                        adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers(),questCardsHolders.get(i[0]).getNumberOfFollowers(),questCardsHolders.get(i[0]).getJoiners());
+                        // increment i so we the next one next time
+                        i[0] = i[0] + 1;
+                        //Log.e("onchild",String.valueOf(i[0]));
+
+                        // add it to the map
+                        map.put(adapterQuest[0].getQuestKey(),adapterQuest[0]);
+
+                        // add it to the list
+                        questCards.add(adapterQuest[0]);
+                        //Log.e("onchild", "I AM ADDED");
+                        adapter.notifyDataSetChanged();
+                        /*
+                        // ensure it gets called once
+                        if (increment[0] == questCards.size()) {
+                            // call the adapter
+                            //adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
+                            //rvQOwnStream.setAdapter(adapter);
+                            //MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvQOwnStream, null);
+                            //Log.e("CheckerAdalter", "adapter is set2");
+                            adapter.notifyDataSetChanged();
+
+                        }
+                        */
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
+                // notify adapter that there are changes
+
+
+                /*
+                // update the data of the quest
+
+                // HOW TO DO IT
+                // convert to quest card
+                QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
+                // get the keyy and index it into the map
+                String key = updatedQuestCard.getQuestKey();
+                //Log.e("indexes", "" + key);
+                QuestCard oldQuest = map.get(key);
+                // Log.e("indexes",""+oldQuest.getQuestKey());
+                if(oldQuest == null){
+                    // not of interest to this user
+                }else{
+                    // get the index of the oldQuest
+                    int index = questCards.indexOf(oldQuest);
+                    // use this index to update the quest
+                    //Log.e("indexes",""+index);
+                    //Log.e("indexes", "" + questCards.size());
+                    if(index >= 0){// because of the firebase issue of calling ondatachanged many times
+                        questCards.set(index,updatedQuestCard);
+                        // notify the adapter
+                        adapter.notifyDataSetChanged();
+                    }
+
+                }
+                */
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+        // query3 (joiners)
+        Query query = questRef.orderByChild("joiners/"+MainActivity.uid).equalTo(1);
+        query.addChildEventListener(new ChildEventListener() {
+            QuestCard fireQuest;
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                fireQuest = dataSnapshot.getValue(QuestCard.class);
+                // track
+                questCardsHolders.add(fireQuest);
+
+
+                increment[0]++;
+
+                // get user image and username
+                String author = fireQuest.getAuthorId();
+                usersRef[0] = new Firebase("https://quest1.firebaseio.com/users/" + author);
+                // attach listener
+                usersRef[0].addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        user[0] = dataSnapshot.getValue(User.class);
+                        userImage[0] = user[0].getUserImage();
+                        username[0] = user[0].getUsername();
+
+
+                            /*
+                            to use descending set i[0] = increment and then start subtracting
+                            TO BE CONTINUED LATERZZZ
+                             */
+
+
+                        // use the full data constructor
+                        adapterQuest[0] = new QuestCard(questCardsHolders.get(i[0]).getQuestImage(), questCardsHolders.get(i[0]).getQuestTitle(), questCardsHolders.get(i[0]).getAuthorId(), username[0], userImage[0], questCardsHolders.get(i[0]).getQuestDescription(), questCardsHolders.get(i[0]).getQuestCost(), questCardsHolders.get(i[0]).getTodos(),questCardsHolders.get(i[0]).getQuestKey(),questCardsHolders.get(i[0]).getUsersWhoLiked(),questCardsHolders.get(i[0]).getTakers(),questCardsHolders.get(i[0]).getNumberOfLikes(),questCardsHolders.get(i[0]).getNumberOfTakers(),questCardsHolders.get(i[0]).getNumberOfFollowers(),questCardsHolders.get(i[0]).getJoiners());
+                        // increment i so we the next one next time
+                        i[0] = i[0] + 1;
+                        //Log.e("onchild",String.valueOf(i[0]));
+
+                        // add it to the map
+                        map.put(adapterQuest[0].getQuestKey(), adapterQuest[0]);
+
+                        // add it to the list
+                        questCards.add(adapterQuest[0]);
+                        adapter.notifyDataSetChanged();
+
+
+                        /*
+                        // ensure it gets called once
+                        if (increment[0] == questCards.size()) {
+                            // call the adapter
+                            //adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
+                            //rvQOwnStream.setAdapter(adapter);
+                            //MaterialViewPagerHelper.registerRecyclerView(getActivity(), rvQOwnStream, null);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                        */
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        /*
+                        // update the data of the quest
+
+                        // HOW TO DO IT
+                        // convert to quest card
+                        QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
+                        // get the keyy and index it into the map
+                        String key = updatedQuestCard.getQuestKey();
+                        //Log.e("indexes", "" + key);
+                        QuestCard oldQuest = map.get(key);
+                        //Log.e("indexes",""+oldQuest.getQuestKey());
+                        if(oldQuest == null){
+                            // not of interest to this user
+                        }else{
+                            // get the index of the oldQuest
+                            int index = questCards.indexOf(oldQuest);
+                            // use this index to update the quest
+                            //Log.e("indexes",""+index);
+                            //Log.e("indexes", "" + questCards.size());
+                            if(index >= 0){// because of the firebase issue of calling ondatachanged many times
+                                questCards.set(index,updatedQuestCard);
+                                // notify the adapter
+                                adapter.notifyDataSetChanged();
+                            }
+
+                        }
+                        */
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
         });
 
 

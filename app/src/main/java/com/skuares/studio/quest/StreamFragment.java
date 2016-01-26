@@ -33,6 +33,13 @@ import java.util.Map;
  */
 public class StreamFragment extends Fragment {
 
+    /*
+    Static variable indicating which quest is opened
+    it holds the quest's position, so we can now which quest has changed
+    from the adapter
+     */
+    public static int questChangedPosition = 0;
+
     // identify the caller
     int onResumeCaller = 100;
     int onCreateCaller = 1;
@@ -141,6 +148,10 @@ public class StreamFragment extends Fragment {
                             // add it to the list
                             questCards.add(adapterQuest[0]);
                             //Log.e("onchild", "I AM ADDED");
+                            adapter.notifyDataSetChanged();
+
+                            // NO LONGER NEEDED
+                            /*
 
                             // ensure it gets called once
                             if (increment[0] == questCards.size()) {
@@ -148,9 +159,10 @@ public class StreamFragment extends Fragment {
                                 adapter = new RecyclerViewMaterialAdapter(new QuestAdapter(getContext(),questCards,loadImageFromString,loadImageFromString2));
                                 recyclerView.setAdapter(adapter);
                                 MaterialViewPagerHelper.registerRecyclerView(getActivity(), recyclerView, null);
-                                //Log.e("CheckerAdalter", "adapter is set2");
+                                Log.e("CheckerAdalter", "adapter is set1");
 
                             }
+                            */
 
 
                         }
@@ -166,8 +178,69 @@ public class StreamFragment extends Fragment {
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    // update the data of the quest
 
+                     QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
+                    
+
+                    // loop through the questCard
+                    // find the quest that matches the key of this quest
+                    // get it's position and notify
+
+
+
+                    for(int i = 0; i < questCards.size(); i++){
+
+                        QuestCard qc = questCards.get(i);
+
+                        if(qc.getQuestKey().equals(updatedQuestCard.getQuestKey())){
+
+                            // convert to another constructor
+                             /*
+                            QuestCard(String questImage, String questTitle,String authorId,
+                      String questUsername,
+                      String questUserImage,
+                      String questDescription, String questCost,List<ToDo> todos,
+
+                      String questKey,
+                      Map<String,Object> usersWhoLiked,
+                      Map<String, Object> takers,
+                      double numberOfLikes,
+                      double numberOfTakers,
+                      double numberOfFollowers,
+                      Map<String,Object> joiners){
+
+                      QuestCard(Bitmap questImage, String questTitle,String authorId,
+                     String questDescription, String questCost,List<ToDo> todos,String questKey){
+                             */
+
+
+                        QuestCard newConst = new QuestCard(updatedQuestCard.getQuestImage(),
+                                updatedQuestCard.getQuestTitle(),
+                                updatedQuestCard.getAuthorId(),
+                                qc.getQuestUsername(),
+                                qc.getQuestUserImage(),
+                                updatedQuestCard.getQuestDescription(),
+                                updatedQuestCard.getQuestCost(),
+                                updatedQuestCard.getTodos(),
+                                updatedQuestCard.getQuestKey(),
+                                updatedQuestCard.getUsersWhoLiked(),
+                                updatedQuestCard.getTakers(),
+                                updatedQuestCard.getNumberOfLikes(),
+                                updatedQuestCard.getNumberOfTakers(),
+                                updatedQuestCard.getNumberOfFollowers(),
+                                updatedQuestCard.getJoiners()
+                        );
+
+                            // TAKE out the old quest and insert this one instead
+                            questCards.set(i,newConst);
+
+                        }
+                    }
+
+
+
+                    // update the data of the quest
+                    /*
                     // HOW TO DO IT
                     // convert to quest card
                     QuestCard updatedQuestCard = dataSnapshot.getValue(QuestCard.class);
@@ -191,6 +264,7 @@ public class StreamFragment extends Fragment {
                         }
 
                     }
+                    */
 
 
                 }
@@ -337,7 +411,9 @@ public class StreamFragment extends Fragment {
                             // add it to the list
 
                             questCards.add(adapterQuest[0]);
+                            adapter.notifyDataSetChanged();
 
+                            /*
                             // determine last time we loop
 
                             int i = numberOfLoops[0];
@@ -349,6 +425,7 @@ public class StreamFragment extends Fragment {
                                 //Log.e("CheckerAdalter", "adapter is set2");
 
                             }
+                            */
 
 
 
@@ -385,9 +462,6 @@ public class StreamFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stream_layout,container,false);
         //Log.e("assigned","I am here on create view");
-
-
-
         return view;
     }
 
